@@ -1,0 +1,10 @@
+{
+	"shared": {
+		"ok": "Ok",
+		"cancel": "Cancel",
+		"loading": "Loading…"
+	},
+	"image_list": {
+		"more": "More"
+	}
+}

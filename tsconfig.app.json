@@ -1,0 +1,39 @@
+{
+	"compilerOptions": {
+		"tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+		"target": "ES2024",
+		"lib": ["ES2024", "DOM", "DOM.Iterable"],
+		"module": "ESNext",
+		"types": ["vite/client", "vitest/globals"],
+		"skipLibCheck": true,
+
+		/* Bundler mode */
+		"allowImportingTsExtensions": true,
+		"jsx": "preserve",
+		"jsxImportSource": "solid-js",
+		"moduleDetection": "force",
+		"moduleResolution": "bundler",
+		"noEmit": true,
+		"verbatimModuleSyntax": true,
+
+		/* Type checking */
+		"exactOptionalPropertyTypes": true,
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitOverride": true,
+		"noPropertyAccessFromIndexSignature": true,
+		"noUncheckedSideEffectImports": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"strict": true,
+	
+		/* Interop constraints */
+		"erasableSyntaxOnly": true,
+
+		"paths": {
+			"~/*": ["./src/*"],
+			"~/@types/*": ["./@types/*"],
+			"~/test-utils/*": ["./test-utils/*"]
+		}
+	},
+	"include": ["@types", "src"]
+}

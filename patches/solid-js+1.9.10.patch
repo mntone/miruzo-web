@@ -1,0 +1,159 @@
+diff --git a/node_modules/solid-js/types/jsx.d.ts b/node_modules/solid-js/types/jsx.d.ts
+index 10de29f..74b08eb 100644
+--- a/node_modules/solid-js/types/jsx.d.ts
++++ b/node_modules/solid-js/types/jsx.d.ts
+@@ -1485,21 +1485,12 @@ export namespace JSX {
+ 
+     referrerPolicy?: HTMLReferrerPolicy | undefined;
+ 
+-    /** @experimental */
+-    adauctionheaders?: boolean | undefined;
+-    /**
+-     * @non-standard
+-     * @experimental
+-     */
+-    browsingtopics?: boolean | undefined;
+     /** @experimental */
+     credentialless?: boolean | undefined;
+     /** @experimental */
+     csp?: string | undefined;
+     /** @experimental */
+     privatetoken?: string | undefined;
+-    /** @experimental */
+-    sharedstoragewritable?: boolean | undefined;
+ 
+     /** @deprecated */
+     align?: string | undefined;
+@@ -1717,7 +1708,6 @@ export namespace JSX {
+       | (string & {})
+       | undefined;
+     crossorigin?: HTMLCrossorigin | undefined;
+-    disableremoteplayback?: boolean | undefined;
+     loop?: boolean | undefined;
+     muted?: boolean | undefined;
+     preload?: "none" | "metadata" | "auto" | "" | undefined;
+@@ -1939,13 +1929,7 @@ export namespace JSX {
+     width?: number | string | undefined;
+   }
+   interface TemplateHTMLAttributes<T> extends HTMLAttributes<T> {
+-    shadowrootclonable?: boolean | undefined;
+-    shadowrootcustomelementregistry?: boolean | undefined;
+-    shadowrootdelegatesfocus?: boolean | undefined;
+     shadowrootmode?: "open" | "closed" | undefined;
+-
+-    /** @experimental */
+-    shadowrootserializable?: boolean | undefined;
+   }
+   interface TextareaHTMLAttributes<T> extends HTMLAttributes<T> {
+     autocomplete?: HTMLAutocomplete | undefined;
+@@ -2024,7 +2008,6 @@ export namespace JSX {
+     mediagroup?: string | undefined;
+   }
+   interface VideoHTMLAttributes<T> extends MediaHTMLAttributes<T> {
+-    disablepictureinpicture?: boolean | undefined;
+     height?: number | string | undefined;
+     playsinline?: boolean | undefined;
+     poster?: string | undefined;
+diff --git a/node_modules/solid-js/web/dist/web.js b/node_modules/solid-js/web/dist/web.js
+index 39e84ed..723693c 100644
+--- a/node_modules/solid-js/web/dist/web.js
++++ b/node_modules/solid-js/web/dist/web.js
+@@ -6,21 +6,15 @@ const booleans = ["allowfullscreen", "async", "alpha",
+ "autoplay", "checked", "controls", "default", "disabled", "formnovalidate", "hidden",
+ "indeterminate", "inert",
+ "ismap", "loop", "multiple", "muted", "nomodule", "novalidate", "open", "playsinline", "readonly", "required", "reversed", "seamless",
+-"selected", "adauctionheaders",
+-"browsingtopics",
++"selected",
+ "credentialless",
+-"defaultchecked", "defaultmuted", "defaultselected", "defer", "disablepictureinpicture", "disableremoteplayback", "preservespitch",
+-"shadowrootclonable", "shadowrootcustomelementregistry",
+-"shadowrootdelegatesfocus", "shadowrootserializable",
+-"sharedstoragewritable"
++"defaultchecked", "defaultselected", "defer",
+ ];
+ const Properties = /*#__PURE__*/new Set([
+-"className", "value",
+-"readOnly", "noValidate", "formNoValidate", "isMap", "noModule", "playsInline", "adAuctionHeaders",
+-"allowFullscreen", "browsingTopics",
+-"defaultChecked", "defaultMuted", "defaultSelected", "disablePictureInPicture", "disableRemotePlayback", "preservesPitch", "shadowRootClonable", "shadowRootCustomElementRegistry",
+-"shadowRootDelegatesFocus", "shadowRootSerializable",
+-"sharedStorageWritable",
++"value",
++"readOnly", "noValidate", "formNoValidate", "isMap", "noModule", "playsInline",
++"defaultChecked", "defaultSelected",
++"allowFullscreen",
+ ...booleans]);
+ const ChildProperties = /*#__PURE__*/new Set(["innerHTML", "textContent", "innerText", "children"]);
+ const Aliases = /*#__PURE__*/Object.assign(Object.create(null), {
+@@ -28,7 +22,6 @@ const Aliases = /*#__PURE__*/Object.assign(Object.create(null), {
+   htmlFor: "for"
+ });
+ const PropAliases = /*#__PURE__*/Object.assign(Object.create(null), {
+-  class: "className",
+   novalidate: {
+     $: "noValidate",
+     FORM: 1
+@@ -55,62 +48,18 @@ const PropAliases = /*#__PURE__*/Object.assign(Object.create(null), {
+     INPUT: 1,
+     TEXTAREA: 1
+   },
+-  adauctionheaders: {
+-    $: "adAuctionHeaders",
+-    IFRAME: 1
+-  },
+   allowfullscreen: {
+     $: "allowFullscreen",
+     IFRAME: 1
+   },
+-  browsingtopics: {
+-    $: "browsingTopics",
+-    IMG: 1
+-  },
+   defaultchecked: {
+     $: "defaultChecked",
+     INPUT: 1
+   },
+-  defaultmuted: {
+-    $: "defaultMuted",
+-    AUDIO: 1,
+-    VIDEO: 1
+-  },
+   defaultselected: {
+     $: "defaultSelected",
+     OPTION: 1
+   },
+-  disablepictureinpicture: {
+-    $: "disablePictureInPicture",
+-    VIDEO: 1
+-  },
+-  disableremoteplayback: {
+-    $: "disableRemotePlayback",
+-    AUDIO: 1,
+-    VIDEO: 1
+-  },
+-  preservespitch: {
+-    $: "preservesPitch",
+-    AUDIO: 1,
+-    VIDEO: 1
+-  },
+-  shadowrootclonable: {
+-    $: "shadowRootClonable",
+-    TEMPLATE: 1
+-  },
+-  shadowrootdelegatesfocus: {
+-    $: "shadowRootDelegatesFocus",
+-    TEMPLATE: 1
+-  },
+-  shadowrootserializable: {
+-    $: "shadowRootSerializable",
+-    TEMPLATE: 1
+-  },
+-  sharedstoragewritable: {
+-    $: "sharedStorageWritable",
+-    IFRAME: 1,
+-    IMG: 1
+-  }
+ });
+ function getPropAlias(prop, tagName) {
+   const a = PropAliases[prop];

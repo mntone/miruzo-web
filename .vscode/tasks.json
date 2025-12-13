@@ -1,0 +1,22 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "npm: dev",
+			"type": "npm",
+			"script": "dev:host",
+			"detail": "vite",
+			"presentation": {
+				"reveal": "never",
+				"panel": "dedicated",
+				"showReuseMessage": false,
+				"clear": false
+			},
+			"problemMatcher": [],
+			"isBackground": true,
+			"runOptions": {
+				"runOn": "folderOpen"
+			}
+		}
+	]
+}
