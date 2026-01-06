@@ -4,15 +4,23 @@ export function buildImageListParams(
 	limit: number,
 	cursor?: string,
 	excludeFormats?: readonly string[],
-): URLSearchParams {
+): URLSearchParams | undefined {
+	const hasCursor = cursor !== undefined && cursor.length !== 0
+	const hasExcludeFormats = excludeFormats !== undefined && excludeFormats.length !== 0
+	const shouldIncludeLimit = limit && limit !== DEFAULT_IMAGE_LIST_LIMIT
+	const hasParams = hasCursor || hasExcludeFormats || shouldIncludeLimit
+	if (!hasParams) {
+		return undefined
+	}
+
 	const query = new URLSearchParams()
-	if (cursor) {
+	if (hasCursor) {
 		query.set('cursor', cursor)
 	}
-	if (excludeFormats) {
+	if (hasExcludeFormats) {
 		query.set('exclude_formats', excludeFormats.join('+'))
 	}
-	if (limit && limit !== DEFAULT_IMAGE_LIST_LIMIT) {
+	if (shouldIncludeLimit) {
 		query.set('limit', limit.toString())
 	}
 	return query

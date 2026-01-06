@@ -8,13 +8,11 @@ export function useImageList(
 	limit: number = 50,
 	excludeFormats: readonly string[] | undefined,
 ): [Accessor<ImageList[]>, Resource<ImageListResource>, () => void] {
-	const [getCursor, setCursor] = createSignal<string | undefined>(undefined)
+	const [getCursor, setCursor] = createSignal<string>('')
 	const [getImages, setImages] = createSignal<ImageList[]>([])
 
-	const [listPage] = createResource(function() {
-		const query = buildImageListParams(limit, getCursor(), excludeFormats)
-		return query
-	}, function(query) {
+	const [listPage] = createResource(getCursor, function(cursor) {
+		const query = buildImageListParams(limit, cursor, excludeFormats)
 		const task = fetchImageList(query).then(mapImageListResource)
 		return task
 	})
