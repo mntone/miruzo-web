@@ -7,14 +7,13 @@ export interface VariantModel {
 	readonly h: number
 }
 
-export type VariantsModel = readonly (readonly VariantModel[])[]
+export type VariantLayerModels = readonly (readonly VariantModel[])[]
 
 export interface ImageListModel {
 	readonly id: number
-	readonly status?: number
 	readonly original: VariantModel
 	readonly fallback?: VariantModel
-	readonly variants: VariantsModel
+	readonly variants: VariantLayerModels
 }
 
 export interface ImageListResponse {

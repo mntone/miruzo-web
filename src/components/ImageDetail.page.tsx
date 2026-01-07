@@ -1,23 +1,28 @@
-import { createSignal, onMount, useContext } from 'solid-js'
+import { createMemo, createSignal, onMount, Show, useContext } from 'solid-js'
 
-import type { ImageList } from '~/domain/images'
-import { useImageContext } from '~/hooks/useImageContext'
+import type { IngestId } from '~/domain'
+import { useContextResource } from '~/hooks/useContextResource'
 import { NavigationStackContext } from '~/navigation/Provider'
+import { imageStore } from '~/stores/images'
 
 import * as styles from './ImageDetail.page.css'
 
 interface ImageDetailPageProps {
-	params: ImageList
+	params: IngestId
 }
 
 export function ImageDetailPage(props: ImageDetailPageProps) {
 	const { canPop, pop } = useContext(NavigationStackContext)
 
-	const [getContext] = useImageContext(function() {
-		return props.params.id
+	const getEntry = createMemo(function() {
+		return imageStore.imagesById[props.params]
 	})
 	const [getHiResLoaded, setHiResLoaded] = createSignal(false)
 	const [getLoResVisible, setLoResVisible] = createSignal(true)
+
+	useContextResource(function() {
+		return props.params
+	})
 
 	let mounted = false
 	onMount(function() {
@@ -45,20 +50,21 @@ export function ImageDetailPage(props: ImageDetailPageProps) {
 
 			<main class={styles.container}>
 				<div class={styles.content}>
-					{getLoResVisible() && (
+					<Show when={getLoResVisible()}>
 						<img
-							alt={props.params.id.toString()}
+							alt={props.params.toString()}
 							class={styles.imageLow[getLoResVisible() ? 'visible' : 'revealed']}
 							decoding='sync'
-							src={props.params.variants[0][0].src}
+							src={getEntry().variants[0][0].src}
 						/>
-					)}
+					</Show>
+
 					<img
-						alt={props.params.id.toString()}
+						alt={props.params.toString()}
 						class={styles.imageHigh[getHiResLoaded() ? 'visible' : 'none']}
 						decoding='async'
 						loading='eager'
-						src={props.params.original.src}
+						src={getEntry().original.src}
 						onLoad={function() {
 							setHiResLoaded(true)
 						}}
@@ -72,11 +78,11 @@ export function ImageDetailPage(props: ImageDetailPageProps) {
 					<tbody>
 						<tr>
 							<th>view_count</th>
-							<td>{getContext()?.stats?.viewCount ?? '???'}</td>
+							<td>{getEntry()?.stats?.viewCount ?? '???'}</td>
 						</tr>
 						<tr>
 							<th>last_viewed_at</th>
-							<td>{getContext()?.stats?.lastViewedAt?.toLocaleString() ?? '???'}</td>
+							<td>{getEntry()?.stats?.lastViewedAt?.toLocaleString() ?? '???'}</td>
 						</tr>
 					</tbody>
 				</table>

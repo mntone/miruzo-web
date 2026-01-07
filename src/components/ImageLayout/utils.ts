@@ -1,10 +1,10 @@
-import type { Variant, Variants } from '~/domain/images'
+import type { VariantEntry, VariantLayerEntries } from '~/domain'
 import { supportsImageFormat } from '~/utils/imageSupport'
 
 /**
  * Pick the smallest variant that satisfies the required width and is supported by the browser.
  */
-export function getPreferredVariant(variants: Variants, requiredWidth: number): Variant {
+export function getPreferredVariant(variants: VariantLayerEntries, requiredWidth: number): VariantEntry {
 	const lastLayerIndex = variants.length - 1
 
 	for (let i = 0; i < variants.length; ++i) {

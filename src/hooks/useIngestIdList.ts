@@ -1,19 +1,19 @@
 import { createEffect, createResource, createSignal, type Accessor, type Resource } from 'solid-js'
 
-import { fetchImageList, mapImageListResource } from '~/api/images'
 import { buildImageListParams } from '~/api/images/params'
-import type { ImageList, ImageListResource } from '~/domain/images/list'
+import type { IngestId, IngestIdListResponse } from '~/domain'
+import { loadIngestIdList } from '~/repositories/ingests'
 
-export function useImageList(
+export function useIngestIdList(
 	limit: number = 50,
 	excludeFormats: readonly string[] | undefined,
-): [Accessor<ImageList[]>, Resource<ImageListResource>, () => void] {
+): [Accessor<IngestId[]>, Resource<IngestIdListResponse>, () => void] {
 	const [getCursor, setCursor] = createSignal<string>('')
-	const [getImages, setImages] = createSignal<ImageList[]>([])
+	const [getIngestIds, setIngestIds] = createSignal<IngestId[]>([])
 
 	const [listPage] = createResource(getCursor, function(cursor) {
 		const query = buildImageListParams(limit, cursor, excludeFormats)
-		const task = fetchImageList(query).then(mapImageListResource)
+		const task = loadIngestIdList(query)
 		return task
 	})
 
@@ -23,8 +23,8 @@ export function useImageList(
 			return
 		}
 
-		setImages(function(previous) {
-			return [...previous, ...p.items]
+		setIngestIds(function(previous) {
+			return [...previous, ...p.ids]
 		})
 	})
 
@@ -37,5 +37,5 @@ export function useImageList(
 		setCursor(p.cursor)
 	}
 
-	return [getImages, listPage, loadMore]
+	return [getIngestIds, listPage, loadMore]
 }

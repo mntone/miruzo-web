@@ -1,15 +1,15 @@
 import { useContext } from 'solid-js'
 import type { JSX } from 'solid-js/jsx-runtime'
 
-import type { ImageList, Variant } from '~/domain/images'
+import type { ImageEntry, VariantEntry } from '~/domain'
 import { NavigationStackContext } from '~/navigation/Provider'
 
 import * as styles from './ImageCard.css'
 import { ImageDetailPage } from './ImageDetail.page'
 
 interface ImageCardProps {
-	image: ImageList
-	variant: Variant
+	image: ImageEntry
+	variant: VariantEntry
 
 	class: string
 	style?: JSX.CSSProperties
@@ -27,7 +27,7 @@ export function ImageCard(props: ImageCardProps) {
 			class={`${styles.card} ${props.class}`}
 			style={props.style}
 			onClick={function() {
-				push(ImageDetailPage, props.image)
+				push(ImageDetailPage, props.image.id)
 			}}
 		>
 			<img

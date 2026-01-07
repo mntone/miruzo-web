@@ -35,5 +35,5 @@
 			"~/test-utils/*": ["./test-utils/*"]
 		}
 	},
-	"include": ["@types", "src"]
+	"include": ["@types", "src", "test-utils"],
 }

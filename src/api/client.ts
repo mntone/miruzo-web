@@ -1,6 +1,15 @@
-let API_BASE_URL = import.meta.env.VITE_API_URL
-if (import.meta.env.DEV) {
-	API_BASE_URL = API_BASE_URL.replace('{host}', window.location.hostname)
+let apiBaseUrl: string | undefined = undefined
+function getApiBaseUrl(): string {
+	if (apiBaseUrl !== undefined) {
+		return apiBaseUrl
+	}
+
+	let base = import.meta.env.VITE_API_URL
+	if (import.meta.env.DEV) {
+		base = base.replace('{host}', window.location.hostname)
+	}
+	apiBaseUrl = base
+	return base
 }
 
 export function apiClient<T>(method: string, path: string): Promise<T> {
@@ -16,7 +25,7 @@ export function apiClient<T>(method: string, path: string): Promise<T> {
 		referrerPolicy: 'no-referrer',
 	}
 
-	return fetch(API_BASE_URL + path, init).then(function(response) {
+	return fetch(getApiBaseUrl() + path, init).then(function(response) {
 		if (!response.ok) {
 			throw new Error('Failed to fetch images: ' + response.status)
 		}

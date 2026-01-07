@@ -2,8 +2,9 @@ import { createMemo, createSignal, For } from 'solid-js'
 import { Dynamic } from 'solid-js/web'
 
 import { ImageCard } from '~/components/ImageCard'
-import type { Variant } from '~/domain/images'
+import type { IngestId, VariantEntry } from '~/domain'
 import { useContentSize } from '~/hooks/useContentSize'
+import { imageStore } from '~/stores/images'
 
 import { getPreferredVariant } from '../utils'
 
@@ -13,7 +14,7 @@ import { computeMasonryMetrics } from './layoutMetrics'
 import type { MasonryImageLayoutProps, MasonryLayoutMetrics } from './types'
 
 function createItemStyle(
-	variant: Variant,
+	variant: VariantEntry,
 	metrics: MasonryLayoutMetrics,
 	rowUnit: number,
 ) {
@@ -62,8 +63,13 @@ export function MasonryImageLayout(props: MasonryImageLayoutProps) {
 			{props.header}
 
 			<div class={styles.layout}>
-				<For each={props.getImages()}>
-					{function(image) {
+				<For each={props.getImageIds()}>
+					{function(imageId: IngestId) {
+						const image = imageStore.imagesById[imageId]
+						if (!image) {
+							return null
+						}
+
 						const variant = getPreferredVariant(image.variants, getMetrics().effectiveFinalWidth)
 						const getItemStyle = createMemo(function() {
 							return createItemStyle(

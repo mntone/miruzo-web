@@ -2,8 +2,9 @@ import { createMemo, createSignal, For } from 'solid-js'
 import { Dynamic } from 'solid-js/web'
 
 import { ImageCard } from '~/components/ImageCard'
-import type { Variant } from '~/domain/images'
+import type { IngestId, VariantEntry } from '~/domain'
 import { useContentSize } from '~/hooks/useContentSize'
+import { imageStore } from '~/stores/images'
 
 import { getPreferredVariant } from '../utils'
 
@@ -13,7 +14,7 @@ import { computeGridMetrics } from './layoutMetrics'
 
 import type { GridImageLayoutProps } from '.'
 
-function createItemStyle(variant: Variant) {
+function createItemStyle(variant: VariantEntry) {
 	if (!variant.width || !variant.height) {
 		throw new Error('Image variant is missing intrinsic width or height')
 	}
@@ -52,8 +53,13 @@ export function GridImageLayout(props: GridImageLayoutProps) {
 			{props.header}
 
 			<div class={styles.layout}>
-				<For each={props.getImages()}>
-					{function(image) {
+				<For each={props.getImageIds()}>
+					{function(imageId: IngestId) {
+						const image = imageStore.imagesById[imageId]
+						if (!image) {
+							return null
+						}
+
 						const variant = getPreferredVariant(image.variants, window.devicePixelRatio * getMetrics().effectiveItemWidth)
 						const style = createItemStyle(variant)
 						return (

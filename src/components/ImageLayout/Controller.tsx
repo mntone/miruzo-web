@@ -1,7 +1,7 @@
 import { Show } from 'solid-js'
 import { Dynamic } from 'solid-js/web'
 
-import { useImageList } from '~/hooks/useImageList'
+import { useIngestIdList } from '~/hooks/useIngestIdList'
 import { useI18n } from '~/i18n/Context'
 import { getExcludeFormats } from '~/utils/imageSupport'
 
@@ -10,7 +10,7 @@ import type { ImageLayoutControllerProps, ImageLayoutProps } from './types'
 
 export function ImageLayoutController(props: ImageLayoutControllerProps) {
 	const { t } = useI18n()
-	const [getImages, listPage, loadMore] = useImageList(50, getExcludeFormats())
+	const [getImageIds, listPage, loadMore] = useIngestIdList(50, getExcludeFormats())
 
 	function hasNext() {
 		const p = listPage()
@@ -49,7 +49,7 @@ export function ImageLayoutController(props: ImageLayoutControllerProps) {
 					</button>
 				</Show>
 
-				<Show when={!hasNext() && getImages().length > 0}>
+				<Show when={!hasNext() && getImageIds().length > 0}>
 					<div class='image-page__status'>
 						No more images
 					</div>
@@ -57,7 +57,7 @@ export function ImageLayoutController(props: ImageLayoutControllerProps) {
 			</footer>
 		),
 
-		getImages,
+		getImageIds,
 	}
 	return <Dynamic component={props.layout} {...nextProps} />
 }

@@ -1,18 +1,20 @@
 export interface ImageSummaryModel {
 	readonly id: number
-	readonly status?: number
-	readonly captured_at?: string
 	readonly ingested_at: string
 }
 
-export interface ImageStatsModel {
-	readonly is_favorited?: boolean
+export interface StatsModel {
 	readonly score: number
 	readonly view_count: number
-	readonly last_viewed_at: string
+	readonly last_viewed_at?: string
+	readonly first_loved_at?: string
+	readonly last_loved_at?: string
+	readonly hall_of_fame_at?: string
+	readonly view_milestone_count?: number
+	readonly view_milestone_archived_at?: string
 }
 
-export interface ImageContextResponse {
+export interface ContextResponse {
 	readonly image: ImageSummaryModel
-	readonly stats?: ImageStatsModel
+	readonly stats?: StatsModel
 }

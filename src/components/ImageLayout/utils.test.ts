@@ -1,8 +1,7 @@
 vi.mock('~/utils/imageSupport', () => ({
 	supportsImageFormat: vi.fn(),
 }))
-
-import type { Variants } from '~/domain/images'
+import type { VariantLayerEntries } from '~/domain'
 import { supportsImageFormat } from '~/utils/imageSupport'
 
 import { getPreferredVariant } from './utils'
@@ -17,15 +16,15 @@ describe('getPreferredVariant', () => {
 	it('returns the smallest supported variant that satisfies the width', () => {
 		supportsImageFormatMock.mockReturnValue(true)
 
-		const variants: Variants = [
+		const variants: VariantLayerEntries = [
 			[
-				{ src: '200.webp', format: 'webp', width: 200 },
-				{ src: '350.webp', format: 'webp', width: 350 },
-				{ src: '500.webp', format: 'webp', width: 500 },
+				{ src: '320.webp', format: 'webp', manbytes: 2, width: 320, height: 240 },
+				{ src: '480.webp', format: 'webp', manbytes: 3, width: 480, height: 360 },
+				{ src: '640.webp', format: 'webp', manbytes: 4, width: 640, height: 480 },
 			],
 		]
 
-		const variant = getPreferredVariant(variants, 320)
+		const variant = getPreferredVariant(variants, 420)
 		expect(variant).toBe(variants[0][1])
 	})
 
@@ -34,15 +33,15 @@ describe('getPreferredVariant', () => {
 			.mockImplementationOnce(() => false)
 			.mockImplementation(() => true)
 
-		const variants: Variants = [
+		const variants: VariantLayerEntries = [
 			[
-				{ src: '200.webp', format: 'webp', width: 200 },
-				{ src: '400.webp', format: 'webp', width: 400 },
-				{ src: '500.webp', format: 'webp', width: 500 },
+				{ src: '320.avif', format: 'avif', manbytes: 2, width: 320, height: 240 },
+				{ src: '480.webp', format: 'webp', manbytes: 3, width: 480, height: 360 },
+				{ src: '640.webp', format: 'webp', manbytes: 4, width: 640, height: 480 },
 			],
 		]
 
-		const variant = getPreferredVariant(variants, 380)
+		const variant = getPreferredVariant(variants, 420)
 		expect(variant).toBe(variants[0][2])
 		expect(supportsImageFormatMock).toHaveBeenCalledTimes(2)
 	})
@@ -53,30 +52,31 @@ describe('getPreferredVariant', () => {
 			.mockImplementationOnce(() => false)
 			.mockImplementation(() => true)
 
-		const variants: Variants = [
+		const variants: VariantLayerEntries = [
 			[
-				{ src: 'l1-small.webp', format: 'webp', width: 200 },
-				{ src: 'l1-large.webp', format: 'webp', width: 420 },
+				{ src: 'l1-small.jxl', format: 'jxl', manbytes: 2, width: 320, height: 240 },
+				{ src: 'l1-medium.jxl', format: 'jxl', manbytes: 3, width: 480, height: 360 },
 			],
 			[
-				{ src: 'l2-large.webp', format: 'webp', width: 420 },
+				{ src: 'l2-large.jpg', format: 'jpeg', manbytes: 5, width: 640, height: 480 },
 			],
 		]
 
-		const variant = getPreferredVariant(variants, 350)
+		const variant = getPreferredVariant(variants, 480)
 		expect(variant).toBe(variants[1][0])
 	})
 
 	it('throws when no supported variant exists', () => {
 		supportsImageFormatMock.mockReturnValue(false)
 
-		const variants: Variants = [
+		const variants: VariantLayerEntries = [
 			[
-				{ src: 'l1-small.webp', format: 'webp', width: 200 },
-				{ src: 'l1-large.webp', format: 'webp', width: 420 },
+				{ src: 'l1-small.webp', format: 'webp', manbytes: 2, width: 320, height: 240 },
+				{ src: 'l1-large.webp', format: 'webp', manbytes: 3, width: 480, height: 360 },
+				{ src: 'l1-large.webp', format: 'webp', manbytes: 3, width: 480, height: 360 },
 			],
 		]
 
-		expect(() => getPreferredVariant(variants, 300)).toThrow()
+		expect(() => getPreferredVariant(variants, 320)).toThrow()
 	})
 })
