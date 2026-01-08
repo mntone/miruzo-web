@@ -19,6 +19,6 @@ export interface ImageListModel {
 export type ImageListType = 'latest' | 'chronological' | 'recently' | 'first_love' | 'hall_of_fame' | 'engaged'
 
 export interface ImageListResponse {
-	readonly items: readonly ImageListModel[]
+	readonly items?: readonly ImageListModel[]
 	readonly cursor?: string
 }

@@ -16,9 +16,9 @@ export interface IngestIdListRequest {
 
 export function initIngestIdListResponse(r: ImageListResponse): IngestIdListResponse {
 	const newEntry: Writable<IngestIdListResponse> = {
-		ids: r.items.map(function(item) {
+		ids: r.items?.map(function(item) {
 			return item.id
-		}),
+		}) ?? [],
 	}
 	if (r.cursor !== undefined) {
 		newEntry.cursor = r.cursor
@@ -34,8 +34,10 @@ export function loadIngestIdList(request: IngestIdListRequest): Promise<IngestId
 	return fetchImageList(request.type, query).then(function(response): IngestIdListResponse {
 		setImageStore('imagesById', function(prev): Record<IngestId, ImageEntry> {
 			const next = Object.assign({}, prev)
-			for (const item of response.items) {
-				next[item.id] = mergeImageEntry(prev[item.id], item)
+			if (response.items !== undefined) {
+				for (const item of response.items) {
+					next[item.id] = mergeImageEntry(prev[item.id], item)
+				}
 			}
 			return next
 		})
