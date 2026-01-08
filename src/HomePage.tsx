@@ -22,6 +22,7 @@ export function HomePage() {
 
 			<ImageLayoutController
 				layout={getLayout() === 'grid' ? GridImageLayout : MasonryImageLayout}
+				listType='latest'
 			/>
 		</>
 	)

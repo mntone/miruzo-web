@@ -1,21 +1,33 @@
 import { createEffect, createResource, createSignal, type Accessor, type Resource } from 'solid-js'
 
-import { buildImageListParams } from '~/api/images/params'
+import type { Writable } from '~/@types/utils'
+import type { ImageListType } from '~/api/types'
 import type { IngestId, IngestIdListResponse } from '~/domain'
-import { loadIngestIdList } from '~/repositories/ingests'
+import { loadIngestIdList, type IngestIdListRequest } from '~/repositories/ingests'
 
 export function useIngestIdList(
-	limit: number = 50,
+	type: ImageListType,
+	limit: number,
 	excludeFormats: readonly string[] | undefined,
 ): [Accessor<IngestId[]>, Resource<IngestIdListResponse>, () => void] {
 	const [getCursor, setCursor] = createSignal<string>('')
 	const [getIngestIds, setIngestIds] = createSignal<IngestId[]>([])
 
-	const [listPage] = createResource(getCursor, function(cursor) {
-		const query = buildImageListParams(limit, cursor, excludeFormats)
-		const task = loadIngestIdList(query)
-		return task
-	})
+	const [listPage] = createResource(function() {
+		const request: Writable<IngestIdListRequest> = {
+			type,
+			limit,
+		}
+
+		const cursor = getCursor()
+		if (cursor !== '') {
+			request.cursor = cursor
+		}
+		if (excludeFormats !== undefined) {
+			request.excludeFormats = excludeFormats
+		}
+		return request
+	}, loadIngestIdList)
 
 	createEffect(function() {
 		const p = listPage()

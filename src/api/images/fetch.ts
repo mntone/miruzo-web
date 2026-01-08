@@ -1,17 +1,17 @@
 import { apiClient } from '../client'
-import type { ContextResponse, ImageListResponse } from '../types'
+import type { ContextResponse, ImageListResponse, ImageListType } from '../types'
 
-function buildImageListUrl(query: URLSearchParams | undefined): string {
+function buildImageListUrl(type: ImageListType, query: URLSearchParams | undefined): string {
 	if (query !== undefined && query.size !== 0) {
 		const search = query.toString()
-		return '/i/latest?' + search
+		return '/i/' + type + '?' + search
 	} else {
-		return '/i/latest'
+		return '/i/' + type
 	}
 }
 
-export function fetchImageList(query?: URLSearchParams): Promise<ImageListResponse> {
-	const url = buildImageListUrl(query)
+export function fetchImageList(type: ImageListType, query?: URLSearchParams): Promise<ImageListResponse> {
+	const url = buildImageListUrl(type, query)
 	return apiClient<ImageListResponse>('GET', url)
 }
 

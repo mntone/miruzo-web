@@ -1,5 +1,6 @@
 import type { Accessor, JSX, JSXElement } from 'solid-js'
 
+import type { ImageListType } from '~/api/types'
 import type { IngestId } from '~/domain'
 
 export interface ImageLayoutProps {
@@ -11,5 +12,7 @@ export interface ImageLayoutProps {
 }
 
 export interface ImageLayoutControllerProps {
+	readonly limit?: number
+	readonly listType: ImageListType
 	readonly layout: (props: ImageLayoutProps) => JSXElement
 }

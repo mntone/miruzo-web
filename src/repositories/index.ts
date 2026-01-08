@@ -1,2 +1,2 @@
 export { loadContextIntoStore } from './contexts'
-export { loadIngestIdList } from './ingests'
+export { type IngestIdListRequest, loadIngestIdList } from './ingests'

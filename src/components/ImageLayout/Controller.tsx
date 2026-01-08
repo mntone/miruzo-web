@@ -1,6 +1,7 @@
 import { Show } from 'solid-js'
 import { Dynamic } from 'solid-js/web'
 
+import { DEFAULT_IMAGE_LIST_LIMIT } from '~/api/constants'
 import { useIngestIdList } from '~/hooks/useIngestIdList'
 import { useI18n } from '~/i18n/Context'
 import { getExcludeFormats } from '~/utils/imageSupport'
@@ -10,7 +11,13 @@ import type { ImageLayoutControllerProps, ImageLayoutProps } from './types'
 
 export function ImageLayoutController(props: ImageLayoutControllerProps) {
 	const { t } = useI18n()
-	const [getImageIds, listPage, loadMore] = useIngestIdList(50, getExcludeFormats())
+	/* eslint-disable solid/reactivity */
+	const [getImageIds, listPage, loadMore] = useIngestIdList(
+		props.listType,
+		props.limit || DEFAULT_IMAGE_LIST_LIMIT,
+		getExcludeFormats(),
+	)
+	/* eslint-enable solid/reactivity */
 
 	function hasNext() {
 		const p = listPage()
