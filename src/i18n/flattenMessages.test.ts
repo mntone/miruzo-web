@@ -39,4 +39,38 @@ describe('flattenMessages', () => {
 			'header.title': 'Title',
 		})
 	})
+
+	it('keeps plural records as leaf entries', () => {
+		const dict: LocaleRecord = {
+			labels: {
+				items: {
+					one: '{0} item',
+					other: '{0} items',
+				},
+			},
+		}
+
+		expect(flattenMessages(dict)).toStrictEqual({
+			'labels.items': {
+				one: '{0} item',
+				other: '{0} items',
+			},
+		})
+	})
+
+	it('keeps other-only plural records as leaf entries', () => {
+		const dict: LocaleRecord = {
+			labels: {
+				items: {
+					other: '{0} items',
+				},
+			},
+		}
+
+		expect(flattenMessages(dict)).toStrictEqual({
+			'labels.items': {
+				other: '{0} items',
+			},
+		})
+	})
 })

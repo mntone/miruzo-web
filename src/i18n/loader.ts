@@ -1,12 +1,40 @@
 import type { Locale } from './config'
 import dict from './locales/en.json'
-import type { FlatLocaleMessages, LocaleMessages, LocaleRecord, Flatten } from './types'
+import type {
+	FlatLocaleMessages,
+	LocaleMessages,
+	LocaleRecord,
+	Flatten,
+	PluralRecord,
+} from './types'
 
 export function flattenMessages<T extends LocaleRecord>(messages: T): Flatten<T> {
-	const entries: Record<string, string> = {}
+	const entries: Record<string, string | PluralRecord> = {}
+	const pluralCategories = new Set(['zero', 'one', 'two', 'few', 'many', 'other'])
+
+	function isPluralRecord(node: LocaleRecord): node is PluralRecord {
+		const keys = Object.keys(node)
+		if (keys.length === 0) {
+			return false
+		}
+
+		for (const key of keys) {
+			if (!pluralCategories.has(key)) {
+				return false
+			}
+			if (typeof node[key] !== 'string') {
+				return false
+			}
+		}
+		return true
+	}
 
 	function traverse(node: string | LocaleRecord, currentKey: string) {
 		if (typeof node === 'string') {
+			entries[currentKey] = node
+			return
+		}
+		if (isPluralRecord(node)) {
 			entries[currentKey] = node
 			return
 		}
