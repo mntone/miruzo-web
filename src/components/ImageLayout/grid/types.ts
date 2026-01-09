@@ -1,15 +1,5 @@
-import type { Interval } from '../shared/types'
-import type { ImageLayoutProps } from '../types'
+import type { LayoutProps } from '../shared/types'
 
-export type GridInterval = Interval
-
-export interface GridLayoutMetrics {
-	cols: number
-	gap: number
-	effectiveItemWidth: number
-	itemWidth: number
-}
-
-export interface GridImageLayoutProps extends ImageLayoutProps {
-	readonly intervals?: readonly GridInterval[]
+export interface GridImageLayoutProps<Item> extends LayoutProps<Item> {
+	readonly maxRows?: number
 }

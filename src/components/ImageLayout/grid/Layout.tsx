@@ -1,76 +1,84 @@
 import { createMemo, createSignal, For } from 'solid-js'
+import type { JSX } from 'solid-js/h/jsx-runtime'
 import { Dynamic } from 'solid-js/web'
 
-import { ImageCard } from '~/components/ImageCard'
-import type { IngestId, VariantEntry } from '~/domain'
-import { useContentSize } from '~/hooks/useContentSize'
-import { imageStore } from '~/stores/images'
+import { useParentContentSize } from '~/hooks'
 
-import { getPreferredVariant } from '../utils'
+import { computeLayoutMetrics, normalizeIntervals } from '../shared/layoutMetrics'
 
 import { defaultIntervals } from './config'
 import * as styles from './Layout.css'
-import { computeGridMetrics } from './layoutMetrics'
+import type { GridImageLayoutProps } from './types'
 
-import type { GridImageLayoutProps } from '.'
-
-function createItemStyle(variant: VariantEntry) {
-	if (!variant.width || !variant.height) {
-		throw new Error('Image variant is missing intrinsic width or height')
-	}
-
-	return {
-		'--g-aspect-ratio': variant.width / variant.height,
-	}
-}
-
-export function GridImageLayout(props: GridImageLayoutProps) {
+export function GridImageLayout<Item>(props: GridImageLayoutProps<Item>) {
 	const [getEl, setEl] = createSignal<HTMLElement | undefined>(undefined)
-	const getLayoutSize = useContentSize(getEl)
+	const getLayoutSize = useParentContentSize(getEl)
 
 	const getMetrics = createMemo(function() {
 		const width = getLayoutSize()[0]
-		const intervals = props.intervals || defaultIntervals
-		return computeGridMetrics(width, intervals)
+		const intervals = normalizeIntervals(props.intervals || defaultIntervals)
+		return computeLayoutMetrics(width, intervals)
 	})
 
-	const getStyle = createMemo(function() {
+	const getConstrainItems = createMemo(function() {
 		const metrics = getMetrics()
-		const style = {
-			'--g-columns': metrics.cols,
-			'--g-gap': metrics.gap + 'px',
+		if (props.maxRows === undefined) {
+			return props.getItems()
+		}
+		return props.getItems().slice(0, metrics.cols * props.maxRows)
+	})
+
+	const getContainerStyle = createMemo(function() {
+		const metrics = getMetrics()
+		const style: JSX.CSSProperties = {
+			'padding-inline': metrics.outerPadding + 'px',
+			'--m-spacing-x': metrics.horizontalSpacing + 'px',
+			'--m-spacing-y': metrics.verticalSpacing + 'px',
+		}
+		if (metrics.containerWidth !== undefined) {
+			style.width = metrics.containerWidth + 'px'
 		}
 		return style
+	})
+
+	const getChildStyle = createMemo(function() {
+		const metrics = getMetrics()
+		const style: JSX.CSSProperties = {
+			width: metrics.itemWidthMode == 'fixed'
+				? metrics.itemWidth + 'px'
+				: `calc((100% - ${metrics.totalHorizontalSpacing}px) / ${metrics.cols})`,
+		}
+		return style
+	})
+
+	const getChildWidth = createMemo(function() {
+		const metrics = getMetrics()
+		return metrics.itemWidth
+	})
+
+	const getNativeChildWidth = createMemo(function() {
+		const metrics = getMetrics()
+		return metrics.nativeItemWidth
 	})
 
 	return (
 		<Dynamic
 			ref={setEl}
 			class={styles.container}
-			component={props.as || 'div'}
-			style={getStyle()}
+			component={props.as}
+			style={getContainerStyle()}
 		>
 			{props.header}
 
 			<div class={styles.layout}>
-				<For each={props.getImageIds()}>
-					{function(imageId: IngestId) {
-						const image = imageStore.imagesById[imageId]
-						if (!image) {
-							return null
-						}
-
-						const variant = getPreferredVariant(image.variants, window.devicePixelRatio * getMetrics().effectiveItemWidth)
-						const style = createItemStyle(variant)
-						return (
-							<ImageCard
-								class={styles.card}
-								image={image}
-								style={style}
-								variant={variant}
-							/>
-						)
-					}}
+				<For each={getConstrainItems()}>
+					{props.children.bind(null,
+						{
+							getChildStyle,
+							getChildWidth,
+							getNativeChildWidth,
+						},
+					)}
 				</For>
 			</div>
 

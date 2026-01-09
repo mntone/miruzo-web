@@ -1,11 +1,19 @@
-import { computeFluidWidth, estimateColumnCount, resolveInterval } from './layoutMetrics'
-import type { Interval } from './types'
+import { computeFluidWidth, computeLayoutMetrics, computeTotalInnerGap, estimateColumnCount, normalizeIntervals, resolveInterval } from './layoutMetrics'
+import type { LayoutIntervals } from './types'
 
-const intervals: readonly Interval[] = [
-	{ colMin: 1, colMax: 2, minItemWidth: 200, gap: 8 },
-	{ colMin: 3, colMax: 3, minItemWidth: 200, gap: 16 },
-	{ colMin: 4, colMax: Infinity, minItemWidth: 320, gap: 16 },
-]
+beforeAll(() => {
+	vi.stubGlobal('window', { devicePixelRatio: 1 })
+})
+
+afterAll(() => {
+	vi.unstubAllGlobals()
+})
+
+const intervals = normalizeIntervals([
+	{ colMin: 1, colMax: 2, minItemWidth: 200, maxItemWidth: Infinity, spacing: 8, outerPadding: 12 },
+	{ col: 3, minItemWidth: 200, maxItemWidth: 320, spacing: 16, outerPadding: 24 },
+	{ colMin: 4, colMax: Infinity, itemWidth: 320, spacing: 16, outerPadding: 24 },
+] satisfies LayoutIntervals)
 
 describe('estimateColumnCount', () => {
 	it('returns the smallest column count when space is limited', () => {
@@ -33,14 +41,97 @@ describe('resolveInterval', () => {
 	})
 })
 
+describe('normalizeIntervals', () => {
+	it('normalizes col and spacing shortcuts', () => {
+		const normalized = normalizeIntervals([
+			{ col: 2, itemWidth: 240, spacing: 12, outerPadding: 20 },
+		] satisfies LayoutIntervals)
+
+		expect(normalized).toEqual([
+			{
+				colMin: 2,
+				colMax: 2,
+				minItemWidth: 240,
+				maxItemWidth: 240,
+				horizontalSpacing: 12,
+				verticalSpacing: 12,
+				outerPadding: 20,
+			},
+		])
+	})
+
+	it('fills missing colMax with Infinity', () => {
+		const normalized = normalizeIntervals([
+			{ colMin: 3, minItemWidth: 200, maxItemWidth: 320, spacing: 16, outerPadding: 24 },
+		] satisfies LayoutIntervals)
+
+		expect(normalized[0].colMax).toBe(Infinity)
+	})
+})
+
 describe('computeFluidWidth', () => {
 	it('removes the gutters and distributes the width evenly', () => {
-		// container=600, cols=2, gap=16 => raw=(600 - 16)/2=292
+		// container=600, cols=2, spacing=16 => raw=(600 - 16)/2=292
 		expect(computeFluidWidth(600, 2, 16)).toBe(292)
 	})
 
 	it('never returns a negative width even when gutters overflow the container', () => {
 		// container=10, cols=2, gap=16 -> max term is clamped to 0 before dividing
 		expect(computeFluidWidth(10, 2, 16)).toBe(0)
+	})
+})
+
+describe('computeTotalInnerGap', () => {
+	it('multiplies spacing by the number of gaps', () => {
+		expect(computeTotalInnerGap(4, intervals[2])).toBe(48)
+	})
+})
+
+describe('computeMetrics', () => {
+	it('returns safe defaults when the container width is zero', () => {
+		expect(computeLayoutMetrics(0, intervals)).toEqual({
+			cols: 1,
+			horizontalSpacing: 0,
+			totalHorizontalSpacing: 0,
+			verticalSpacing: 8,
+			outerPadding: 12,
+			itemWidth: 0,
+			itemWidthMode: 'fixed',
+			nativeItemWidth: 0,
+		})
+	})
+
+	it('computes fluid widths based on the provided intervals', () => {
+		const metrics = computeLayoutMetrics(900, intervals)
+
+		expect(metrics.cols).toBe(3)
+		expect(metrics.horizontalSpacing).toBe(16)
+		expect(metrics.totalHorizontalSpacing).toBe(32)
+		expect(metrics.verticalSpacing).toBe(16)
+		expect(metrics.outerPadding).toBe(24)
+		expect(metrics.itemWidthMode).toBe('fluid')
+		expect(metrics.itemWidth).toBeCloseTo((900 - 80) / 3, 5)
+		expect(metrics.nativeItemWidth).toBe(metrics.itemWidth)
+		expect(metrics.containerWidth).toBeCloseTo(900, 5)
+	})
+
+	it('uses the fixed width value and produces a layout width', () => {
+		const metrics = computeLayoutMetrics(1200, intervals)
+
+		expect(metrics.cols).toBe(3)
+		expect(metrics.itemWidthMode).toBe('fixed')
+		expect(metrics.itemWidth).toBe(320)
+		expect(metrics.containerWidth).toBe(3 * 320 + 80)
+		expect(metrics.itemWidth).toBe(320)
+		expect(metrics.nativeItemWidth).toBe(metrics.itemWidth)
+	})
+
+	it('switches to fixed width when the max item width is exceeded', () => {
+		const metrics = computeLayoutMetrics(1400, intervals)
+
+		expect(metrics.cols).toBe(4)
+		expect(metrics.itemWidthMode).toBe('fixed')
+		expect(metrics.itemWidth).toBe(320)
+		expect(metrics.containerWidth).toBe(4 * 320 + 2 * 24 + 3 * 16)
 	})
 })

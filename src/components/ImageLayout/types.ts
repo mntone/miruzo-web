@@ -1,18 +1,20 @@
-import type { Accessor, JSX, JSXElement } from 'solid-js'
+import type { Accessor, Component, ComponentProps, JSX } from 'solid-js'
 
 import type { ImageListType } from '~/api/types'
-import type { IngestId } from '~/domain'
+import type { ImageEntry, IngestId } from '~/domain'
 
-export interface ImageLayoutProps {
+import type { LayoutChildAccessors, LayoutProps, LayoutPropsBase } from './shared/types'
+
+export interface ImageLayoutControllerProps<Layout extends Component<LayoutProps<IngestId>>> {
 	readonly as?: keyof HTMLElementTagNameMap
-	readonly header: JSX.Element
-	readonly footer: JSX.Element
-
-	readonly getImageIds: Accessor<readonly IngestId[]>
-}
-
-export interface ImageLayoutControllerProps {
+	readonly children: (
+		accessors: LayoutChildAccessors,
+		getImage: Accessor<ImageEntry>,
+	) => JSX.Element
+	readonly header?: JSX.Element | string
 	readonly limit?: number
 	readonly listType: ImageListType
-	readonly layout: (props: ImageLayoutProps) => JSXElement
+	readonly layout: Layout
+	readonly layoutProps?: Omit<ComponentProps<Layout>, keyof LayoutPropsBase<IngestId>>
+	readonly useMoreButton?: boolean
 }

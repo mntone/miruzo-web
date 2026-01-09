@@ -1,13 +1,13 @@
-import type { GridInterval } from './types'
+import type { LayoutInterval } from '../shared/types'
 
-// minItemWidth / gap が段階的に変化する仕様
-export const defaultIntervals: readonly GridInterval[] = [
-	// 1〜2 カラム区間（minItemWidth=160, gap=8）
-	{ colMin: 1, colMax: 2, minItemWidth: 160, gap: 8 },
+// minItemWidth and gap scale in steps by column range.
+export const defaultIntervals: readonly LayoutInterval[] = [
+	// 1–2 columns (minItemWidth=160, gap=8)
+	{ colMin: 1, colMax: 2, minItemWidth: 160, maxItemWidth: Infinity, spacing: 8, outerPadding: 12 },
 
-	// 3 カラム区間（minItemWidth=200, gap=16）
-	{ colMin: 3, colMax: 3, minItemWidth: 200, gap: 16 },
+	// 3 columns (minItemWidth=240–320, gap=16)
+	{ col: 3, minItemWidth: 240, maxItemWidth: 320, spacing: 16, outerPadding: 24 },
 
-	// 4 カラム以上（∞区間）
-	{ colMin: 4, colMax: Infinity, minItemWidth: 320, gap: 16 },
+	// 4+ columns (open-ended range)
+	{ colMin: 4, itemWidth: 320, spacing: 16, outerPadding: 24 },
 ]

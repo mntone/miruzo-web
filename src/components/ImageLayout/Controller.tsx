@@ -1,18 +1,21 @@
-import { Show } from 'solid-js'
-import { Dynamic } from 'solid-js/web'
+import { Show, type Component } from 'solid-js'
 
+import type { Writable } from '~/@types/utils'
 import { DEFAULT_IMAGE_LIST_LIMIT } from '~/api/constants'
+import type { IngestId } from '~/domain'
 import { useIngestIdList } from '~/hooks/useIngestIdList'
 import { useI18n } from '~/i18n/Context'
+import { imageStore } from '~/stores/images'
 import { getExcludeFormats } from '~/utils/imageSupport'
 
 import * as styles from './Controller.css'
-import type { ImageLayoutControllerProps, ImageLayoutProps } from './types'
+import type { LayoutProps, LayoutPropsBase } from './shared/types'
+import type { ImageLayoutControllerProps } from './types'
 
-export function ImageLayoutController(props: ImageLayoutControllerProps) {
+export function ImageLayoutController<Layout extends Component<LayoutProps<IngestId>>>(props: ImageLayoutControllerProps<Layout>) {
 	const { t } = useI18n()
 	/* eslint-disable solid/reactivity */
-	const [getImageIds, listPage, loadMore] = useIngestIdList(
+	const [getIngestIds, listPage, loadMore] = useIngestIdList(
 		props.listType,
 		props.limit || DEFAULT_IMAGE_LIST_LIMIT,
 		getExcludeFormats(),
@@ -24,10 +27,15 @@ export function ImageLayoutController(props: ImageLayoutControllerProps) {
 		return p ? Boolean(p.cursor) : false
 	}
 
-	const nextProps: ImageLayoutProps = {
-		as: 'main',
+	const nextProps: Writable<LayoutPropsBase<IngestId>> = {
+		// eslint-disable-next-line solid/reactivity
+		as: props.as || 'div',
 		header: (
 			<>
+				<Show when={props.header}>
+					{props.header}
+				</Show>
+
 				<Show when={listPage.loading}>
 					<div class='image-page_status'>
 						{t('shared.loading')}
@@ -43,7 +51,19 @@ export function ImageLayoutController(props: ImageLayoutControllerProps) {
 				</Show>
 			</>
 		),
-		footer: (
+		children(accessors, ingestId: IngestId) {
+			return (
+				<Show when={imageStore.imagesById[ingestId]}>
+					{props.children.bind(null, accessors)}
+				</Show>
+			)
+		},
+		getItems: getIngestIds,
+	}
+
+	// eslint-disable-next-line solid/reactivity
+	if (props.useMoreButton) {
+		nextProps.footer = (
 			<footer class={styles.footer}>
 				<Show when={hasNext()}>
 					<button
@@ -56,15 +76,21 @@ export function ImageLayoutController(props: ImageLayoutControllerProps) {
 					</button>
 				</Show>
 
-				<Show when={!hasNext() && getImageIds().length > 0}>
+				<Show when={!hasNext() && getIngestIds().length > 0}>
 					<div class='image-page__status'>
 						No more images
 					</div>
 				</Show>
 			</footer>
-		),
-
-		getImageIds,
+		)
 	}
-	return <Dynamic component={props.layout} {...nextProps} />
+
+	// eslint-disable-next-line solid/reactivity
+	const LayoutComponent = props.layout
+	return (
+		<LayoutComponent
+			{...props.layoutProps}
+			{...nextProps}
+		/>
+	)
 }

@@ -12,16 +12,18 @@ export const card = style({
 	boxShadow: '0 1px 3px 0 rgb(0 0 0 / .1), 0 1px 2px -1px rgb(0 0 0 / .1)',
 	color: '#0a0a0a',
 	backgroundColor: '#FFF',
-	transition: 'outline ease-out 123ms',
+	transition: 'transform ease-out 123ms',
 
 	':hover': {
-		outline: '4px solid deeppink',
+		transform: 'translateY(-1px)',
 	},
 })
 
 export const image = style({
 	width: '100%',
 	height: '100%',
+	minHeight: '10px',
+
 	imageRendering: 'smooth',
 	objectFit: 'cover',
 	pointerEvents: 'none',

@@ -1,40 +1,51 @@
-import { useContext } from 'solid-js'
+import { createMemo, useContext, type Accessor } from 'solid-js'
 import type { JSX } from 'solid-js/jsx-runtime'
 
-import type { ImageEntry, VariantEntry } from '~/domain'
+import type { ImageEntry } from '~/domain'
 import { NavigationStackContext } from '~/navigation/Provider'
 
 import * as styles from './ImageCard.css'
 import { ImageDetailPage } from './ImageDetail.page'
+import { getPreferredVariant } from './ImageLayout/utils'
 
 interface ImageCardProps {
-	image: ImageEntry
-	variant: VariantEntry
-
-	class: string
-	style?: JSX.CSSProperties
-
-	onToggleFavorite?: () => void
-	onScoreUp?: () => void
-	onScoreDown?: () => void
+	getImage: Accessor<ImageEntry>
+	getLayoutStyle: (itemHeight: number) => JSX.CSSProperties
+	getCardWidth: Accessor<number>
+	getNativeCardWidth: Accessor<number>
 }
 
 export function ImageCard(props: ImageCardProps) {
 	const { push } = useContext(NavigationStackContext)
 
+	const getVariant = createMemo(function() {
+		return getPreferredVariant(
+			props.getImage().variants,
+			props.getNativeCardWidth(),
+		)
+	})
+
+	const getStyle = createMemo(function() {
+		const variant = getVariant()
+		const cardWidth = props.getCardWidth()
+		const scaledHeight = variant.height * (cardWidth / variant.width)
+		const layoutStyle = props.getLayoutStyle(scaledHeight)
+		return layoutStyle
+	})
+
 	return (
 		<div
-			class={`${styles.card} ${props.class}`}
-			style={props.style}
+			class={styles.card}
+			style={getStyle()}
 			onClick={function() {
-				push(ImageDetailPage, props.image.id)
+				push(ImageDetailPage, props.getImage().id)
 			}}
 		>
 			<img
-				alt={props.image.id.toString()}
+				alt={props.getImage().id.toString()}
 				class={styles.image}
 				loading='lazy'
-				src={props.variant.src}
+				src={getVariant().src}
 			/>
 		</div>
 	)

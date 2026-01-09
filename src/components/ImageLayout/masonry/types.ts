@@ -1,22 +1,8 @@
-import type { Interval } from '../shared/types'
-import type { ImageLayoutProps } from '../types'
+import type { LayoutProps, LayoutMetrics } from '../shared/types'
 
-export type MasonryInterval = Interval
-
-export interface MasonryLayoutMetrics {
-	cols: number
-	gap: number
+export interface MasonryLayoutMetrics extends LayoutMetrics {
+	rowSize: number
 	rowUnit: number
-	effectiveFinalWidth: number
-	finalWidth: number
-	fixedWidth?: number | undefined
-	fluidWidth?: number | undefined
-	layoutWidth?: number | undefined
 }
 
-export type GetFixedItemWidthFn = (cols: number, containerWidth: number) => number | undefined
-
-export interface MasonryImageLayoutProps extends ImageLayoutProps {
-	readonly intervals?: readonly MasonryInterval[]
-	readonly getFixedItemWidth?: GetFixedItemWidthFn
-}
+export type MasonryImageLayoutProps<Item> = LayoutProps<Item>

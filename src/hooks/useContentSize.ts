@@ -1,6 +1,6 @@
-import { createSignal, onCleanup } from 'solid-js'
+import { createSignal, onCleanup, type Accessor } from 'solid-js'
 
-export function useContentSize(getElement: () => HTMLElement | undefined) {
+export function useContentSize(getElement: Accessor<HTMLElement | undefined>) {
 	const [getSize, setSize] = createSignal([0, 0])
 
 	if (typeof ResizeObserver === 'undefined') {

@@ -1,28 +1,33 @@
-import { createSignal } from 'solid-js'
+import { type Accessor } from 'solid-js'
 
 import { Header } from '~/components/Header/Header'
-import { ImageLayoutController, GridImageLayout, MasonryImageLayout } from '~/components/ImageLayout'
+import { ImageLayoutController, MasonryImageLayout } from '~/components/ImageLayout'
+
+import { ImageCard } from './components/ImageCard'
+import type { LayoutChildAccessors } from './components/ImageLayout/shared/types'
+import type { ImageEntry } from './domain'
+
+function CardDelegate(accessors: LayoutChildAccessors, getImage: Accessor<ImageEntry>) {
+	return (
+		<ImageCard
+			getCardWidth={accessors.getChildWidth}
+			getImage={getImage}
+			getLayoutStyle={accessors.getChildStyle}
+			getNativeCardWidth={accessors.getNativeChildWidth}
+		/>
+	)
+}
 
 export function HomePage() {
-	const [getLayout, setLayout] = createSignal('masonry')
 	return (
 		<>
 			<Header />
-			<select
-				name='layout'
-				title='Layout'
-				value={getLayout()}
-				onInput={function(event) {
-					setLayout((event.target as HTMLSelectElement).value)
-				}}
-			>
-				<option value='grid'>Grid</option>
-				<option value='masonry'>Masonry</option>
-			</select>
-
 			<ImageLayoutController
-				layout={getLayout() === 'grid' ? GridImageLayout : MasonryImageLayout}
+				children={CardDelegate}
+				as='main'
+				layout={MasonryImageLayout}
 				listType='latest'
+				useMoreButton
 			/>
 		</>
 	)
