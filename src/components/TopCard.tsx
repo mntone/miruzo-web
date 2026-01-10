@@ -4,18 +4,18 @@ import type { JSX } from 'solid-js/jsx-runtime'
 import type { ImageEntry } from '~/domain'
 import { NavigationStackContext } from '~/navigation/Provider'
 
-import * as styles from './ImageCard.css'
 import { ImageDetailPage } from './ImageDetail.page'
 import { getPreferredVariant } from './ImageLayout/utils'
+import * as styles from './TopCard.css'
 
-interface ImageCardProps {
+interface TopCardProps {
+	aspectRatio: string
 	getImage: Accessor<ImageEntry>
 	getLayoutStyle: (itemHeight: number) => JSX.CSSProperties
-	getCardWidth: Accessor<number>
 	getNativeCardWidth: Accessor<number>
 }
 
-export function ImageCard(props: ImageCardProps) {
+export function TopCard(props: TopCardProps) {
 	const { push } = useContext(NavigationStackContext)
 
 	const getVariant = createMemo(function() {
@@ -25,22 +25,23 @@ export function ImageCard(props: ImageCardProps) {
 		)
 	})
 
-	const getStyle = createMemo(function() {
-		const variant = getVariant()
-		const cardWidth = props.getCardWidth()
-		const scaledHeight = variant.height * (cardWidth / variant.width)
-		const layoutStyle = props.getLayoutStyle(scaledHeight)
-		return layoutStyle
-	})
-
 	return (
 		<div
 			class={styles.card}
-			style={getStyle()}
+			style={{
+				...props.getLayoutStyle(0),
+				'aspect-ratio': props.aspectRatio,
+			}}
 			onClick={function() {
 				push(ImageDetailPage, props.getImage().id)
 			}}
 		>
+			<div
+				class={styles.backgroundImage}
+				style={{
+					'background-image': `url(${getVariant().src})`,
+				}}
+			/>
 			<img
 				alt={props.getImage().id.toString()}
 				class={styles.image}

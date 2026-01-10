@@ -6,5 +6,10 @@
 	},
 	"image_list": {
 		"more": "さらに表示"
+	},
+	"sections": {
+		"engaged": "殿堂入り目前",
+		"hall_of_fame": "殿堂入り",
+		"latest": "新着画像"
 	}
 }

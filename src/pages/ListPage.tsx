@@ -1,15 +1,19 @@
-import { type Accessor } from 'solid-js'
+import type { Accessor } from 'solid-js'
 
+import type { ImageListType } from '~/api/types'
 import { Header } from '~/components/Header/Header'
 import { ImageLayoutController, MasonryImageLayout } from '~/components/ImageLayout'
+import type { LayoutChildAccessors } from '~/components/ImageLayout/shared/types'
+import { ListCard } from '~/components/ListCard'
+import type { ImageEntry } from '~/domain'
 
-import { ImageCard } from './components/ImageCard'
-import type { LayoutChildAccessors } from './components/ImageLayout/shared/types'
-import type { ImageEntry } from './domain'
+interface ListPageProps {
+	params: ImageListType
+}
 
 function CardDelegate(accessors: LayoutChildAccessors, getImage: Accessor<ImageEntry>) {
 	return (
-		<ImageCard
+		<ListCard
 			getCardWidth={accessors.getChildWidth}
 			getImage={getImage}
 			getLayoutStyle={accessors.getChildStyle}
@@ -18,7 +22,7 @@ function CardDelegate(accessors: LayoutChildAccessors, getImage: Accessor<ImageE
 	)
 }
 
-export function HomePage() {
+export function ListPage(props: ListPageProps) {
 	return (
 		<>
 			<Header />
@@ -26,7 +30,7 @@ export function HomePage() {
 				children={CardDelegate}
 				as='main'
 				layout={MasonryImageLayout}
-				listType='latest'
+				listType={props.params}
 				useMoreButton
 			/>
 		</>

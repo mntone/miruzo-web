@@ -6,5 +6,10 @@
 	},
 	"image_list": {
 		"more": "More"
+	},
+	"sections": {
+		"engaged": "Rising Images",
+		"hall_of_fame": "Hall of Fame",
+		"latest": "Latest Images"
 	}
 }
