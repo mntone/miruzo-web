@@ -83,11 +83,22 @@
 
 :root {
 	color-scheme: dark;
-	font-family: 'Inter Variable', 'BIZ UDPGothic', 'Hiragino Sans', sans-serif;
+	font-family:
+		'Inter Variable',
+		'BIZ UDPGothic',
+		'Hiragino Sans',
+		sans-serif,
+		'Apple Color Emoji',
+		'Segoe UI Emoji',
+		'Segoe UI Symbol',
+		'Noto Color Emoji';
 	font-feature-settings: 'palt';
 	font-synthesis: none;
 	font-weight: 400;
+	line-break: strict;
 	line-height: 1.75;
+	overflow-wrap: anywhere;
+	text-autospace: normal;
 
 	--scrollbar-width: 0px;
 	--text-primary: #FFF;
