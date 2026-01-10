@@ -188,6 +188,19 @@ button:focus-visible {
 	line-height: 2;
 }
 
+@media (pointer:coarse) {
+	button {
+		padding-block: .6em;
+		min-height: 44px;
+	}
+
+
+	.button-group {
+		gap: .5em;
+		line-height: 2.75;
+	}
+}
+
 @media (prefers-color-scheme: light) {
 	:root {
 		color-scheme: light;
