@@ -1,11 +1,11 @@
 {
-	"shared": {
-		"ok": "Ok",
+	"actions": {
 		"cancel": "Cancel",
-		"loading": "Loading…"
+		"more": "More",
+		"ok": "Ok"
 	},
-	"image_list": {
-		"more": "More"
+	"labels": {
+		"loading": "Loading…"
 	},
 	"sections": {
 		"engaged": "Rising Images",

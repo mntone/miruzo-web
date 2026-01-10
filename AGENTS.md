@@ -30,6 +30,8 @@ them.
 - Comments must be written in English and limited to intent/behavior,
   not obvious statements
 - Markdown files must be wrapped at 80 characters
+- Localization resources: keep common UI labels under `labels.*` and user
+  actions under `actions.*`; update `en.json` and `ja.json` together.
 - Test utility code must be placed under `test-utils` at the project root
 - Prefer `type` imports/exports (`import type { Foo }`) and keep runtime
   imports sorted to satisfy `import-x/order`

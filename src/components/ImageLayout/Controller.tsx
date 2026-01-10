@@ -38,7 +38,7 @@ export function ImageLayoutController<Layout extends Component<LayoutProps<Inges
 
 				<Show when={listPage.loading}>
 					<div class='image-page_status'>
-						{t('shared.loading')}
+						{t('labels.loading')}
 					</div>
 				</Show>
 
@@ -72,7 +72,7 @@ export function ImageLayoutController<Layout extends Component<LayoutProps<Inges
 						type='button'
 						onClick={loadMore}
 					>
-						{t(listPage.loading ? 'shared.loading' : 'image_list.more')}
+						{t(listPage.loading ? 'labels.loading' : 'actions.more')}
 					</button>
 				</Show>
 
