@@ -23,10 +23,19 @@ export const sheet = style({
 	flexDirection: 'column',
 
 	vars: {
+		'--detail-aside-height': '120px',
 		'--sheet-horizontal': 'calc(50vw - 0.5 * var(--sheet-width))',
 		'--sheet-width': 'min(720px, calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right)))',
 		'--sheet-spacing': '16px',
 		'--sheet-extra-spacing': 'calc(100lvh - 100dvh)',
+		'--sheet-offset-y': 'calc(100dvh - 60px - var(--detail-aside-height) + 16px)',
+	},
+
+	'@media': {
+		'(prefers-color-scheme: light)': {
+			backgroundColor: '#F2F2F7',
+			boxShadow: '0 -2px 16px rgba(0,0,0,0.1)',
+		},
 	},
 })
 
@@ -55,7 +64,7 @@ export const main = style({
 	overflow: 'clip',
 	position: 'absolute',
 	inset: 0,
-	bottom: 'var(--sheet-extra-spacing)',
+	bottom: 'calc(var(--detail-aside-height) + var(--sheet-extra-spacing))',
 
 	display: 'flex',
 	alignItems: 'center',
@@ -63,6 +72,16 @@ export const main = style({
 
 	backgroundColor: '#000',
 	colorScheme: 'only dark',
+})
+
+export const aside = style({
+	overflow: 'clip',
+	overflowY: 'scroll',
+	position: 'absolute',
+	inset: 0,
+	bottom: 'var(--sheet-extra-spacing)',
+
+	padding: 'var(--sheet-offset-y) var(--sheet-spacing) 16px',
 })
 
 export const imageBox = style({

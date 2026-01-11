@@ -1,11 +1,17 @@
 {
 	"actions": {
 		"cancel": "Cancel",
+		"love": "❤ Love this Image",
+		"memo": "📝 Add a Memo",
 		"more": "More",
 		"ok": "Ok"
 	},
 	"labels": {
-		"loading": "Loading…"
+		"loading": "Loading…",
+		"view": {
+			"one": "{0} view",
+			"other": "{0} views"
+		}
 	},
 	"sections": {
 		"engaged": "Rising Images",

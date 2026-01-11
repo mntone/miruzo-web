@@ -5,7 +5,9 @@ import { useContextResource } from '~/hooks/useContextResource'
 import { NavigationStackContext } from '~/navigation/Provider'
 import { imageStore } from '~/stores/images'
 
+import { LoveButton, MemoButton } from './actions'
 import * as styles from './ImageDetail.page.css'
+import { ViewCountText } from './stats'
 
 interface ImageDetailPageProps {
 	params: IngestId
@@ -88,6 +90,19 @@ export function ImageDetailPage(props: ImageDetailPageProps) {
 						/>
 					</figure>
 				</main>
+
+				<aside class={styles.aside}>
+					<div class='button-group'>
+						<LoveButton />
+						{import.meta.env.DEV && <MemoButton />}
+
+						<Show when={getEntry()?.stats?.viewCount}>
+							{function(getViewCount) {
+								return <ViewCountText value={getViewCount()} />
+							}}
+						</Show>
+					</div>
+				</aside>
 			</div>
 		</div>
 	)

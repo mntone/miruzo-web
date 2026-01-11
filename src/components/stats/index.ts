@@ -1,0 +1,1 @@
+export { ViewCountText } from './ViewCountText'
