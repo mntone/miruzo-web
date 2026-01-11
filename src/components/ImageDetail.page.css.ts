@@ -24,9 +24,9 @@ export const sheet = style({
 
 	vars: {
 		'--sheet-horizontal': 'calc(50vw - 0.5 * var(--sheet-width))',
-		'--sheet-bottom': 'max(8px, calc(100lvh - 100dvh + 8px))',
 		'--sheet-width': 'min(720px, calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right)))',
 		'--sheet-spacing': '16px',
+		'--sheet-extra-spacing': 'calc(100lvh - 100dvh)',
 	},
 })
 
@@ -47,28 +47,35 @@ export const closeButton = style({
 })
 
 export const container = style({
-	display: 'flex',
-	flexDirection: 'column',
-	flexGrow: 1,
-	padding: '0 0 var(--sheet-bottom)',
+	position: 'relative',
+	height: '100%',
 })
 
-export const content = style({
-	overflow: 'hidden',
-	position: 'relative',
-	flex: 1,
+export const main = style({
+	overflow: 'clip',
+	position: 'absolute',
+	inset: 0,
+	bottom: 'var(--sheet-extra-spacing)',
+
 	display: 'flex',
 	alignItems: 'center',
 	justifyContent: 'center',
+
+	backgroundColor: '#000',
+	colorScheme: 'only dark',
+})
+
+export const imageBox = style({
+	position: 'absolute',
+	width: '100%',
+	height: '100%',
 })
 
 export const image = style({
-	position: 'absolute',
 	width: '100%',
 	height: '100%',
 	objectFit: 'contain',
 	userSelect: 'none',
-	backgroundColor: '#000',
 })
 
 export const imageLow = styleVariants(
@@ -78,6 +85,7 @@ export const imageLow = styleVariants(
 	},
 	props => [image, {
 		...props,
+		position: 'absolute',
 		transition: 'opacity 333ms ease, filter 333ms ease',
 	}],
 )

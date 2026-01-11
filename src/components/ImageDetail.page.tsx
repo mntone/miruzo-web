@@ -48,8 +48,8 @@ export function ImageDetailPage(props: ImageDetailPageProps) {
 				</button>
 			</header>
 
-			<main class={styles.container}>
-				<div class={styles.content}>
+			<div class={styles.container}>
+				<main class={styles.main}>
 					<Show when={getLoResVisible()}>
 						<img
 							alt={props.params.toString()}
@@ -59,21 +59,23 @@ export function ImageDetailPage(props: ImageDetailPageProps) {
 						/>
 					</Show>
 
-					<img
-						alt={props.params.toString()}
-						class={styles.imageHigh[getHiResLoaded() ? 'visible' : 'none']}
-						decoding='async'
-						loading='eager'
-						src={getEntry().original.src}
-						onLoad={function() {
-							setHiResLoaded(true)
-						}}
-						onTransitionEnd={function() {
-							setLoResVisible(false)
-						}}
-					/>
-				</div>
-			</main>
+					<figure class={styles.imageBox}>
+						<img
+							alt={props.params.toString()}
+							class={styles.imageHigh[getHiResLoaded() ? 'visible' : 'none']}
+							decoding='async'
+							loading='eager'
+							src={getEntry().original.src}
+							onLoad={function() {
+								setHiResLoaded(true)
+							}}
+							onTransitionEnd={function() {
+								setLoResVisible(false)
+							}}
+						/>
+					</figure>
+				</main>
+			</div>
 		</div>
 	)
 }
