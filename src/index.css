@@ -105,6 +105,11 @@
 	--text-secondary: rgba(235, 235, 245, .6);
 	--text-tertiary: rgba(235, 235, 245, .3);
 	--fill-tertiary: rgba(118, 118, 128, .12);
+
+	--base-padding-left: 16px;
+	--base-padding-right: 16px;
+	--layout-padding-left: max(var(--base-padding-left), env(safe-area-inset-left));
+	--layout-padding-right: max(var(--base-padding-right), env(safe-area-inset-right));
 }
 
 @media print {

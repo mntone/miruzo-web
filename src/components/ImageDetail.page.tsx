@@ -1,8 +1,7 @@
-import { createMemo, createSignal, onMount, Show, useContext } from 'solid-js'
+import { createMemo, createSignal, onMount, Show } from 'solid-js'
 
 import type { IngestId } from '~/domain'
 import { useContextResource } from '~/hooks/useContextResource'
-import { NavigationStackContext } from '~/navigation/Provider'
 import { imageStore } from '~/stores/images'
 
 import { LoveButton, MemoButton } from './actions'
@@ -14,8 +13,6 @@ interface ImageDetailPageProps {
 }
 
 export function ImageDetailPage(props: ImageDetailPageProps) {
-	const { canPop, pop } = useContext(NavigationStackContext)
-
 	const getEntry = createMemo(function() {
 		return imageStore.imagesById[props.params]
 	})
@@ -43,22 +40,7 @@ export function ImageDetailPage(props: ImageDetailPageProps) {
 	})
 
 	return (
-		<div class={styles.sheet}>
-			<header class={styles.header}>
-				<p class={styles.headerTitle}>Image Detail</p>
-				<button
-					class={styles.closeButton}
-					disabled={!canPop()}
-					onClick={function() {
-						if (mounted) {
-							pop()
-						}
-					}}
-				>
-					Close
-				</button>
-			</header>
-
+		<>
 			<div class={styles.container}>
 				<main class={styles.main}>
 					<Show when={getLoResVisible()}>
@@ -104,9 +86,6 @@ export function ImageDetailPage(props: ImageDetailPageProps) {
 					</div>
 				</aside>
 			</div>
-		</div>
+		</>
 	)
 }
-ImageDetailPage.options = {
-	overlay: true,
-} as const
