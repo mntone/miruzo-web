@@ -43,18 +43,7 @@ export const headerTitle = style({
 })
 
 export const closeButton = style({
-	appearance: 'none',
-	border: 'none',
-	padding: '8px 12px',
-	borderRadius: '6px',
-	background: 'rgba(255, 255, 255, .15)',
-	color: 'white',
-	cursor: 'pointer',
-	fontSize: '14px',
-
-	':hover': {
-		background: 'rgba(255, 255, 255, .25)',
-	},
+	fontSize: '.875em',
 })
 
 export const container = style({
