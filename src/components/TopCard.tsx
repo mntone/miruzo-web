@@ -3,8 +3,8 @@ import type { JSX } from 'solid-js/jsx-runtime'
 
 import type { ImageEntry } from '~/domain'
 import { NavigationStackContext } from '~/navigation/Provider'
+import { DetailPage } from '~/pages/detail'
 
-import { ImageDetailPage } from './ImageDetail.page'
 import { getPreferredVariant } from './ImageLayout/utils'
 import * as styles from './TopCard.css'
 
@@ -33,7 +33,7 @@ export function TopCard(props: TopCardProps) {
 				'aspect-ratio': props.aspectRatio,
 			}}
 			onClick={function() {
-				push(ImageDetailPage, props.getImage().id)
+				push(DetailPage, props.getImage().id)
 			}}
 		>
 			<div

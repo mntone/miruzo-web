@@ -1,18 +1,18 @@
 import { createMemo, createSignal, onMount, Show } from 'solid-js'
 
+import { LoveButton, MemoButton } from '~/components/actions'
+import { ViewCountText } from '~/components/stats'
 import type { IngestId } from '~/domain'
 import { useContextResource } from '~/hooks/useContextResource'
 import { imageStore } from '~/stores/images'
 
-import { LoveButton, MemoButton } from './actions'
-import * as styles from './ImageDetail.page.css'
-import { ViewCountText } from './stats'
+import * as styles from './DetailPage.css'
 
-interface ImageDetailPageProps {
+interface DetailPageProps {
 	params: IngestId
 }
 
-export function ImageDetailPage(props: ImageDetailPageProps) {
+export function DetailPage(props: DetailPageProps) {
 	const getEntry = createMemo(function() {
 		return imageStore.imagesById[props.params]
 	})

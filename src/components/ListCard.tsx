@@ -3,8 +3,8 @@ import type { JSX } from 'solid-js/jsx-runtime'
 
 import type { ImageEntry } from '~/domain'
 import { NavigationStackContext } from '~/navigation/Provider'
+import { DetailPage } from '~/pages/detail'
 
-import { ImageDetailPage } from './ImageDetail.page'
 import { getPreferredVariant } from './ImageLayout/utils'
 import * as styles from './ListCard.css'
 
@@ -38,7 +38,7 @@ export function ListCard(props: ListCardProps) {
 			class={styles.card}
 			style={getStyle()}
 			onClick={function() {
-				push(ImageDetailPage, props.getImage().id)
+				push(DetailPage, props.getImage().id)
 			}}
 		>
 			<img
