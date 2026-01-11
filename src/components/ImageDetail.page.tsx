@@ -73,19 +73,6 @@ export function ImageDetailPage(props: ImageDetailPageProps) {
 						}}
 					/>
 				</div>
-
-				<table class={styles.meta}>
-					<tbody>
-						<tr>
-							<th>view_count</th>
-							<td>{getEntry()?.stats?.viewCount ?? '???'}</td>
-						</tr>
-						<tr>
-							<th>last_viewed_at</th>
-							<td>{getEntry()?.stats?.lastViewedAt?.toLocaleString() ?? '???'}</td>
-						</tr>
-					</tbody>
-				</table>
 			</main>
 		</div>
 	)

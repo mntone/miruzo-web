@@ -1,4 +1,4 @@
-import { globalStyle, keyframes, style, styleVariants } from '@vanilla-extract/css'
+import { keyframes, style, styleVariants } from '@vanilla-extract/css'
 
 const slideUp = keyframes({
 	from: { transform: 'translateY(100%)' },
@@ -92,16 +92,3 @@ export const imageHigh = styleVariants(
 		transition: 'opacity 333ms ease',
 	}],
 )
-
-export const meta = style({
-	marginInline: 'var(--sheet-spacing)',
-})
-
-globalStyle(`${meta} th`, {
-	textAlign: 'left',
-	width: '160px',
-})
-
-globalStyle(`${meta} th:after`, {
-	content: ':',
-})
