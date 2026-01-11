@@ -100,3 +100,7 @@ export const imageHigh = styleVariants(
 		transition: 'opacity 333ms ease',
 	}],
 )
+
+export const imageHighInstant = style({
+	transition: 'none',
+})

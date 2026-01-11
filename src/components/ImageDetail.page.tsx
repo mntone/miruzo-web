@@ -19,6 +19,8 @@ export function ImageDetailPage(props: ImageDetailPageProps) {
 	})
 	const [getHiResLoaded, setHiResLoaded] = createSignal(false)
 	const [getLoResVisible, setLoResVisible] = createSignal(true)
+	const [getSkipAnimation, setSkipAnimation] = createSignal(false)
+	const [getElement, setElement] = createSignal<HTMLImageElement | undefined>(undefined)
 
 	useContextResource(function() {
 		return props.params
@@ -26,6 +28,13 @@ export function ImageDetailPage(props: ImageDetailPageProps) {
 
 	let mounted = false
 	onMount(function() {
+		const element = getElement()
+		if (element && element.complete && element.naturalWidth > 0) {
+			setLoResVisible(false)
+			setHiResLoaded(true)
+			setSkipAnimation(true)
+		}
+
 		queueMicrotask(function() {
 			mounted = true
 		})
@@ -61,8 +70,12 @@ export function ImageDetailPage(props: ImageDetailPageProps) {
 
 					<figure class={styles.imageBox}>
 						<img
+							ref={setElement}
 							alt={props.params.toString()}
 							class={styles.imageHigh[getHiResLoaded() ? 'visible' : 'none']}
+							classList={{
+								[styles.imageHighInstant]: getSkipAnimation(),
+							}}
 							decoding='async'
 							loading='eager'
 							src={getEntry().original.src}
