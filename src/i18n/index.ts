@@ -10,8 +10,8 @@ export interface I18nInstance {
 	tp: ReturnType<typeof createPluralTranslator>
 	tt: ReturnType<typeof createArgumentTranslator>
 
-	getLocale(): Locale
-	setLocale(locale: Locale): void
+	getLocale(this: void): Locale
+	setLocale(this: void, locale: Locale): void
 }
 
 export function createI18n(): I18nInstance {
