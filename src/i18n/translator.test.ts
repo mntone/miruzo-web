@@ -1,5 +1,25 @@
-import { createPluralTranslator } from './translator'
-import type { FlatLocaleMessages } from './types'
+import { createArgumentTranslator, createPluralTranslator } from './translator'
+import type { FlatLocaleMessages, TextTranslationKey } from './types'
+
+function createTT<Key extends TextTranslationKey>(key: Key, template: string) {
+	return createArgumentTranslator(function() {
+		return {
+			[key]: template,
+		} as unknown as FlatLocaleMessages
+	})
+}
+
+describe('createArgumentTranslator', () => {
+	it('replaces indexed placeholders', () => {
+		const tt = createTT('events.memo', 'message: {0}')
+		expect(tt('events.memo', 'hello')).toBe('message: hello')
+	})
+
+	it('leaves placeholders without a matching argument', () => {
+		const tt = createTT('events.memo', '{0} {1} {2}')
+		expect(tt('events.memo', 'a', 'b')).toBe('a b {2}')
+	})
+})
 
 function createTP(messages: FlatLocaleMessages) {
 	return createPluralTranslator(function() {

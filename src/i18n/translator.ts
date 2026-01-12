@@ -1,3 +1,4 @@
+import { formatWithArgument } from './format'
 import type { FlatLocaleMessages, PluralRecord, PluralTranslationKey, TextTranslationKey } from './types'
 
 export function createTranslator(getMessages: () => FlatLocaleMessages | undefined) {
@@ -10,6 +11,24 @@ export function createTranslator(getMessages: () => FlatLocaleMessages | undefin
 		const message = messages[key]
 		if (typeof message === 'string') {
 			return message
+		}
+
+		return key
+	}
+}
+
+export function createArgumentTranslator(
+	getMessages: () => FlatLocaleMessages | undefined,
+) {
+	return function tt<K extends TextTranslationKey>(key: K, ...args: ReadonlyArray<string>): string {
+		const messages = getMessages()
+		if (!messages) {
+			return key
+		}
+
+		const message = messages[key]
+		if (typeof message === 'string') {
+			return formatWithArgument(message, args)
 		}
 
 		return key
