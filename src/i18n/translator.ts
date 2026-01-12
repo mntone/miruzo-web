@@ -1,4 +1,4 @@
-import { formatWithArgument } from './format'
+import { formatNumeralMessage, formatWithArgument } from './format'
 import type { FlatLocaleMessages, PluralRecord, PluralTranslationKey, TextTranslationKey } from './types'
 
 export function createTranslator(getMessages: () => FlatLocaleMessages | undefined) {
@@ -35,15 +35,6 @@ export function createArgumentTranslator(
 	}
 }
 
-function formatMessage(
-	getNumberFormat: () => Intl.NumberFormat,
-	template: string,
-	count: number,
-): string {
-	const value = getNumberFormat().format(count)
-	return template.replace(/\{0\}/g, value)
-}
-
 function selectMessage(
 	getPluralRules: () => Intl.PluralRules,
 	message: PluralRecord,
@@ -59,8 +50,8 @@ export function createPluralTranslator(
 ) {
 	let cachedPluralRulesLocale: string | undefined
 	let cachedPluralRules: Intl.PluralRules | undefined
-	let cachedNumberFormatLocale: string | undefined
-	let cachedNumberFormat: Intl.NumberFormat | undefined
+	let cachedNumberFormatterLocale: string | undefined
+	let cachedNumberFormatter: ((value: number) => string) | undefined
 
 	function getPluralRules(): Intl.PluralRules {
 		const locale = getLocale()
@@ -71,16 +62,18 @@ export function createPluralTranslator(
 		return cachedPluralRules
 	}
 
-	function getNumberFormat(): Intl.NumberFormat {
+	function getNumberFormatter(): (value: number) => string {
 		const locale = getLocale()
-		if (!cachedNumberFormat || cachedNumberFormatLocale !== locale) {
-			cachedNumberFormatLocale = locale
-			cachedNumberFormat = new Intl.NumberFormat(locale)
+		if (!cachedNumberFormatter || cachedNumberFormatterLocale !== locale) {
+			cachedNumberFormatterLocale = locale
+
+			const numberFormatter = new Intl.NumberFormat(locale)
+			// eslint-disable-next-line @typescript-eslint/unbound-method -- Intl.NumberFormat#format is bound per spec.
+			cachedNumberFormatter = numberFormatter.format
 		}
-		return cachedNumberFormat
+		return cachedNumberFormatter
 	}
 
-	const _formatMessage = formatMessage.bind(null, getNumberFormat)
 	const _selectMessage = selectMessage.bind(null, getPluralRules)
 	return function tp<K extends PluralTranslationKey>(key: K, count: number): string {
 		const messages = getMessages()
@@ -94,7 +87,7 @@ export function createPluralTranslator(
 		}
 
 		if (typeof message === 'string') {
-			return _formatMessage(message, count)
+			return formatNumeralMessage(message, count, getNumberFormatter())
 		}
 
 		const template = _selectMessage(message, count)
@@ -102,6 +95,6 @@ export function createPluralTranslator(
 			return key
 		}
 
-		return _formatMessage(template, count)
+		return formatNumeralMessage(template, count, getNumberFormatter())
 	}
 }

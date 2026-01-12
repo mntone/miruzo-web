@@ -1,4 +1,4 @@
-import { formatWithArgument } from './format'
+import { formatNumeralMessage, formatWithArgument } from './format'
 
 describe('formatWithArgument', () => {
 	it('replaces indexed placeholders', () => {
@@ -19,5 +19,22 @@ describe('formatWithArgument', () => {
 
 	it('returns template when no args are provided', () => {
 		expect(formatWithArgument('message: {0}', [])).toBe('message: {0}')
+	})
+})
+
+describe('formatNumeralMessage', () => {
+	it('replaces numeral placeholders', () => {
+		expect(formatNumeralMessage('Viewed {0} times', 3, String)).toBe('Viewed 3 times')
+	})
+
+	it('reuses formatted value for repeated placeholders', () => {
+		let calls = 0
+		function formatNumber(value: number): string {
+			calls += 1
+			return `#${value}`
+		}
+
+		expect(formatNumeralMessage('{0} {0}', 12, formatNumber)).toBe('#12 #12')
+		expect(calls).toBe(1)
 	})
 })

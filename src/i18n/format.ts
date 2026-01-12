@@ -13,3 +13,13 @@ export function formatWithArgument(template: string, args: readonly string[]): s
 		return match
 	})
 }
+
+const numeralPattern = /\{0\}/g
+
+export function formatNumeralMessage(
+	template: string,
+	count: number,
+	formatNumber: (value: number) => string,
+): string {
+	return template.replace(numeralPattern, formatNumber(count))
+}
