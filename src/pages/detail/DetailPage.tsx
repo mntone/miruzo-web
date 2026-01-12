@@ -1,8 +1,10 @@
 import { createMemo, createSignal, onMount, Show } from 'solid-js'
 
 import { LoveButton, MemoButton } from '~/components/actions'
+import { EventList } from '~/components/events'
 import { ViewCountText } from '~/components/stats'
 import type { IngestId } from '~/domain'
+import { mockEvents } from '~/domain/events.mock'
 import { useContextResource } from '~/hooks/useContextResource'
 import { imageStore } from '~/stores/images'
 
@@ -84,6 +86,13 @@ export function DetailPage(props: DetailPageProps) {
 							}}
 						</Show>
 					</div>
+
+					<EventList entries={
+						import.meta.env.DEV && import.meta.env.VITE_USE_MOCK_EVENTS === 'true'
+							? mockEvents
+							: getEntry().events
+					}
+					/>
 				</aside>
 			</div>
 		</>

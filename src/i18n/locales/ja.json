@@ -6,6 +6,12 @@
 		"more": "さらに表示",
 		"ok": "OK"
 	},
+	"events": {
+		"love": "ラブした",
+		"love:first": "初めてラブした",
+		"memo": "メモ: {0}",
+		"view": "{0}回見た"
+	},
 	"labels": {
 		"loading": "読み込み中…",
 		"view": "{0}回閲覧"

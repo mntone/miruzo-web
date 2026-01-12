@@ -6,6 +6,15 @@
 		"more": "More",
 		"ok": "Ok"
 	},
+	"events": {
+		"love": "Loved",
+		"love:first": "Loved for the first time",
+		"memo": "Memo: {0}",
+		"view": {
+			"one": "Viewed {0} time",
+			"other": "Viewed {0} times"
+		}
+	},
 	"labels": {
 		"loading": "Loading…",
 		"view": {
