@@ -3,6 +3,7 @@ import { fetchContextById } from '~/api/images'
 import type { ContextResponse, StatsModel } from '~/api/types'
 import { toDate } from '~/api/utils'
 import type { ImageEntry, IngestId, StatsEntry } from '~/domain'
+import { tryDeriveEventsFromStats } from '~/domain/events'
 import { setImageStore } from '~/stores/images'
 
 export function initStatsEntry(stats: StatsModel): StatsEntry {
@@ -39,6 +40,18 @@ export function applyContext(
 
 	if (src.stats !== undefined) {
 		dst.stats = initStatsEntry(src.stats)
+
+		const result = tryDeriveEventsFromStats(dst.stats)
+		if (result.status === 'success') {
+			dst.events = result.value
+		} else {
+			if (import.meta.env.DEV) {
+				console.warn('Invalid event stats:', result.error, dst.stats)
+			}
+			if (dst.events !== undefined) {
+				delete dst.events
+			}
+		}
 	}
 }
 

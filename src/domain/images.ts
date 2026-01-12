@@ -1,3 +1,4 @@
+import type { EventEntries } from './events'
 import type { IngestId } from './ingests'
 import type { StatsEntry } from './stats'
 import type { VariantEntry, VariantLayerEntries } from './variants'
@@ -9,5 +10,6 @@ export interface ImageEntry {
 	readonly fallback?: VariantEntry
 	readonly variants: VariantLayerEntries
 
+	readonly events?: EventEntries
 	readonly stats?: StatsEntry
 }
