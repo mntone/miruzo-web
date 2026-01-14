@@ -3,7 +3,7 @@ import { createMemo, createSignal, onMount, Show } from 'solid-js'
 import { LoveButton, MemoButton } from '~/components/actions'
 import { EventList } from '~/components/events'
 import { ViewCountText } from '~/components/stats'
-import type { IngestId } from '~/domain'
+import type { ImageEntry, IngestId } from '~/domain'
 import { mockEvents } from '~/domain/events.mock'
 import { useContextResource } from '~/hooks/useContextResource'
 import { imageStore } from '~/stores/images'
@@ -15,7 +15,7 @@ interface DetailPageProps {
 }
 
 export function DetailPage(props: DetailPageProps) {
-	const getEntry = createMemo(function() {
+	const getEntry = createMemo(function(): ImageEntry | undefined {
 		return imageStore.imagesById[props.params]
 	})
 	const [getHiResLoaded, setHiResLoaded] = createSignal(false)
@@ -50,7 +50,7 @@ export function DetailPage(props: DetailPageProps) {
 							alt={props.params.toString()}
 							class={styles.imageLow[getLoResVisible() ? 'visible' : 'revealed']}
 							decoding='sync'
-							src={getEntry().variants[0][0].src}
+							src={getEntry()?.variants[0][0].src}
 						/>
 					</Show>
 
@@ -64,7 +64,7 @@ export function DetailPage(props: DetailPageProps) {
 							}}
 							decoding='async'
 							loading='eager'
-							src={getEntry().original.src}
+							src={getEntry()?.original.src}
 							onLoad={function() {
 								setHiResLoaded(true)
 							}}
@@ -76,21 +76,23 @@ export function DetailPage(props: DetailPageProps) {
 				</main>
 
 				<aside class={styles.aside}>
-					<div class='button-group'>
-						<LoveButton />
-						{import.meta.env.DEV && <MemoButton />}
+					<Show when={getEntry()?.stats}>
+						{function(getStats) {
+							return (
+								<div class='button-group'>
+									<LoveButton ingestId={props.params} />
+									{import.meta.env.DEV && <MemoButton />}
 
-						<Show when={getEntry()?.stats?.viewCount}>
-							{function(getViewCount) {
-								return <ViewCountText value={getViewCount()} />
-							}}
-						</Show>
-					</div>
+									<ViewCountText value={getStats().viewCount} />
+								</div>
+							)
+						}}
+					</Show>
 
 					<EventList entries={
 						import.meta.env.DEV && import.meta.env.VITE_USE_MOCK_EVENTS === 'true'
 							? mockEvents
-							: getEntry().events
+							: getEntry()?.events
 					}
 					/>
 				</aside>

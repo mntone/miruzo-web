@@ -13,3 +13,15 @@ export interface ImageEntry {
 	readonly events?: EventEntries
 	readonly stats?: StatsEntry
 }
+
+export type ImageEntryWithStats = ImageEntry & { readonly stats: StatsEntry }
+
+export function assertHasStats(entry: ImageEntry | undefined): asserts entry is ImageEntryWithStats {
+	if (entry?.stats === undefined) {
+		throw new Error('ImageEntry and stats must exist')
+	}
+}
+
+export function hasStats(entry: ImageEntry | undefined): entry is ImageEntryWithStats {
+	return entry?.stats !== undefined
+}
