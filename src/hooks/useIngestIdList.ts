@@ -8,7 +8,7 @@ export function useIngestIdList(
 	type: ImageListType,
 	limit: number,
 	excludeFormats: readonly string[] | undefined,
-): [Accessor<IngestId[]>, Resource<IngestIdListResponse>, () => void] {
+): readonly [Accessor<IngestId[]>, Resource<IngestIdListResponse>, () => void] {
 	const [getCursor, setCursor] = createSignal<string>('')
 	const [getIngestIds, setIngestIds] = createSignal<IngestId[]>([])
 
@@ -48,5 +48,5 @@ export function useIngestIdList(
 		setCursor(p.cursor)
 	}
 
-	return [getIngestIds, listPage, loadMore]
+	return [getIngestIds, listPage, loadMore] as const
 }

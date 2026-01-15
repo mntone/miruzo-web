@@ -1,6 +1,6 @@
-import { createSignal, onCleanup } from 'solid-js'
+import { createSignal, onCleanup, type Accessor } from 'solid-js'
 
-export function useDevicePixelRatio() {
+export function useDevicePixelRatio(): Accessor<number> {
 	const [getDevicePixelRatio, setDevicePixelRatio] = createSignal(window.devicePixelRatio)
 
 	if (typeof ResizeObserver === 'undefined') {
