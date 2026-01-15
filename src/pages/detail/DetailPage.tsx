@@ -86,6 +86,7 @@ export function DetailPage(props: DetailPageProps) {
 									<LoveButton
 										canLove={!getIsPending() && quotaStore.love.remaining !== 0}
 										ingestId={props.params}
+										remainingLoves={quotaStore.love.remaining}
 									/>
 									{import.meta.env.DEV && <MemoButton />}
 

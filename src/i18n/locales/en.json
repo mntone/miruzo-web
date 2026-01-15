@@ -17,6 +17,7 @@
 	},
 	"labels": {
 		"loading": "Loading…",
+		"love_remaining": "You can love {0} more today",
 		"view": {
 			"one": "{0} view",
 			"other": "{0} views"

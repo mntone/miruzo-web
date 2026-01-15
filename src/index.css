@@ -123,6 +123,19 @@
 	padding-right: var(--scrollbar-width);
 }
 
+.screen-reader-only {
+	overflow: hidden;
+	overflow: clip;
+	position: absolute;
+
+	clip: rect(0, 0, 0, 0);
+	clip-path: inset(50%);
+	height: 1px;
+	margin: -1px;
+	white-space: nowrap;
+	width: 1px;
+}
+
 html {
 	overflow-y: scroll;
 	min-height: 100vh;
@@ -165,6 +178,11 @@ button {
 	font-weight: 500;
 	font-family: inherit;
 	line-height: 1.25;
+}
+
+button:disabled {
+	color: var(--text-tertiary);
+	pointer-events: none;
 }
 
 button::after {

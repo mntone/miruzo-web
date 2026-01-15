@@ -75,7 +75,8 @@ export function createPluralTranslator(
 	}
 
 	const _selectMessage = selectMessage.bind(null, getPluralRules)
-	return function tp<K extends PluralTranslationKey>(key: K, count: number): string {
+	// Accept text keys too; JSON resources prevent distinguishing templates statically for now.
+	return function tp<K extends TextTranslationKey | PluralTranslationKey>(key: K, count: number): string {
 		const messages = getMessages()
 		if (!messages) {
 			return key
