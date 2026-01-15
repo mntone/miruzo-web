@@ -60,6 +60,7 @@ export function loadLocaleMessage(locale: Locale): Promise<FlatLocaleMessages> {
 	}
 
 	return import(`./locales/${locale}.json`).then(function(module: { default: LocaleMessages }) {
-		return flattenMessages(module.default)
+		const messages = flattenMessages(module.default)
+		return Object.assign({}, initialMessage, messages)
 	})
 }

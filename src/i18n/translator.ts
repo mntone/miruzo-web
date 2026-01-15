@@ -1,6 +1,15 @@
 import { formatNumeralMessage, formatWithArgument } from './format'
 import type { FlatLocaleMessages, PluralRecord, PluralTranslationKey, TextTranslationKey } from './types'
 
+const warnedKeys = new Set<string>()
+
+function warnMissingKey(key: string) {
+	if (import.meta.env.DEV && !warnedKeys.has(key)) {
+		warnedKeys.add(key)
+		console.warn(`Missing translation key: ${key}`)
+	}
+}
+
 export function createTranslator(getMessages: () => FlatLocaleMessages | undefined) {
 	return function t<K extends TextTranslationKey>(key: K): string {
 		const messages = getMessages()
@@ -13,6 +22,7 @@ export function createTranslator(getMessages: () => FlatLocaleMessages | undefin
 			return message
 		}
 
+		warnMissingKey(key)
 		return key
 	}
 }
@@ -31,6 +41,7 @@ export function createArgumentTranslator(
 			return formatWithArgument(message, args)
 		}
 
+		warnMissingKey(key)
 		return key
 	}
 }
@@ -83,7 +94,8 @@ export function createPluralTranslator(
 		}
 
 		const message = messages[key]
-		if (!message) {
+		if (message === undefined) {
+			warnMissingKey(key)
 			return key
 		}
 
@@ -92,7 +104,8 @@ export function createPluralTranslator(
 		}
 
 		const template = _selectMessage(message, count)
-		if (!template) {
+		if (template === undefined) {
+			warnMissingKey(key)
 			return key
 		}
 
