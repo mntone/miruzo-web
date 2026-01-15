@@ -6,6 +6,7 @@ import { ViewCountText } from '~/components/stats'
 import type { ImageEntry, IngestId } from '~/domain'
 import { mockEvents } from '~/domain/events.mock'
 import { useContextResource } from '~/hooks/useContextResource'
+import { useQuota } from '~/hooks/useQuota'
 import { imageStore } from '~/stores/images'
 
 import * as styles from './DetailPage.css'
@@ -22,6 +23,8 @@ export function DetailPage(props: DetailPageProps) {
 	const [getLoResVisible, setLoResVisible] = createSignal(true)
 	const [getSkipAnimation, setSkipAnimation] = createSignal(false)
 	const [getElement, setElement] = createSignal<HTMLImageElement | undefined>(undefined)
+
+	const { quotaStore, getIsPending } = useQuota()
 
 	useContextResource(function() {
 		return props.params
@@ -80,7 +83,10 @@ export function DetailPage(props: DetailPageProps) {
 						{function(getStats) {
 							return (
 								<div class='button-group'>
-									<LoveButton ingestId={props.params} />
+									<LoveButton
+										canLove={!getIsPending() && quotaStore.love.remaining !== 0}
+										ingestId={props.params}
+									/>
 									{import.meta.env.DEV && <MemoButton />}
 
 									<ViewCountText value={getStats().viewCount} />

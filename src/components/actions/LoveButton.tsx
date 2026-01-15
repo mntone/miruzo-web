@@ -3,6 +3,7 @@ import { useLoveAction } from '~/hooks/useLoveAction'
 import { useI18n } from '~/i18n/Context'
 
 interface LoveButtonProps {
+	canLove: boolean
 	ingestId: IngestId
 }
 
@@ -15,7 +16,7 @@ export function LoveButton(props: LoveButtonProps) {
 
 	return (
 		<button
-			disabled={getIsPending()}
+			disabled={getIsPending() || !props.canLove}
 			type='button'
 			onClick={love}
 		>
