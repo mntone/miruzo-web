@@ -50,10 +50,17 @@ export function NavigationStackProvider(props: NavigationStackProviderProps) {
 	}
 
 	const canPop = createMemo(function() {
-		return getStack().length !== 1
+		return getStack().length > 1
 	})
 
 	function pop() {
+		if (getStack().length <= 1) {
+			if (import.meta.env.DEV) {
+				throw Error('pop() requires at least 2 items')
+			}
+			return
+		}
+
 		setStack(function(prevStack) {
 			const head = prevStack.slice(0, -1)
 			return head
