@@ -1,8 +1,7 @@
 import { createEffect, createResource, createSignal, type Accessor, type Resource } from 'solid-js'
 
 import type { Writable } from '~/@types/utils'
-import type { ImageListType } from '~/api/types'
-import type { IngestId, IngestIdListResponse } from '~/domain'
+import type { ImageListType, IngestId, IngestIdListResponse } from '~/domain'
 import { loadIngestIdList, type IngestIdListRequest } from '~/repositories/ingests'
 
 export function useIngestIdList(

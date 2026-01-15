@@ -1,5 +1,7 @@
+import type { ImageListType } from '~/domain'
+
 import { apiClient } from '../client'
-import type { ContextResponse, ImageListResponse, ImageListType } from '../types'
+import type { ContextResponse, ImageListResponse } from '../types'
 
 function buildImageListUrl(type: ImageListType, query: URLSearchParams | undefined): string {
 	if (query !== undefined && query.size !== 0) {

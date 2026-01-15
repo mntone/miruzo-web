@@ -1,7 +1,6 @@
 import type { Accessor, Component, ComponentProps, JSX } from 'solid-js'
 
-import type { ImageListType } from '~/api/types'
-import type { ImageEntry, IngestId } from '~/domain'
+import type { ImageEntry, ImageListType, IngestId } from '~/domain'
 
 import type { LayoutChildAccessors, LayoutProps, LayoutPropsBase } from './shared/types'
 

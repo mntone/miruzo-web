@@ -1,11 +1,10 @@
 import type { Accessor } from 'solid-js'
 
-import type { ImageListType } from '~/api/types'
 import { Header } from '~/components/Header/Header'
 import { ImageLayoutController, MasonryImageLayout } from '~/components/ImageLayout'
 import type { LayoutChildAccessors } from '~/components/ImageLayout/shared/types'
 import { ListCard } from '~/components/ListCard'
-import type { ImageEntry } from '~/domain'
+import type { ImageEntry, ImageListType } from '~/domain'
 
 interface ListPageProps {
 	params: ImageListType

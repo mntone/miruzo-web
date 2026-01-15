@@ -16,6 +16,23 @@ export interface ImageEntry {
 
 export type ImageEntryWithStats = ImageEntry & { readonly stats: StatsEntry }
 
+const IMAGE_LIST_TYPES = [
+	'latest',
+	'chronological',
+	'recently',
+	'first_love',
+	'hall_of_fame',
+	'engaged',
+] as const
+
+export type ImageListType = typeof IMAGE_LIST_TYPES[number]
+
+const imageListTypeSet: ReadonlySet<string> = new Set(IMAGE_LIST_TYPES)
+
+export function isImageListType(value: string): value is ImageListType {
+	return imageListTypeSet.has(value)
+}
+
 export function assertHasStats(entry: ImageEntry | undefined): asserts entry is ImageEntryWithStats {
 	if (entry?.stats === undefined) {
 		throw new Error('ImageEntry and stats must exist')
