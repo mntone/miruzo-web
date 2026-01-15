@@ -30,7 +30,6 @@ export function DetailPage(props: DetailPageProps) {
 		return props.params
 	})
 
-	let mounted = false
 	onMount(function() {
 		const element = getElement()
 		if (element && element.complete && element.naturalWidth > 0) {
@@ -38,10 +37,6 @@ export function DetailPage(props: DetailPageProps) {
 			setHiResLoaded(true)
 			setSkipAnimation(true)
 		}
-
-		queueMicrotask(function() {
-			mounted = true
-		})
 	})
 
 	return (
