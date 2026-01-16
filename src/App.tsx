@@ -1,11 +1,14 @@
 import { NavigationStackProvider } from '~/navigation/Provider'
 import { NavigationStackRender } from '~/navigation/Render'
 
-import { TopPage } from './pages/TopPage'
+import { initialRouteId, navigationRoutes } from './pages/routes'
 
 export function App() {
 	return (
-		<NavigationStackProvider initialRoute={TopPage}>
+		<NavigationStackProvider
+			initialRouteId={initialRouteId}
+			routes={navigationRoutes}
+		>
 			<NavigationStackRender />
 		</NavigationStackProvider>
 	)

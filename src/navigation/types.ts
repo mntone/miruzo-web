@@ -1,18 +1,40 @@
 import type { Accessor, JSX } from 'solid-js'
 
-import type { NavigationOptions, NavigationStackComponent, NavigationParamsOptional, NavigationParamsRequired } from './helpers'
+import type { NavigationOptions, NavigationParamsOptional, NavigationParamsRequired, NavigationStackComponent } from './helpers'
 
-export type { NavigationOptions, NavigationStackComponent, NavigationParamsOptional, NavigationParamsRequired } from './helpers'
+export type { NavigationOptions, NavigationParamsOptional, NavigationParamsRequired, NavigationStackComponent } from './helpers'
 
-export interface NavigationStackItem extends NavigationOptions {
-	key: string
+export interface NavigationPageRoute {
+	id: string
+	type: 'page'
 	component: NavigationStackComponent
-	params?: unknown
 }
+
+export interface NavigationOverlayRoute {
+	id: string
+	type: 'overlay'
+	component: NavigationStackComponent
+}
+
+export type NavigationRoute = NavigationPageRoute | NavigationOverlayRoute
+
+export type NavigationRoutes = readonly NavigationRoute[]
+
+export type NavigationPageRouteId<Routes extends readonly NavigationRoute[]>
+	= Extract<Routes[number], { type: 'page' }>['id']
+
+export interface NavigationEntry extends NavigationOptions {
+	readonly key: string
+	readonly component: NavigationStackComponent
+	readonly routeId: string
+	readonly params?: unknown
+}
+
+export type NavigationEntries = readonly NavigationEntry[]
 
 export interface NavigationStackContextValue {
 	canPop: Accessor<boolean>
-	getStack: Accessor<NavigationStackItem[]>
+	getEntries: Accessor<NavigationEntries>
 
 	push<C extends NavigationStackComponent>(this: void, component: C, params: NavigationParamsRequired<C>): void
 	push<C extends NavigationStackComponent>(this: void, component: C, params?: NavigationParamsOptional<C>): void
@@ -22,6 +44,7 @@ export interface NavigationStackContextValue {
 }
 
 export interface NavigationStackProviderProps {
-	children: JSX.Element
-	initialRoute?: NavigationStackComponent
+	readonly children: JSX.Element
+	readonly initialRouteId?: string
+	readonly routes: NavigationRoutes
 }

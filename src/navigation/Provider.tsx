@@ -1,12 +1,21 @@
-import { createContext, createMemo, createSignal, onMount } from 'solid-js'
+import { createContext, createMemo, createSignal } from 'solid-js'
 
-import type { NavigationStackContextValue, NavigationStackItem, NavigationStackProviderProps, NavigationStackComponent, NavigationParamsRequired, NavigationParamsOptional } from './types'
+import { createEntryFromRoute } from './entry'
+import { createRouteRegistry } from './registry'
+import type {
+	NavigationEntries,
+	NavigationParamsOptional,
+	NavigationParamsRequired,
+	NavigationStackComponent,
+	NavigationStackContextValue,
+	NavigationStackProviderProps,
+} from './types'
 
 const emptyContext: NavigationStackContextValue = {
 	canPop() {
 		return false
 	},
-	getStack() {
+	getEntries() {
 		return []
 	},
 
@@ -18,68 +27,63 @@ const emptyContext: NavigationStackContextValue = {
 export const NavigationStackContext = createContext<NavigationStackContextValue>(emptyContext)
 
 export function NavigationStackProvider(props: NavigationStackProviderProps) {
-	const [getStack, setStack] = createSignal<NavigationStackItem[]>([])
+	const {
+		initialRoute,
+		getRouteByComponent,
+	// eslint-disable-next-line solid/reactivity
+	} = createRouteRegistry(props.routes, props.initialRouteId)
 
-	function createStackItem(component: NavigationStackComponent, params?: unknown): NavigationStackItem {
-		return {
-			key: Date.now().toString(),
-			component,
-			params,
-			...component.options,
-		}
-	}
+	const [getEntries, setEntries] = createSignal<NavigationEntries>(
+		initialRoute !== null ? [createEntryFromRoute(initialRoute)] : [],
+	)
 
 	function push<C extends NavigationStackComponent>(component: C, params: NavigationParamsRequired<C>): void
 	function push<C extends NavigationStackComponent>(component: C, params?: NavigationParamsOptional<C>): void
 	function push(component: NavigationStackComponent, params?: unknown): void {
-		setStack(function(prevStack) {
-			const newItem = createStackItem(component, params)
-			const newStack = prevStack.concat(newItem)
-			return newStack
+		const route = getRouteByComponent(component)
+		setEntries(function(prevEntry) {
+			const entry = createEntryFromRoute(route, params)
+			const entries = prevEntry.concat(entry)
+			return entries
 		})
 	}
 
 	function replace<C extends NavigationStackComponent>(component: C, params: NavigationParamsRequired<C>): void
 	function replace<C extends NavigationStackComponent>(component: C, params?: NavigationParamsOptional<C>): void
 	function replace(component: NavigationStackComponent, params?: unknown): void {
-		setStack(function(prevStack) {
-			const newItem = createStackItem(component, params)
-			const newStack = prevStack.slice(0, -1).concat(newItem)
-			return newStack
+		const route = getRouteByComponent(component)
+		setEntries(function(prevEntry) {
+			const entry = createEntryFromRoute(route, params)
+			const entries = prevEntry.slice(0, -1).concat(entry)
+			return entries
 		})
 	}
 
 	const canPop = createMemo(function() {
-		return getStack().length > 1
+		return getEntries().length > 1
 	})
 
 	function pop() {
-		if (getStack().length <= 1) {
+		if (getEntries().length <= 1) {
 			if (import.meta.env.DEV) {
 				throw Error('pop() requires at least 2 items')
 			}
 			return
 		}
 
-		setStack(function(prevStack) {
-			const head = prevStack.slice(0, -1)
+		setEntries(function(prevEntry) {
+			const head = prevEntry.slice(0, -1)
 			return head
 		})
 	}
 
 	const api: NavigationStackContextValue = {
-		getStack,
+		getEntries,
 		push,
 		replace,
 		canPop,
 		pop,
 	}
-
-	onMount(function() {
-		if (props.initialRoute) {
-			push(props.initialRoute)
-		}
-	})
 
 	return (
 		<NavigationStackContext.Provider value={api}>

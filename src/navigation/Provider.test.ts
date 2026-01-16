@@ -1,14 +1,29 @@
 import { createComponent, createRoot, useContext } from 'solid-js'
 
+import type { Writable } from '~/@types/utils'
+
 import { NavigationStackContext, NavigationStackProvider } from './Provider'
-import type { NavigationStackComponent, NavigationStackContextValue, NavigationStackProviderProps } from './types'
+import type { NavigationRoutes, NavigationStackComponent, NavigationStackContextValue, NavigationStackProviderProps } from './types'
 
 interface SetupResult {
 	readonly context: NavigationStackContextValue
 	readonly dispose: () => void
 }
 
-function setupProvider(initialRoute?: NavigationStackComponent): SetupResult {
+function createRoutesFromComponents(components: NavigationStackComponent[]): NavigationRoutes {
+	return components.map(component => {
+		return {
+			id: component.name,
+			type: 'page',
+			component,
+		}
+	})
+}
+
+function setupProvider(
+	routes: NavigationRoutes,
+	initialRouteId?: string | null,
+): SetupResult {
 	let context: NavigationStackContextValue | undefined
 	let dispose: () => void = () => {}
 
@@ -20,13 +35,21 @@ function setupProvider(initialRoute?: NavigationStackComponent): SetupResult {
 			return null
 		}
 
-		const providerProps: NavigationStackProviderProps = {
+		const providerProps: Writable<NavigationStackProviderProps> = {
 			get children() {
 				return createComponent(Capture, {})
 			},
+			routes,
 		}
-		if (initialRoute !== undefined) {
-			providerProps.initialRoute = initialRoute
+		if (initialRouteId !== undefined) {
+			if (initialRouteId !== null) {
+				providerProps.initialRouteId = initialRouteId
+			}
+		} else {
+			const firstRouteId = routes.at(0)?.id
+			if (firstRouteId !== undefined) {
+				providerProps.initialRouteId = firstRouteId
+			}
 		}
 
 		createComponent(NavigationStackProvider, providerProps)
@@ -40,23 +63,22 @@ function setupProvider(initialRoute?: NavigationStackComponent): SetupResult {
 }
 
 describe('NavigationStackProvider', () => {
-	it('pushes the initial route on mount', async () => {
+	it('initializes with the initial route', () => {
 		const Initial = (() => null) as NavigationStackComponent
-		const { context, dispose } = setupProvider(Initial)
+		const routes = createRoutesFromComponents([Initial])
+		const { context, dispose } = setupProvider(routes)
 
-		await Promise.resolve()
-
-		const stack = context.getStack()
-		expect(stack).toHaveLength(1)
-		expect(stack[0].component).toBe(Initial)
+		const entries = context.getEntries()
+		expect(entries).toHaveLength(1)
+		expect(entries[0].component).toBe(Initial)
 
 		dispose()
 	})
 
 	it('reports canPop as false on an empty stack', () => {
-		const { context, dispose } = setupProvider()
+		const { context, dispose } = setupProvider([])
 
-		expect(context.getStack()).toHaveLength(0)
+		expect(context.getEntries()).toHaveLength(0)
 		expect(context.canPop()).toBe(false)
 
 		dispose()
@@ -70,16 +92,17 @@ describe('NavigationStackProvider', () => {
 		}
 		Detail.options = { overlay: true }
 
-		const { context, dispose } = setupProvider()
+		const routes = createRoutesFromComponents([Detail])
+		const { context, dispose } = setupProvider(routes, null)
 
 		const params = { id: 123 }
 		context.push(Detail, params)
 
-		const stack = context.getStack()
-		expect(stack).toHaveLength(1)
-		expect(stack[0].component).toBe(Detail)
-		expect(stack[0].params).toEqual(params)
-		expect(stack[0].overlay).toBe(true)
+		const entries = context.getEntries()
+		expect(entries).toHaveLength(1)
+		expect(entries[0].component).toBe(Detail)
+		expect(entries[0].params).toEqual(params)
+		expect(entries[0].overlay).toBe(true)
 
 		dispose()
 	})
@@ -89,16 +112,17 @@ describe('NavigationStackProvider', () => {
 		const Second = (() => null) as NavigationStackComponent
 		const Replacement = (() => null) as NavigationStackComponent
 
-		const { context, dispose } = setupProvider()
+		const routes = createRoutesFromComponents([First, Second, Replacement])
+		const { context, dispose } = setupProvider(routes, null)
 
 		context.push(First)
 		context.push(Second)
 		context.replace(Replacement)
 
-		const stack = context.getStack()
-		expect(stack).toHaveLength(2)
-		expect(stack[0].component).toBe(First)
-		expect(stack[1].component).toBe(Replacement)
+		const entries = context.getEntries()
+		expect(entries).toHaveLength(2)
+		expect(entries[0].component).toBe(First)
+		expect(entries[1].component).toBe(Replacement)
 
 		dispose()
 	})
@@ -107,7 +131,8 @@ describe('NavigationStackProvider', () => {
 		const First = (() => null) as NavigationStackComponent
 		const Second = (() => null) as NavigationStackComponent
 
-		const { context, dispose } = setupProvider()
+		const routes = createRoutesFromComponents([First, Second])
+		const { context, dispose } = setupProvider(routes, null)
 
 		context.push(First)
 		expect(context.canPop()).toBe(false)
@@ -116,7 +141,7 @@ describe('NavigationStackProvider', () => {
 		expect(context.canPop()).toBe(true)
 
 		context.pop()
-		expect(context.getStack()).toHaveLength(1)
+		expect(context.getEntries()).toHaveLength(1)
 		expect(context.canPop()).toBe(false)
 
 		dispose()
