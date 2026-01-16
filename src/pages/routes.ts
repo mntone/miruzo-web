@@ -7,17 +7,14 @@ import { TopPage } from './TopPage'
 export const navigationRoutes = [
 	{
 		id: 'top',
-		type: 'page',
 		component: TopPage,
 	},
 	{
 		id: 'list',
-		type: 'page',
 		component: ListPage,
 	},
 	{
 		id: 'detail',
-		type: 'page',
 		component: DetailPage,
 	},
 ] as const satisfies NavigationRoutes

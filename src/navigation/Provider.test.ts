@@ -14,7 +14,6 @@ function createRoutesFromComponents(components: NavigationStackComponent[]): Nav
 	return components.map(component => {
 		return {
 			id: component.name,
-			type: 'page',
 			component,
 		}
 	})
@@ -84,13 +83,12 @@ describe('NavigationStackProvider', () => {
 		dispose()
 	})
 
-	it('pushes items with params and options', () => {
+	it('pushes items with params', () => {
 		type DetailParams = { id: number }
 		const Detail: NavigationStackComponent<{ params: DetailParams }> = (props: { params: DetailParams }) => {
 			void props
 			return null
 		}
-		Detail.options = { overlay: true }
 
 		const routes = createRoutesFromComponents([Detail])
 		const { context, dispose } = setupProvider(routes, null)
@@ -102,7 +100,6 @@ describe('NavigationStackProvider', () => {
 		expect(entries).toHaveLength(1)
 		expect(entries[0].component).toBe(Detail)
 		expect(entries[0].params).toEqual(params)
-		expect(entries[0].overlay).toBe(true)
 
 		dispose()
 	})

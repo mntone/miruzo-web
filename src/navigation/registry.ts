@@ -1,7 +1,7 @@
-import type { NavigationPageRoute, NavigationRoute, NavigationRoutes, NavigationStackComponent } from './types'
+import type { NavigationRoute, NavigationRoutes, NavigationStackComponent } from './types'
 
 export interface NavigationRouteRegistry {
-	readonly initialRoute: NavigationPageRoute | null
+	readonly initialRoute: NavigationRoute | null
 
 	getRouteByComponent(this: void, component: NavigationStackComponent): NavigationRoute
 }
@@ -25,11 +25,11 @@ export function createRouteRegistry(
 		routesByComponent.set(route.component, route)
 	}
 
-	let initialRoute: NavigationPageRoute | null = null
+	let initialRoute: NavigationRoute | null = null
 	if (initialRouteId !== undefined) {
 		const route = routesById.get(initialRouteId)
-		if (route === undefined || route.type !== 'page') {
-			throw Error(`Initial route must be a page route: ${initialRouteId}`)
+		if (route === undefined) {
+			throw Error(`Initial route must be a registered route: ${initialRouteId}`)
 		}
 
 		initialRoute = route

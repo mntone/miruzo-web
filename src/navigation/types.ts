@@ -1,35 +1,25 @@
 import type { Accessor, JSX } from 'solid-js'
 
-import type { NavigationOptions, NavigationParamsOptional, NavigationParamsRequired, NavigationStackComponent } from './helpers'
+import type { NavigationParamsOptional, NavigationParamsRequired, NavigationStackComponent } from './helpers'
 
-export type { NavigationOptions, NavigationParamsOptional, NavigationParamsRequired, NavigationStackComponent } from './helpers'
+export type { NavigationParamsOptional, NavigationParamsRequired, NavigationStackComponent } from './helpers'
 
-export interface NavigationPageRoute {
+export interface NavigationRoute {
 	id: string
-	type: 'page'
 	component: NavigationStackComponent
 }
-
-export interface NavigationOverlayRoute {
-	id: string
-	type: 'overlay'
-	component: NavigationStackComponent
-}
-
-export type NavigationRoute = NavigationPageRoute | NavigationOverlayRoute
-
 export type NavigationRoutes = readonly NavigationRoute[]
 
-export type NavigationPageRouteId<Routes extends readonly NavigationRoute[]>
-	= Extract<Routes[number], { type: 'page' }>['id']
+export type NavigationPageRouteId<Routes extends readonly NavigationRoute[]> = Routes[number]['id']
 
-export interface NavigationEntry extends NavigationOptions {
-	readonly key: string
+export type NavigationKey = string
+
+export interface NavigationEntry {
+	readonly key: NavigationKey
 	readonly component: NavigationStackComponent
-	readonly routeId: string
 	readonly params?: unknown
+	readonly routeId: string
 }
-
 export type NavigationEntries = readonly NavigationEntry[]
 
 export interface NavigationStackContextValue {
