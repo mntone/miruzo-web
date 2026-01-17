@@ -1,4 +1,4 @@
-import { createSignal, type Accessor } from 'solid-js'
+import { batch, createSignal, type Accessor } from 'solid-js'
 
 import type { IngestId } from '~/domain'
 import { loveImageIntoStore } from '~/repositories'
@@ -14,8 +14,10 @@ export function useLoveAction(getIngestId: Accessor<IngestId>): readonly [() => 
 			return
 		}
 
-		setIsPending(true)
-		setError(undefined)
+		batch(function() {
+			setIsPending(true)
+			setError(undefined)
+		})
 
 		loveImageIntoStore(getIngestId())
 			.catch(reportAndIgnore(setError))
