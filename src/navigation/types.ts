@@ -12,6 +12,12 @@ export type NavigationRoutes = readonly NavigationRoute[]
 
 export type NavigationPageRouteId<Routes extends readonly NavigationRoute[]> = Routes[number]['id']
 
+export interface NavigationSnapshot {
+	readonly params?: unknown
+	readonly root?: true
+	readonly routeId: string
+}
+
 export type NavigationKey = string
 
 export interface NavigationEntry {
