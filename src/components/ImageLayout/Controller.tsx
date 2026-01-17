@@ -1,7 +1,6 @@
 import { Show, type Component } from 'solid-js'
 
 import type { Writable } from '~/@types/utils'
-import { DEFAULT_IMAGE_LIST_LIMIT } from '~/api/constants'
 import type { IngestId } from '~/domain'
 import { useIngestIdList } from '~/hooks/useIngestIdList'
 import { useI18n } from '~/i18n/Context'
@@ -16,8 +15,7 @@ export function ImageLayoutController<Layout extends Component<LayoutProps<Inges
 	const { t } = useI18n()
 	/* eslint-disable solid/reactivity */
 	const [getIngestIds, listPage, loadMore] = useIngestIdList(
-		props.listType,
-		props.limit || DEFAULT_IMAGE_LIST_LIMIT,
+		props.requestParams,
 		getExcludeFormats(),
 	)
 	/* eslint-enable solid/reactivity */

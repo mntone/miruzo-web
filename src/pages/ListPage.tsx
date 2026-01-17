@@ -29,7 +29,7 @@ export function ListPage(props: ListPageProps) {
 				children={CardDelegate}
 				as='main'
 				layout={MasonryImageLayout}
-				listType={props.params}
+				requestParams={{ type: props.params }}
 				useMoreButton
 			/>
 		</>

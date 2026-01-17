@@ -58,8 +58,10 @@ export function TopPage() {
 						intervals,
 						maxRows: 2,
 					}}
-					limit={20}
-					listType='latest'
+					requestParams={{
+						type: 'latest',
+						limit: 20,
+					}}
 				/>
 
 				<ImageLayoutController
@@ -80,8 +82,10 @@ export function TopPage() {
 						intervals,
 						maxRows: 1,
 					}}
-					limit={10}
-					listType='engaged'
+					requestParams={{
+						type: 'engaged',
+						limit: 10,
+					}}
 				/>
 
 				<ImageLayoutController
@@ -102,8 +106,10 @@ export function TopPage() {
 						intervals,
 						maxRows: 1,
 					}}
-					limit={10}
-					listType='hall_of_fame'
+					requestParams={{
+						type: 'hall_of_fame',
+						limit: 10,
+					}}
 				/>
 			</main>
 		</>

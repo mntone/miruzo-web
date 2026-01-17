@@ -1,4 +1,5 @@
 import type { Writable } from '~/@types/utils'
+import { IMAGE_LIST_LIMIT_MAX, IMAGE_LIST_LIMIT_MIN } from '~/api/constants'
 import { fetchImageList } from '~/api/images'
 import { buildImageListParams } from '~/api/images/params'
 import type { ImageListResponse } from '~/api/types'
@@ -26,8 +27,25 @@ export function initIngestIdListResponse(r: ImageListResponse): IngestIdListResp
 	return newEntry
 }
 export function loadIngestIdList(request: IngestIdListRequest): Promise<IngestIdListResponse> {
+	let limit: number
+	if (request.limit < IMAGE_LIST_LIMIT_MIN) {
+		if (import.meta.env.DEV) {
+			throw Error(`limit must be >= ${IMAGE_LIST_LIMIT_MIN}`)
+		} else {
+			limit = IMAGE_LIST_LIMIT_MIN
+		}
+	} else if (request.limit > IMAGE_LIST_LIMIT_MAX) {
+		if (import.meta.env.DEV) {
+			throw Error(`limit must be <= ${IMAGE_LIST_LIMIT_MAX}`)
+		} else {
+			limit = IMAGE_LIST_LIMIT_MAX
+		}
+	} else {
+		limit = request.limit
+	}
+
 	const query = buildImageListParams(
-		request.limit,
+		limit,
 		request.cursor,
 		request.excludeFormats,
 	)
