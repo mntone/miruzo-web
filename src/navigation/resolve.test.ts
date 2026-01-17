@@ -1,5 +1,6 @@
-import { resolveSnapshotFromLocation, resolveSnapshotFromState } from './resolve'
-import type { NavigationRoute, NavigationRoutes, NavigationStackComponent } from './types'
+import { createEntryFromRoute } from './entry'
+import { buildUrlFromEntry, resolveSnapshotFromLocation, resolveSnapshotFromState } from './resolve'
+import type { NavigationEntry, NavigationRoute, NavigationRoutes, NavigationStackComponent } from './types'
 
 function createRouteFixtures() {
 	const Alpha = (() => null) as NavigationStackComponent
@@ -84,6 +85,48 @@ describe('resolveSnapshotFromLocation', () => {
 			{ pathname: '/unknown' },
 			{ routes },
 		)).toBeUndefined()
+	})
+})
+
+describe('buildUrlFromEntry', () => {
+	it('builds url for a route with params', () => {
+		const { routes, routesById } = createRouteFixtures()
+		const entry = createEntryFromRoute(routes[1], { id: 42 })
+		const url = buildUrlFromEntry(entry, {
+			getRouteById(id) {
+				return routesById.get(id)
+			},
+		})
+
+		expect(url).toBe('/beta/42')
+	})
+
+	it('builds url for a route without params', () => {
+		const { routes, routesById } = createRouteFixtures()
+		const entry = createEntryFromRoute(routes[0])
+		const url = buildUrlFromEntry(entry, {
+			getRouteById(id) {
+				return routesById.get(id)
+			},
+		})
+
+		expect(url).toBe('/')
+	})
+
+	it('returns undefined when the route is missing', () => {
+		const { routes, routesById } = createRouteFixtures()
+		const entry: NavigationEntry = {
+			key: 'missing',
+			component: routes[0].component,
+			routeId: 'missing',
+		}
+		const url = buildUrlFromEntry(entry, {
+			getRouteById(id) {
+				return routesById.get(id)
+			},
+		})
+
+		expect(url).toBeUndefined()
 	})
 })
 

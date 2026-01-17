@@ -11,10 +11,29 @@ function createRouteFixtures() {
 		{
 			id: 'alpha',
 			component: Alpha,
+			fromPath(path) {
+				return path === '/' ? true : undefined
+			},
+			toPath() {
+				return '/'
+			},
 		},
 		{
 			id: 'beta',
 			component: Beta,
+			fromPath(path) {
+				if (path.startsWith('/beta')) {
+					const integerString = decodeURIComponent(path.slice('/beta/'.length))
+					const integer = Number(integerString)
+					if (Number.isInteger(integer)) {
+						return { id: integer }
+					}
+				}
+				return undefined
+			},
+			toPath(params: { id: number }) {
+				return `/beta/${params.id}`
+			},
 		},
 	] as const satisfies NavigationRoutes
 

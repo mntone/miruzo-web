@@ -1,8 +1,10 @@
 import type { NavigationRoute, NavigationRoutes, NavigationStackComponent } from './types'
 
 export interface NavigationRouteRegistry {
+	readonly routes: NavigationRoutes
 	readonly initialRoute: NavigationRoute | null
 
+	getRouteById(this: void, id: string): NavigationRoute | undefined
 	getRouteByComponent(this: void, component: NavigationStackComponent): NavigationRoute
 }
 
@@ -36,8 +38,10 @@ export function createRouteRegistry(
 	}
 
 	return {
+		routes,
 		initialRoute,
 
+		getRouteById: routesById.get.bind(routesById),
 		getRouteByComponent(component) {
 			const route = routesByComponent.get(component)
 			if (route === undefined) {

@@ -1,11 +1,12 @@
-import { createContext, createMemo, createSignal } from 'solid-js'
+import { batch, createContext, createSignal, onCleanup, onMount } from 'solid-js'
 
 import { createEntryFromRoute } from './entry'
+import type { NavigationParamsOptional, NavigationParamsRequired } from './helpers'
 import { createRouteRegistry } from './registry'
+import { buildUrlFromEntry, resolveSnapshotFromLocation, resolveSnapshotFromState } from './resolve'
+import { createEntryFromSnapshot, createSnapshotFromEntry } from './snapshot'
 import type {
-	NavigationEntries,
-	NavigationParamsOptional,
-	NavigationParamsRequired,
+	NavigationEntry,
 	NavigationStackComponent,
 	NavigationStackContextValue,
 	NavigationStackProviderProps,
@@ -15,8 +16,8 @@ const emptyContext: NavigationStackContextValue = {
 	canPop() {
 		return false
 	},
-	getEntries() {
-		return []
+	getEntry() {
+		return undefined
 	},
 
 	push() {},
@@ -28,57 +29,118 @@ export const NavigationStackContext = createContext<NavigationStackContextValue>
 
 export function NavigationStackProvider(props: NavigationStackProviderProps) {
 	const {
+		routes,
 		initialRoute,
+		getRouteById,
 		getRouteByComponent,
 	// eslint-disable-next-line solid/reactivity
 	} = createRouteRegistry(props.routes, props.initialRouteId)
 
-	const [getEntries, setEntries] = createSignal<NavigationEntries>(
-		initialRoute !== null ? [createEntryFromRoute(initialRoute)] : [],
-	)
+	function _buildUrlFromEntry(entry: NavigationEntry): string | undefined {
+		return buildUrlFromEntry(entry, { getRouteById })
+	}
+
+	const [getEntry, setEntry] = createSignal<NavigationEntry | undefined>(undefined)
+	const [isRoot, setIsRoot] = createSignal<boolean>(true)
+	const [canPop, setCanPop] = createSignal<boolean>(false)
+
+	function dispatchEntry(entry: NavigationEntry | undefined, root: boolean): void {
+		batch(function() {
+			setEntry(entry)
+			setIsRoot(root)
+			setCanPop(!root && props.driver.canPop())
+		})
+	}
+
+	function restoreEntry(state: unknown, initialState?: true): void {
+		// Try to restore from state
+		const snapshot = resolveSnapshotFromState(state)
+		if (snapshot !== undefined) {
+			const entry = createEntryFromSnapshot(snapshot, {
+				createEntryFromRoute,
+				getRouteById,
+			})
+			if (entry !== undefined) {
+				dispatchEntry(entry, snapshot?.root === true)
+				return
+			}
+		}
+
+		// Try to restore from location
+		const locationSnapshot = resolveSnapshotFromLocation(props.driver.location, { routes })
+		if (locationSnapshot !== undefined) {
+			const entry = createEntryFromSnapshot(locationSnapshot, {
+				createEntryFromRoute,
+				getRouteById,
+			})
+			if (entry !== undefined) {
+				props.driver.replace(
+					createSnapshotFromEntry(entry, true),
+					_buildUrlFromEntry(entry),
+				)
+				dispatchEntry(entry, locationSnapshot?.root === true)
+				return
+			}
+		}
+
+		// Restore to initial route
+		if (initialState === true && initialRoute !== null) {
+			const entry = createEntryFromRoute(initialRoute)
+			props.driver.replace(
+				createSnapshotFromEntry(entry, true),
+				_buildUrlFromEntry(entry),
+			)
+			dispatchEntry(entry, true)
+			return
+		}
+
+		// Unable to restore
+		if (import.meta.env.DEV) {
+			console.error('Invalid navigation state', state)
+		}
+		if (initialState !== true) {
+			dispatchEntry(undefined, true)
+		}
+	}
 
 	function push<C extends NavigationStackComponent>(component: C, params: NavigationParamsRequired<C>): void
 	function push<C extends NavigationStackComponent>(component: C, params?: NavigationParamsOptional<C>): void
 	function push(component: NavigationStackComponent, params?: unknown): void {
 		const route = getRouteByComponent(component)
-		setEntries(function(prevEntry) {
-			const entry = createEntryFromRoute(route, params)
-			const entries = prevEntry.concat(entry)
-			return entries
-		})
+		const entry = createEntryFromRoute(route, params)
+		props.driver.push(
+			createSnapshotFromEntry(entry),
+			_buildUrlFromEntry(entry),
+		)
+		dispatchEntry(entry, false)
 	}
 
 	function replace<C extends NavigationStackComponent>(component: C, params: NavigationParamsRequired<C>): void
 	function replace<C extends NavigationStackComponent>(component: C, params?: NavigationParamsOptional<C>): void
 	function replace(component: NavigationStackComponent, params?: unknown): void {
 		const route = getRouteByComponent(component)
-		setEntries(function(prevEntry) {
-			const entry = createEntryFromRoute(route, params)
-			const entries = prevEntry.slice(0, -1).concat(entry)
-			return entries
-		})
+		const entry = createEntryFromRoute(route, params)
+		const root = isRoot()
+		props.driver.replace(
+			createSnapshotFromEntry(entry, root ? true : undefined),
+			_buildUrlFromEntry(entry),
+		)
+		dispatchEntry(entry, root)
 	}
-
-	const canPop = createMemo(function() {
-		return getEntries().length > 1
-	})
 
 	function pop() {
-		if (getEntries().length <= 1) {
-			if (import.meta.env.DEV) {
-				throw Error('pop() requires at least 2 items')
-			}
-			return
+		if (canPop()) {
+			props.driver.pop()
 		}
-
-		setEntries(function(prevEntry) {
-			const head = prevEntry.slice(0, -1)
-			return head
-		})
 	}
 
+	onMount(function() {
+		restoreEntry(props.driver.state, true)
+		onCleanup(props.driver.onPop(restoreEntry))
+	})
+
 	const api: NavigationStackContextValue = {
-		getEntries,
+		getEntry,
 		push,
 		replace,
 		canPop,

@@ -1,7 +1,17 @@
 import type { Writable } from '~/@types/utils'
 import { hasOwn } from '~/repositories/utils'
 
-import type { NavigationLocation, NavigationRoutes, NavigationSnapshot } from './types'
+import type { NavigationEntry, NavigationLocation, NavigationRoute, NavigationRoutes, NavigationSnapshot } from './types'
+
+export function buildUrlFromEntry(
+	entry: NavigationEntry,
+	options: {
+		getRouteById(this: void, id: string): NavigationRoute | undefined
+	},
+): string | undefined {
+	const route = options.getRouteById(entry.routeId)
+	return route ? route.toPath(entry?.params) : undefined
+}
 
 function normalizePath(path: string): string {
 	if (path.length === 0) {
