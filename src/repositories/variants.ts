@@ -2,17 +2,35 @@ import type { Writable } from '~/@types/utils'
 import type { VariantLayerModels, VariantModel } from '~/api/types'
 import type { VariantEntry, VariantLayerEntries } from '~/domain'
 
-function addBaseUrl(src: string): string {
-	const baseUrl = import.meta.env.DEV
-		? import.meta.env.VITE_STATIC_ASSETS.replace('{host}', window.location.hostname)
-		: import.meta.env.VITE_STATIC_ASSETS
-	const url = baseUrl + src
-	return url
+let baseUrl: string | undefined = undefined
+export function getBaseUrl(): string {
+	if (baseUrl !== undefined) {
+		return baseUrl
+	}
+
+	const host = import.meta.env.DEV
+		? import.meta.env.VITE_STATIC_ASSET_HOST.replace('{host}', window.location.hostname)
+		: import.meta.env.VITE_STATIC_ASSET_HOST
+	if (host === '') {
+		baseUrl = ''
+		return ''
+	}
+
+	const protocol = import.meta.env.DEV
+		? import.meta.env.VITE_STATIC_ASSET_PROTOCOL.replace('{protocol}', window.location.protocol)
+		: import.meta.env.VITE_STATIC_ASSET_PROTOCOL
+	const urlPrefix = protocol + '//' + host
+	baseUrl = urlPrefix
+	return urlPrefix
+}
+
+export function resetBaseUrlForTests(): void {
+	baseUrl = undefined
 }
 
 export function initVariantEntry(variant: VariantModel): VariantEntry {
 	const newEntry: Writable<VariantEntry> = {
-		src: addBaseUrl(variant.src),
+		src: getBaseUrl() + variant.src,
 		format: variant.format,
 		manbytes: variant.manbytes,
 		width: variant.w,

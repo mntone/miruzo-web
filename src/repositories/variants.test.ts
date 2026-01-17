@@ -1,9 +1,35 @@
 import type { VariantModel } from '~/api/types'
 import { setupEnvStub } from '~/test-utils/env'
 
-import { initVariantEntry, initVariantLayerResources } from './variants'
+import { getBaseUrl, initVariantEntry, initVariantLayerResources } from './variants'
 
 const env = setupEnvStub()
+
+describe('getBaseUrl', () => {
+	it('replaces host and protocol in development', () => {
+		env.DEV = true
+		env.VITE_STATIC_ASSET_HOST = '{host}:8080'
+		env.VITE_STATIC_ASSET_PROTOCOL = '{protocol}'
+
+		expect(getBaseUrl()).toBe('https://images.local:8080')
+	})
+
+	it('returns a protocol-relative base when protocol is empty', () => {
+		env.DEV = false
+		env.VITE_STATIC_ASSET_HOST = 'static.miruzo.dev'
+		env.VITE_STATIC_ASSET_PROTOCOL = ''
+
+		expect(getBaseUrl()).toBe('//static.miruzo.dev')
+	})
+
+	it('returns an empty string when host is empty', () => {
+		env.DEV = false
+		env.VITE_STATIC_ASSET_HOST = ''
+		env.VITE_STATIC_ASSET_PROTOCOL = 'https:'
+
+		expect(getBaseUrl()).toBe('')
+	})
+})
 
 describe('initVariantEntry', () => {
 	it('adds the base assets url and copies optional fields', () => {
@@ -25,9 +51,10 @@ describe('initVariantEntry', () => {
 		})
 	})
 
-	it('uses the production base url without hostname replacement', () => {
+	it('uses the production base url without hostname and protocol replacement', () => {
 		env.DEV = false
-		env.VITE_STATIC_ASSETS = 'https://static.miruzo.dev'
+		env.VITE_STATIC_ASSET_HOST = 'static.miruzo.dev'
+		env.VITE_STATIC_ASSET_PROTOCOL = 'https:'
 
 		const response: VariantModel = {
 			src: '/media/variants/thumb.webp',
@@ -39,6 +66,23 @@ describe('initVariantEntry', () => {
 
 		const mapped = initVariantEntry(response)
 		expect(mapped.src).toBe('https://static.miruzo.dev/media/variants/thumb.webp')
+	})
+
+	it('uses the production base url without hostname replacement', () => {
+		env.DEV = false
+		env.VITE_STATIC_ASSET_HOST = 'static.miruzo.dev'
+		env.VITE_STATIC_ASSET_PROTOCOL = ''
+
+		const response: VariantModel = {
+			src: '/media/variants/thumb.webp',
+			format: 'webp',
+			w: 320,
+			h: 240,
+			manbytes: 2,
+		}
+
+		const mapped = initVariantEntry(response)
+		expect(mapped.src).toBe('//static.miruzo.dev/media/variants/thumb.webp')
 	})
 })
 

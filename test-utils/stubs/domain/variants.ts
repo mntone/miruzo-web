@@ -9,9 +9,10 @@ function buildVariantEntryBase(
 	height: number,
 	manbytes: number,
 	host: string,
+	protocol: string,
 ): VariantEntry {
 	const newEntry: Writable<VariantEntry> = {
-		src: `https://${host}/media/${slot}/${name}.${ext}`,
+		src: `${protocol}//${host}/media/${slot}/${name}.${ext}`,
 		format: ext,
 		width,
 		height,
@@ -27,6 +28,7 @@ export function buildOriginalVariantEntry(
 	name: string,
 	ext: string = 'webp',
 	host: string = 'images.local',
+	protocol: string = 'https:',
 ): VariantEntry {
 	return buildVariantEntryBase(
 		name,
@@ -36,6 +38,7 @@ export function buildOriginalVariantEntry(
 		1080,
 		34,
 		host,
+		protocol,
 	)
 }
 
@@ -43,6 +46,7 @@ export function buildFallbackVariantEntry(
 	name: string,
 	ext: string = 'jpeg',
 	host: string = 'images.local',
+	protocol: string = 'https:',
 ): VariantEntry {
 	return buildVariantEntryBase(
 		name,
@@ -52,6 +56,7 @@ export function buildFallbackVariantEntry(
 		1080,
 		56,
 		host,
+		protocol,
 	)
 }
 
@@ -61,6 +66,7 @@ export function buildVariantEntry(
 	width: number,
 	ext: string,
 	host: string = 'images.local',
+	protocol: string = 'https:',
 ): VariantEntry {
 	return buildVariantEntryBase(
 		name,
@@ -70,6 +76,7 @@ export function buildVariantEntry(
 		Math.floor(width * 0.75),
 		Math.ceil(2 * (width / 320)),
 		host,
+		protocol,
 	)
 }
 
