@@ -18,8 +18,8 @@ function getChildrenStyleBase(
 	const roundedScaledHeight = 0.0001 * Math.round(10000 * scaledHeight)
 	const gridHeight = Math.round(metrics.rowSize * (scaledHeight + metrics.verticalSpacing))
 	const style: JSX.CSSProperties = {
-		'grid-row-end': 'span ' + gridHeight,
-		'height': roundedScaledHeight + 'px',
+		'grid-row-end': `span ${gridHeight}`,
+		'height': `${roundedScaledHeight}px`,
 	}
 	return style
 }
@@ -37,17 +37,17 @@ export function MasonryImageLayout<Item>(props: MasonryImageLayoutProps<Item>) {
 	const getContainerStyle = createMemo(function() {
 		const metrics = getMetrics()
 		const style: JSX.CSSProperties = {
-			'padding': '0 ' + metrics.outerPadding + 'px',
+			'padding': `0 ${metrics.outerPadding}px`,
 			'--m-columns': metrics.cols,
-			'--g-spacing-x': metrics.horizontalSpacing + 'px',
-			'--g-spacing-y': metrics.verticalSpacing + 'px',
+			'--g-spacing-x': `${metrics.horizontalSpacing}px`,
+			'--g-spacing-y': `${metrics.verticalSpacing}px`,
 			'--m-item-width': metrics.itemWidthMode == 'fixed'
-				? metrics.itemWidth + 'px'
+				? `${metrics.itemWidth}px`
 				: '1fr',
-			'--m-row-unit': metrics.rowUnit + 'px',
+			'--m-row-unit': `${metrics.rowUnit}px`,
 		}
 		if (metrics.containerWidth !== undefined) {
-			style.width = metrics.containerWidth + 'px'
+			style.width = `${metrics.containerWidth}px`
 		}
 		return style
 	})

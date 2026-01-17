@@ -19,7 +19,7 @@ function hasBrokenFractionalGridAutoRows(): boolean {
 
 	const container = document.createElement('div')
 	container.style.display = 'grid'
-	container.style.gridAutoRows = unitHeight + 'px'
+	container.style.gridAutoRows = `${unitHeight}px`
 	container.style.position = 'absolute'
 	container.style.visibility = 'hidden'
 

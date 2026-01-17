@@ -31,12 +31,12 @@ export function GridImageLayout<Item>(props: GridImageLayoutProps<Item>) {
 	const getContainerStyle = createMemo(function() {
 		const metrics = getMetrics()
 		const style: JSX.CSSProperties = {
-			'padding-inline': metrics.outerPadding + 'px',
-			'--m-spacing-x': metrics.horizontalSpacing + 'px',
-			'--m-spacing-y': metrics.verticalSpacing + 'px',
+			'padding-inline': `${metrics.outerPadding}px`,
+			'--m-spacing-x': `${metrics.horizontalSpacing}px`,
+			'--m-spacing-y': `${metrics.verticalSpacing}px`,
 		}
 		if (metrics.containerWidth !== undefined) {
-			style.width = metrics.containerWidth + 'px'
+			style.width = `${metrics.containerWidth}px`
 		}
 		return style
 	})
@@ -45,7 +45,7 @@ export function GridImageLayout<Item>(props: GridImageLayoutProps<Item>) {
 		const metrics = getMetrics()
 		const style: JSX.CSSProperties = {
 			width: metrics.itemWidthMode == 'fixed'
-				? metrics.itemWidth + 'px'
+				? `${metrics.itemWidth}px`
 				: `calc((100% - ${metrics.totalHorizontalSpacing}px) / ${metrics.cols})`,
 		}
 		return style

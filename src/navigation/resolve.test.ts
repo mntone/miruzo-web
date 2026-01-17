@@ -32,7 +32,7 @@ function createRouteFixtures() {
 				return undefined
 			},
 			toPath(params: { id: number }) {
-				return '/beta/' + params.id
+				return `/beta/${params.id}`
 			},
 		},
 	] as const satisfies NavigationRoutes

@@ -27,7 +27,7 @@ export function apiClient<T>(method: string, path: string): Promise<T> {
 
 	return fetch(getApiBaseUrl() + path, init).then(function(response) {
 		if (!response.ok) {
-			throw new Error('Failed to fetch images: ' + response.status)
+			throw Error(`Failed to fetch images: ${response.status}`)
 		}
 		return response.json()
 	})

@@ -54,8 +54,8 @@ them.
   `src/**/shared`; prefer extending these before adding ad-hoc logic
 - miruzo-web does not use SSR. Assume browser-only execution when writing code
   (access to `window`, `document`, etc. is always available).
-- Prefer string concatenation (`a + b`) for simple cases; reserve template
-  literals for when two or more variables are interpolated.
+- Prefer string concatenation (`a + b`) only when all operands are strings;
+  use template literals when any operand needs string coercion.
 - TSX component files and their paired vanilla-extract styles should start with
   the component name in PascalCase (e.g., `Controller.tsx`,
   `Controller.css.ts`). When the directory hierarchy already conveys the

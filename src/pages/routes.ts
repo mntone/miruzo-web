@@ -52,7 +52,7 @@ export const navigationRoutes = [
 			return undefined
 		},
 		toPath(params) {
-			return '/i/' + params.toString()
+			return `/i/${params}`
 		},
 	} satisfies NavigationRoute<typeof DetailPage>,
 ] as const satisfies NavigationRoutes

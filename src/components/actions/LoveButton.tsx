@@ -18,7 +18,7 @@ export function LoveButton(props: LoveButtonProps) {
 	})
 
 	function getDescriptionId() {
-		return 'love-remaining-' + props.ingestId
+		return `love-remaining-${props.ingestId}`
 	}
 
 	function getTooltipLabel() {
