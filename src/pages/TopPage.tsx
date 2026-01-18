@@ -9,7 +9,7 @@ import { useI18n } from '~/i18n/Context'
 import type { TextTranslationKey } from '~/i18n/types'
 import { Link } from '~/navigation/Link'
 
-import { ListPage } from './ListPage'
+import { ListPage } from './list'
 import * as styles from './TopPage.css'
 
 const intervals: readonly LayoutInterval[] = [

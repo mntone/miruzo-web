@@ -1,8 +1,8 @@
 import { isImageListType } from '~/domain'
 import type { NavigationPageRouteId, NavigationRoute, NavigationRoutes } from '~/navigation/types'
-import { DetailPage } from '~/pages/detail'
 
-import { ListPage } from './ListPage'
+import { DetailPage } from './detail'
+import { ListPage } from './list'
 import { TopPage } from './TopPage'
 
 const imagePathPrefix = '/i/'
