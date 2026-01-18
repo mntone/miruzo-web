@@ -4,7 +4,7 @@ import type { ImageEntry, IngestId } from '~/domain'
 import { setImageStore } from '~/stores/images'
 import { setupEnvStub } from '~/test-utils/env'
 import { buildImageListModel } from '~/test-utils/stubs/api/images'
-import { buildOriginalVariantEntry, buildVariantLayerEntries } from '~/test-utils/stubs/domain/variants'
+import { buildOriginalVariantEntry, buildVariantLayerEntries } from '~/test-utils/stubs/domain/variant'
 
 import { initIngestIdListResponse, loadIngestIdList } from './ingests'
 

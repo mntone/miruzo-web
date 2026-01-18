@@ -1,10 +1,10 @@
 export { Result } from './result'
 
-export * from './ingests'
+export * from './ingest'
 
-export * from './variants'
-export * from './images'
+export * from './variant'
+export * from './image'
 export * from './stats'
-export type { QuotaEntries, QuotaEntry } from './quotas'
+export type { QuotaEntries, QuotaEntry } from './quota'
 
-export type { EventEntries, EventEntry } from './events'
+export type { EventEntries, EventEntry } from './event'

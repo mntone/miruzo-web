@@ -1,4 +1,4 @@
-import { deriveEventsFromStats, tryDeriveEventsFromStats } from './events'
+import { deriveEventsFromStats, tryDeriveEventsFromStats } from './event'
 import type { StatsEntry } from './stats'
 
 function createStats(overrides: Partial<StatsEntry>): StatsEntry {

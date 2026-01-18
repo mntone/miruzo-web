@@ -1,7 +1,7 @@
-import type { EventEntries } from './events'
-import type { IngestId } from './ingests'
+import type { EventEntries } from './event'
+import type { IngestId } from './ingest'
 import type { StatsEntry } from './stats'
-import type { VariantEntry, VariantLayerEntries } from './variants'
+import type { VariantEntry, VariantLayerEntries } from './variant'
 
 export interface ImageEntry {
 	readonly id: IngestId

@@ -5,7 +5,7 @@ import type { ContextResponse, StatsModel } from '~/api/types'
 import type { ImageEntry } from '~/domain'
 import { setImageStore } from '~/stores/images'
 import { setupEnvStub } from '~/test-utils/env'
-import { buildOriginalVariantEntry, buildVariantLayerEntries } from '~/test-utils/stubs/domain/variants'
+import { buildOriginalVariantEntry, buildVariantLayerEntries } from '~/test-utils/stubs/domain/variant'
 
 import { applyContext, initStatsEntry, loadContextIntoStore } from './contexts'
 

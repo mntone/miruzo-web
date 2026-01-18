@@ -1,6 +1,6 @@
 import type { Writable } from '~/@types/utils'
 import type { ImageEntryWithStats } from '~/domain'
-import { tryDeriveEventsFromStats } from '~/domain/events'
+import { tryDeriveEventsFromStats } from '~/domain/event'
 
 import { deleteOwnProperty } from './utils'
 
