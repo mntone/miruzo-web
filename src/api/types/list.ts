@@ -1,13 +1,4 @@
-export interface VariantModel {
-	readonly src: string
-	readonly format: string
-	readonly codecs?: string
-	readonly manbytes: number
-	readonly w: number
-	readonly h: number
-}
-
-export type VariantLayerModels = readonly (readonly VariantModel[])[]
+import type { VariantLayerModels, VariantModel } from './variant'
 
 export interface ImageListModel {
 	readonly id: number
