@@ -10,7 +10,7 @@ import { App } from './App.tsx'
 
 const app = document.getElementById('app')
 if (!app) {
-	throw new Error('.app not found')
+	throw Error('.app not found')
 }
 
 void preloadImageFormatSupport().then(function() {

@@ -50,7 +50,7 @@ export function loadContextIntoStore(ingestId: IngestId): Promise<void> {
 	return fetchContextById(ingestId).then(function(response) {
 		setImageStore('imagesById', ingestId, function(prev: ImageEntry | undefined): ImageEntry {
 			if (prev === undefined) {
-				throw new Error('ImageEntry must exist to apply context')
+				throw Error('ImageEntry must exist to apply context')
 			}
 
 			const next = Object.assign({}, prev)

@@ -25,7 +25,7 @@ export function I18nProvider(props: ParentProps) {
 export function useI18n() {
 	const ctx = useContext(I18nContext)
 	if (!ctx) {
-		throw new Error('useI18n() must be used inside <I18nProvider>')
+		throw Error('useI18n() must be used inside <I18nProvider>')
 	}
 	return ctx
 }

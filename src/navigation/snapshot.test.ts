@@ -59,7 +59,7 @@ describe('createEntryFromSnapshot', () => {
 			},
 		})
 		if (entry === undefined) {
-			throw new Error('Expected entries to be created')
+			throw Error('Expected entries to be created')
 		}
 
 		expect(entry.component).toBe(routes[0].component)
@@ -82,7 +82,7 @@ describe('createEntryFromSnapshot', () => {
 			},
 		})
 		if (entry === undefined) {
-			throw new Error('Expected entries to be created')
+			throw Error('Expected entries to be created')
 		}
 
 		expect(entry.component).toBe(routes[1].component)

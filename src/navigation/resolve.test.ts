@@ -53,7 +53,7 @@ describe('resolveSnapshotFromLocation', () => {
 		)
 
 		if (!snapshot) {
-			throw new Error('Expected snapshot to be defined')
+			throw Error('Expected snapshot to be defined')
 		}
 
 		expect(snapshot.routeId).toBe('alpha')
@@ -70,7 +70,7 @@ describe('resolveSnapshotFromLocation', () => {
 		)
 
 		if (!snapshot) {
-			throw new Error('Expected snapshot to be defined')
+			throw Error('Expected snapshot to be defined')
 		}
 
 		expect(snapshot.routeId).toBe('beta')

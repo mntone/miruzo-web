@@ -35,6 +35,8 @@ them.
 - Test utility code must be placed under `test-utils` at the project root
 - Prefer `type` imports/exports (`import type { Foo }`) and keep runtime
   imports sorted to satisfy `import-x/order`
+- Use `Error(...)` (and `TypeError(...)`, `RangeError(...)`) instead of
+  `new Error(...)` to keep output smaller.
 
 ## Naming Conventions
 

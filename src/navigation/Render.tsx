@@ -5,7 +5,7 @@ import { NavigationStackContext } from './Provider'
 export function NavigationStackRender() {
 	const context = useContext(NavigationStackContext)
 	if (context === undefined) {
-		throw new Error('NavigationStackContext must be used within a <NavigationStackProvider>.')
+		throw Error('NavigationStackContext must be used within a <NavigationStackProvider>.')
 	}
 
 	return (

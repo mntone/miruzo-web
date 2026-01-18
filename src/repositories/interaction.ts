@@ -53,7 +53,7 @@ export function loveImageIntoStore(ingestId: IngestId): Promise<void> {
 	return postLove(ingestId).then(function(response) {
 		setImageStore('imagesById', ingestId, function(prev: ImageEntry | undefined): ImageEntry {
 			if (!hasStats(prev)) {
-				throw new Error('ImageEntry and stats must exist to apply love stats')
+				throw Error('ImageEntry and stats must exist to apply love stats')
 			}
 
 			const next = Object.assign({}, prev)

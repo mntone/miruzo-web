@@ -131,7 +131,7 @@ function setupProvider(
 	})
 
 	if (!context) {
-		throw new Error('NavigationStackContext was not captured')
+		throw Error('NavigationStackContext was not captured')
 	}
 
 	return { context, dispose } as const
@@ -145,7 +145,7 @@ describe('NavigationStackProvider', () => {
 
 		const entry = context.getEntry()
 		if (entry === undefined) {
-			throw new Error('Expected entry to be defined')
+			throw Error('Expected entry to be defined')
 		}
 		expect(entry.component).toBe(Initial)
 
@@ -176,7 +176,7 @@ describe('NavigationStackProvider', () => {
 
 		const entry = context.getEntry()
 		if (entry === undefined) {
-			throw new Error('Expected entry to be defined')
+			throw Error('Expected entry to be defined')
 		}
 		expect(entry.component).toBe(Detail)
 		expect(entry.params).toEqual(params)

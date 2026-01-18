@@ -29,5 +29,5 @@ export function getPreferredVariant(variants: VariantLayerEntries, requiredWidth
 		}
 	}
 
-	throw new Error('No supported image variant is available')
+	throw Error('No supported image variant is available')
 }

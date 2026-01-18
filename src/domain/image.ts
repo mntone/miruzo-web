@@ -35,7 +35,7 @@ export function isImageListType(value: string): value is ImageListType {
 
 export function assertHasStats(entry: ImageEntry | undefined): asserts entry is ImageEntryWithStats {
 	if (entry?.stats === undefined) {
-		throw new Error('ImageEntry and stats must exist')
+		throw Error('ImageEntry and stats must exist')
 	}
 }
 
