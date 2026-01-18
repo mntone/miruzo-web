@@ -1,7 +1,7 @@
 import type { ImageListType } from '~/domain'
 
 import { apiClient } from '../client'
-import type { ContextResponse, ImageListResponse } from '../types'
+import type { ImageListResponse } from '../types'
 
 function buildImageListUrl(type: ImageListType, query: URLSearchParams | undefined): string {
 	if (query !== undefined && query.size !== 0) {
@@ -15,8 +15,4 @@ function buildImageListUrl(type: ImageListType, query: URLSearchParams | undefin
 export function fetchImageList(type: ImageListType, query?: URLSearchParams): Promise<ImageListResponse> {
 	const url = buildImageListUrl(type, query)
 	return apiClient<ImageListResponse>('GET', url)
-}
-
-export function fetchContextById(ingestId: number): Promise<ContextResponse> {
-	return apiClient<ContextResponse>('GET', `/i/${ingestId}`)
 }

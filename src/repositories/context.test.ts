@@ -1,21 +1,25 @@
 /* eslint-disable camelcase */
 
-import { fetchContextById } from '~/api/images'
+import { fetchContextById } from '~/api/contexts/fetch'
 import type { ContextResponse, StatsModel } from '~/api/types'
 import type { ImageEntry } from '~/domain'
-import { setImageStore } from '~/stores/image'
+import { imageStore, setImageStore } from '~/stores/image'
 import { setupEnvStub } from '~/test-utils/env'
 import { buildOriginalVariantEntry, buildVariantLayerEntries } from '~/test-utils/stubs/domain/variant'
 
 import { applyContext, initStatsEntry, loadContextIntoStore } from './context'
 
-vi.mock('~/api/images', () => ({
+vi.mock('~/api/contexts/fetch', () => ({
 	fetchContextById: vi.fn(),
 }))
 
-vi.mock('~/stores/image', () => ({
-	setImageStore: vi.fn(),
-}))
+vi.mock('~/stores/image', () => {
+	const imageStore = { imagesById: {} as Record<number, ImageEntry> }
+	return {
+		imageStore,
+		setImageStore: vi.fn(),
+	}
+})
 
 setupEnvStub()
 
@@ -25,6 +29,7 @@ const setImageStoreMock = vi.mocked(setImageStore)
 beforeEach(() => {
 	fetchContextByIdMock.mockReset()
 	setImageStoreMock.mockReset()
+	imageStore.imagesById = {}
 })
 
 describe('initStatsEntry', () => {
@@ -124,9 +129,16 @@ describe('loadContextIntoStore', () => {
 		}
 		fetchContextByIdMock.mockResolvedValue(response)
 
+		const previousEntry: ImageEntry = {
+			id: 123,
+			original: buildOriginalVariantEntry('foo'),
+			variants: buildVariantLayerEntries('foo'),
+		}
+		imageStore.imagesById[123] = previousEntry
+
 		await loadContextIntoStore(123)
 
-		expect(fetchContextByIdMock).toHaveBeenCalledWith(123)
+		expect(fetchContextByIdMock).toHaveBeenCalledWith({ ingestId: 123 })
 		expect(setImageStoreMock).toHaveBeenCalledWith(
 			'imagesById',
 			123,
@@ -136,11 +148,6 @@ describe('loadContextIntoStore', () => {
 		const updater = setImageStoreMock.mock.calls[0][2] as (
 			prev: ImageEntry | undefined,
 		) => ImageEntry
-		const previousEntry: ImageEntry = {
-			id: 123,
-			original: buildOriginalVariantEntry('foo'),
-			variants: buildVariantLayerEntries('foo'),
-		}
 		const next = updater(previousEntry)
 		expect(next.id).toBe(123)
 		expect(next.ingestedAt).toEqual(new Date(ingestedAt))
@@ -159,6 +166,7 @@ describe('loadContextIntoStore', () => {
 
 		await loadContextIntoStore(999)
 
+		expect(fetchContextByIdMock).toHaveBeenCalledWith({ ingestId: 999, level: 'rich' })
 		const updater = setImageStoreMock.mock.calls[0][2] as (
 			prev: ImageEntry | undefined,
 		) => ImageEntry

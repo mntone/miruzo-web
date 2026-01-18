@@ -1,11 +1,13 @@
 import type { Writable } from '~/@types/utils'
-import { fetchContextById } from '~/api/images'
-import type { ContextResponse, StatsModel } from '~/api/types'
+import { fetchContextById } from '~/api/contexts/fetch'
+import { isRichContextResponse } from '~/api/contexts/validate'
+import type { ContextRequest, ContextResponse, ImageRichModel, StatsModel } from '~/api/types'
 import { toDate } from '~/api/utils'
 import { assertHasStats, type ImageEntry, type IngestId, type StatsEntry } from '~/domain'
-import { setImageStore } from '~/stores/image'
+import { imageStore, setImageStore } from '~/stores/image'
 
 import { updateEvents } from './event'
+import { initImageEntry } from './image'
 
 export function initStatsEntry(stats: StatsModel): StatsEntry {
 	const newEntry: Writable<StatsEntry> = {
@@ -46,10 +48,30 @@ export function applyContext(
 	}
 }
 
+export function initImageEntryFromContext(src: ContextResponse<ImageRichModel>): ImageEntry {
+	const newEntry = initImageEntry(src.image)
+	applyContext(newEntry, src)
+	return newEntry
+}
+
+export function needsRichContext(ingestId: IngestId): boolean {
+	return imageStore.imagesById[ingestId] === undefined
+}
+
 export function loadContextIntoStore(ingestId: IngestId): Promise<void> {
-	return fetchContextById(ingestId).then(function(response) {
+	const request: Writable<ContextRequest> = {
+		ingestId,
+	}
+	if (needsRichContext(ingestId)) {
+		request.level = 'rich'
+	}
+
+	return fetchContextById(request).then(function(response) {
 		setImageStore('imagesById', ingestId, function(prev: ImageEntry | undefined): ImageEntry {
 			if (prev === undefined) {
+				if (isRichContextResponse(response)) {
+					return initImageEntryFromContext(response)
+				}
 				throw Error('ImageEntry must exist to apply context')
 			}
 
