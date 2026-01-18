@@ -36,6 +36,37 @@ them.
 - Prefer `type` imports/exports (`import type { Foo }`) and keep runtime
   imports sorted to satisfy `import-x/order`
 
+## Naming Conventions
+
+- Layer directories under `src/` use kebab-case plural names by default.
+  Current exceptions: `api`, `domain`, `i18n`, `navigation`.
+- Component subdirectories may use PascalCase when matching the component
+  name (e.g., `src/components/ImageLayout`, `src/components/Header`).
+- Page route subdirectories follow the route segment name in kebab-case
+  (e.g., `src/pages/detail`).
+- Pages may live directly under `src/pages` when a page is small
+  (e.g., only `Page.tsx` + `Page.css.ts`). Promote to a route
+  subdirectory once a page gains more page-only components.
+- Page component naming stays aligned across the codebase:
+  - Route id: `<example-name>` (kebab-case)
+  - Component function: `<ExampleName>Page`
+  - Props type (if defined): `<ExampleName>PageProps`
+  - File name: `<ExampleName>Page.tsx`
+  - Style file: `<ExampleName>Page.css.ts`
+  - Page subdirectory (when used): `src/pages/<example-name>/`
+- Page-only components should live under their page directory; move them
+  to `src/components` when they become shared.
+- Page-only styles/utilities should live under the same page directory.
+- Avoid abbreviations; prefer full words in names.
+- Exception: `utils.ts` is allowed for shared helper collections when a
+  more specific file name is not practical.
+- Exception: `types.ts` is allowed for shared type-only definitions.
+- File names use camelCase singular by default.
+- Hook files use camelCase matching the hook name (e.g., `useQuota.ts`).
+- Tests colocate with source and use `*.test.ts`/`*.test.tsx`.
+- Barrel files are `index.ts` and only re-export public APIs.
+- Global styles live in `src/index.css`; vanilla-extract styles use
+  `Component.css.ts`.
 
 ## Solid & UI Conventions
 
