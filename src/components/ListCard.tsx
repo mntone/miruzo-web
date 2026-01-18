@@ -44,6 +44,7 @@ export function ListCard(props: ListCardProps) {
 			<img
 				alt={props.getImage().id.toString()}
 				class={styles.image}
+				decoding='async'
 				loading='lazy'
 				src={getVariant().src}
 			/>

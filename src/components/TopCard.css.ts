@@ -1,7 +1,8 @@
 import { style } from '@vanilla-extract/css'
 
 export const card = style({
-	contain: 'strict',
+	contain: 'paint',
+	contentVisibility: 'auto',
 	overflow: 'clip',
 	position: 'relative',
 	userSelect: 'none',
@@ -17,6 +18,12 @@ export const card = style({
 
 	':hover': {
 		transform: 'translateY(-1px)',
+	},
+
+	'@supports': {
+		'(font: -apple-system-body)': {
+			contentVisibility: 'visible',
+		},
 	},
 })
 

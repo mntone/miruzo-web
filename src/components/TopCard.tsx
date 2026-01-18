@@ -45,6 +45,7 @@ export function TopCard(props: TopCardProps) {
 			<img
 				alt={props.getImage().id.toString()}
 				class={styles.image}
+				decoding='async'
 				loading='lazy'
 				src={getVariant().src}
 			/>
