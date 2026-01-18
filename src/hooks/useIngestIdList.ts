@@ -1,7 +1,7 @@
 import { createEffect, createResource, createSignal, type Accessor, type Resource } from 'solid-js'
 
 import type { Writable } from '~/@types/utils'
-import { DEFAULT_IMAGE_LIST_LIMIT } from '~/api/constants'
+import { DEFAULT_IMAGE_LIST_LIMIT } from '~/api/images'
 import type { IngestId, IngestIdListResponse } from '~/domain'
 import { loadIngestIdList, type IngestIdListRequest } from '~/repositories/ingest'
 

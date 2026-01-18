@@ -1,8 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
-import { DEFAULT_IMAGE_LIST_LIMIT } from '../constants'
-
-import { buildImageListParams } from './params'
+import { DEFAULT_IMAGE_LIST_LIMIT } from './limit'
+import { buildImageListParams } from './query'
 
 describe('buildImageListParams', () => {
 	it('omits cursor and exclude_formats when not provided', () => {

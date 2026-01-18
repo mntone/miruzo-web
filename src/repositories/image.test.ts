@@ -1,5 +1,5 @@
 import { setupEnvStub } from '~/test-utils/env'
-import { buildImageListModel } from '~/test-utils/stubs/api/images'
+import { buildImageListModel } from '~/test-utils/stubs/api/image'
 import { buildFallbackVariantEntry, buildOriginalVariantEntry, buildVariantLayerEntries } from '~/test-utils/stubs/domain/variant'
 
 import { initImageEntry } from './image'

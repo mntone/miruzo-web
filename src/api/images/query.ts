@@ -1,4 +1,4 @@
-import { DEFAULT_IMAGE_LIST_LIMIT } from '../constants'
+import { DEFAULT_IMAGE_LIST_LIMIT } from './limit'
 
 export function buildImageListParams(
 	limit: number,

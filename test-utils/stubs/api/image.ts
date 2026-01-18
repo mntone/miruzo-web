@@ -1,6 +1,6 @@
 import type { ImageListModel } from '~/api/types'
 
-import { buildFallbackVariantModel, buildOriginalVariantModel, buildVariantLayerModels } from './variants'
+import { buildFallbackVariantModel, buildOriginalVariantModel, buildVariantLayerModels } from './variant'
 
 export function buildImageListModel(id: number, name: string): ImageListModel {
 	return {
