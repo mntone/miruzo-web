@@ -8,11 +8,16 @@ import { buildOriginalVariantEntry, buildVariantLayerEntries } from '~/test-util
 
 import { initIngestIdListResponse, loadIngestIdList } from './ingest'
 
-vi.mock('~/api/images', () => ({
-	fetchImageList: vi.fn(),
-}))
+vi.mock('~/api/images', async () => {
+	// eslint-disable-next-line @typescript-eslint/consistent-type-imports
+	const actual = await vi.importActual<typeof import('~/api/images')>('~/api/images')
+	return {
+		...actual,
+		fetchImageList: vi.fn(),
+	}
+})
 
-vi.mock('~/stores/images', () => ({
+vi.mock('~/stores/image', () => ({
 	setImageStore: vi.fn(),
 }))
 

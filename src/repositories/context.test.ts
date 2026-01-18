@@ -13,7 +13,7 @@ vi.mock('~/api/images', () => ({
 	fetchContextById: vi.fn(),
 }))
 
-vi.mock('~/stores/images', () => ({
+vi.mock('~/stores/image', () => ({
 	setImageStore: vi.fn(),
 }))
 
