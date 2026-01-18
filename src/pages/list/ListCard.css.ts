@@ -4,7 +4,6 @@ export const card = style({
 	contain: 'paint',
 	contentVisibility: 'auto',
 	overflow: 'clip',
-	userSelect: 'none',
 
 	borderRadius: '2em', // 'calc(4px + .625em)',
 	boxSizing: 'content-box',

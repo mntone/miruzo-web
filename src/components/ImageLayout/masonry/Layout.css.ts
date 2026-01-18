@@ -3,6 +3,7 @@ import { style } from '@vanilla-extract/css'
 export const container = style({
 	boxSizing: 'border-box',
 	marginInline: 'auto',
+	WebkitUserSelect: 'none',
 	userSelect: 'none',
 })
 

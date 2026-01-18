@@ -5,7 +5,6 @@ export const card = style({
 	contentVisibility: 'auto',
 	overflow: 'clip',
 	position: 'relative',
-	userSelect: 'none',
 
 	borderRadius: '4px',
 	boxSizing: 'content-box',
