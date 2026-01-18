@@ -3,7 +3,7 @@
 import { fetchContextById } from '~/api/images'
 import type { ContextResponse, StatsModel } from '~/api/types'
 import type { ImageEntry } from '~/domain'
-import { setImageStore } from '~/stores/images'
+import { setImageStore } from '~/stores/image'
 import { setupEnvStub } from '~/test-utils/env'
 import { buildOriginalVariantEntry, buildVariantLayerEntries } from '~/test-utils/stubs/domain/variant'
 

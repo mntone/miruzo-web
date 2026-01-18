@@ -3,7 +3,7 @@ import { postLove } from '~/api/images'
 import type { LoveResponse, LoveStatsModel } from '~/api/types/love'
 import { toDate } from '~/api/utils'
 import { hasStats, type ImageEntry, type ImageEntryWithStats, type IngestId, type QuotaEntry, type StatsEntry } from '~/domain'
-import { setImageStore } from '~/stores/images'
+import { setImageStore } from '~/stores/image'
 import { setQuotaStore } from '~/stores/quota'
 
 import { updateEvents } from './event'

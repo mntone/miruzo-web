@@ -2,7 +2,7 @@ import type { Writable } from '~/@types/utils'
 import { buildImageListParams, fetchImageList, IMAGE_LIST_LIMIT_MAX, IMAGE_LIST_LIMIT_MIN } from '~/api/images'
 import type { ImageListResponse } from '~/api/types'
 import type { ImageEntry, ImageListType, IngestId, IngestIdListResponse } from '~/domain'
-import { setImageStore } from '~/stores/images'
+import { setImageStore } from '~/stores/image'
 
 import { mergeImageEntry } from './image'
 

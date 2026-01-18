@@ -7,7 +7,7 @@ import type { ImageEntry, IngestId } from '~/domain'
 import { mockEvents } from '~/domain/event.mock'
 import { useContextResource } from '~/hooks/useContextResource'
 import { useQuota } from '~/hooks/useQuota'
-import { imageStore } from '~/stores/images'
+import { imageStore } from '~/stores/image'
 
 import * as styles from './DetailPage.css'
 

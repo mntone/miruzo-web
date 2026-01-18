@@ -1,7 +1,7 @@
 import { fetchImageList } from '~/api/images'
 import type { ImageListResponse } from '~/api/types'
 import type { ImageEntry, IngestId } from '~/domain'
-import { setImageStore } from '~/stores/images'
+import { setImageStore } from '~/stores/image'
 import { setupEnvStub } from '~/test-utils/env'
 import { buildImageListModel } from '~/test-utils/stubs/api/image'
 import { buildOriginalVariantEntry, buildVariantLayerEntries } from '~/test-utils/stubs/domain/variant'

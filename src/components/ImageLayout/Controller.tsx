@@ -4,7 +4,7 @@ import type { Writable } from '~/@types/utils'
 import type { IngestId } from '~/domain'
 import { useIngestIdList } from '~/hooks/useIngestIdList'
 import { useI18n } from '~/i18n/Context'
-import { imageStore } from '~/stores/images'
+import { imageStore } from '~/stores/image'
 import { getExcludeFormats } from '~/utils/imageSupport'
 
 import * as styles from './Controller.css'

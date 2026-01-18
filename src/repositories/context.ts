@@ -3,7 +3,7 @@ import { fetchContextById } from '~/api/images'
 import type { ContextResponse, StatsModel } from '~/api/types'
 import { toDate } from '~/api/utils'
 import { assertHasStats, type ImageEntry, type IngestId, type StatsEntry } from '~/domain'
-import { setImageStore } from '~/stores/images'
+import { setImageStore } from '~/stores/image'
 
 import { updateEvents } from './event'
 
