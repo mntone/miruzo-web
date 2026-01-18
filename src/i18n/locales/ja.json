@@ -15,6 +15,7 @@
 	"labels": {
 		"loading": "読み込み中…",
 		"love_remaining": "本日あと{0}回ラブできます",
+		"open": "{0}を開く",
 		"view": "{0}回閲覧"
 	},
 	"sections": {
