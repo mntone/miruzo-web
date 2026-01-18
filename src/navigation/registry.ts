@@ -17,12 +17,12 @@ export function createRouteRegistry(
 
 	for (const route of routes) {
 		if (routesById.has(route.id)) {
-			throw Error(`Duplicate navigation route id: ${route.id}`)
+			throw Error('Duplicate navigation route id: ' + route.id)
 		}
 		routesById.set(route.id, route)
 
 		if (routesByComponent.has(route.component)) {
-			throw Error(`Duplicate navigation route component for id: ${route.id}`)
+			throw Error('Duplicate navigation route component for id: ' + route.id)
 		}
 		routesByComponent.set(route.component, route)
 	}
@@ -31,7 +31,7 @@ export function createRouteRegistry(
 	if (initialRouteId !== undefined) {
 		const route = routesById.get(initialRouteId)
 		if (route === undefined) {
-			throw Error(`Initial route must be a registered route: ${initialRouteId}`)
+			throw Error('Initial route must be a registered route: ' + initialRouteId)
 		}
 
 		initialRoute = route
