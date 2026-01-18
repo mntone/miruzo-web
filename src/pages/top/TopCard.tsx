@@ -1,11 +1,12 @@
 import { createMemo, useContext, type Accessor } from 'solid-js'
 import type { JSX } from 'solid-js/jsx-runtime'
 
+import { getPreferredVariant } from '~/components/ImageLayout/utils'
 import type { ImageEntry } from '~/domain'
 import { NavigationStackContext } from '~/navigation/Provider'
-import { DetailPage } from '~/pages/detail'
 
-import { getPreferredVariant } from './ImageLayout/utils'
+import { DetailPage } from '../detail'
+
 import * as styles from './TopCard.css'
 
 interface TopCardProps {

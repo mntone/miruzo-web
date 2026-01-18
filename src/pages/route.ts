@@ -3,7 +3,7 @@ import type { NavigationPageRouteId, NavigationRoute, NavigationRoutes } from '~
 
 import { DetailPage } from './detail'
 import { ListPage } from './list'
-import { TopPage } from './TopPage'
+import { TopPage } from './top'
 
 const imagePathPrefix = '/i/'
 
