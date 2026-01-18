@@ -12,12 +12,18 @@ import type {
 	NavigationStackProviderProps,
 } from './types'
 
+function getUndefined(): undefined {
+	return undefined
+}
+
 const emptyContext: NavigationStackContextValue = {
 	canPop() {
 		return false
 	},
-	getEntry() {
-		return undefined
+	getEntry: getUndefined,
+	getRouteById: getUndefined,
+	getRouteByComponent() {
+		throw Error('No routes registered')
 	},
 
 	push() {},
@@ -141,6 +147,8 @@ export function NavigationStackProvider(props: NavigationStackProviderProps) {
 
 	const api: NavigationStackContextValue = {
 		getEntry,
+		getRouteById,
+		getRouteByComponent,
 		push,
 		replace,
 		canPop,

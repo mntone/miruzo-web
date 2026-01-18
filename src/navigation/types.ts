@@ -55,6 +55,8 @@ export interface NavigationEntry {
 export interface NavigationStackContextValue {
 	canPop: Accessor<boolean>
 	getEntry: Accessor<NavigationEntry | undefined>
+	getRouteById(this: void, id: string): NavigationRoute | undefined
+	getRouteByComponent(this: void, component: NavigationStackComponent): NavigationRoute
 
 	push<C extends NavigationStackComponent>(this: void, component: C, params: NavigationParamsRequired<C>): void
 	push<C extends NavigationStackComponent>(this: void, component: C, params?: NavigationParamsOptional<C>): void
