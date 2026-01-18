@@ -171,6 +171,7 @@ button {
 	background-color: var(--fill-tertiary);
 	color: inherit;
 	overflow: clip;
+	-webkit-user-select: none;
 	user-select: none;
 
 	cursor: pointer;
@@ -200,7 +201,6 @@ button:hover::after {
 	opacity: .12;
 }
 
-button:focus,
 button:focus-visible {
 	outline: 4px auto -webkit-focus-ring-color;
 }
