@@ -1,7 +1,7 @@
 import { batch, createEffect, createSignal, type Accessor } from 'solid-js'
 
 import type { QuotaEntries } from '~/domain'
-import { loadQuotaIntoStore } from '~/repositories/quotas'
+import { loadQuotaIntoStore } from '~/repositories/quota'
 import { quotaStore } from '~/stores/quota'
 
 import { reportAndIgnore } from './error'

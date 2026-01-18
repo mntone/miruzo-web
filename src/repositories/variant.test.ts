@@ -1,7 +1,7 @@
 import type { VariantModel } from '~/api/types'
 import { setupEnvStub } from '~/test-utils/env'
 
-import { getBaseUrl, initVariantEntry, initVariantLayerResources } from './variants'
+import { getBaseUrl, initVariantEntry, initVariantLayerResources } from './variant'
 
 const env = setupEnvStub()
 

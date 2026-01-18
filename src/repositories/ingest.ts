@@ -6,7 +6,7 @@ import type { ImageListResponse } from '~/api/types'
 import type { ImageEntry, ImageListType, IngestId, IngestIdListResponse } from '~/domain'
 import { setImageStore } from '~/stores/images'
 
-import { mergeImageEntry } from './images'
+import { mergeImageEntry } from './image'
 
 export interface IngestIdListRequest {
 	readonly type: ImageListType

@@ -2,7 +2,7 @@
 
 import type { QuotaItem } from '~/api/types/quota'
 
-import { initQuotaEntry } from './quotas'
+import { initQuotaEntry } from './quota'
 
 describe('initQuotaEntry', () => {
 	it('maps fields and computes used', () => {

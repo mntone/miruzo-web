@@ -6,7 +6,7 @@ import { hasStats, type ImageEntry, type ImageEntryWithStats, type IngestId, typ
 import { setImageStore } from '~/stores/images'
 import { setQuotaStore } from '~/stores/quota'
 
-import { updateEvents } from './events'
+import { updateEvents } from './event'
 import { deleteOwnProperty } from './utils'
 
 export function applyLove(

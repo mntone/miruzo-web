@@ -5,7 +5,7 @@ import { toDate } from '~/api/utils'
 import { assertHasStats, type ImageEntry, type IngestId, type StatsEntry } from '~/domain'
 import { setImageStore } from '~/stores/images'
 
-import { updateEvents } from './events'
+import { updateEvents } from './event'
 
 export function initStatsEntry(stats: StatsModel): StatsEntry {
 	const newEntry: Writable<StatsEntry> = {

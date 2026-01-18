@@ -1,4 +1,4 @@
-import { resetBaseUrlForTests } from '~/repositories/variants'
+import { resetBaseUrlForTests } from '~/repositories/variant'
 
 import type { MutableEnv } from './types'
 

@@ -2,7 +2,7 @@ import type { Writable } from '~/@types/utils'
 import type { ImageListModel } from '~/api/types'
 import type { ImageEntry } from '~/domain'
 
-import { initVariantLayerResources, initVariantEntry } from './variants'
+import { initVariantLayerResources, initVariantEntry } from './variant'
 
 export function initImageEntry(src: ImageListModel): ImageEntry {
 	const newEntry: Writable<ImageEntry> = {

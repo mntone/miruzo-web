@@ -6,7 +6,7 @@ import { setupEnvStub } from '~/test-utils/env'
 import { buildImageListModel } from '~/test-utils/stubs/api/images'
 import { buildOriginalVariantEntry, buildVariantLayerEntries } from '~/test-utils/stubs/domain/variant'
 
-import { initIngestIdListResponse, loadIngestIdList } from './ingests'
+import { initIngestIdListResponse, loadIngestIdList } from './ingest'
 
 vi.mock('~/api/images', () => ({
 	fetchImageList: vi.fn(),

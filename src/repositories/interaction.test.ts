@@ -5,7 +5,7 @@ import type { LoveStatsModel } from '~/api/types/love'
 import { toDateOptional } from '~/api/utils'
 import type { QuotaEntry, StatsEntry } from '~/domain'
 
-import { applyLove, consumeLoveQuota } from './interactions'
+import { applyLove, consumeLoveQuota } from './interaction'
 
 describe('applyLoveStats', () => {
 	it('updates score and love timestamps', () => {

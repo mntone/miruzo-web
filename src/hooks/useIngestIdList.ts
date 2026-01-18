@@ -3,7 +3,7 @@ import { createEffect, createResource, createSignal, type Accessor, type Resourc
 import type { Writable } from '~/@types/utils'
 import { DEFAULT_IMAGE_LIST_LIMIT } from '~/api/constants'
 import type { IngestId, IngestIdListResponse } from '~/domain'
-import { loadIngestIdList, type IngestIdListRequest } from '~/repositories/ingests'
+import { loadIngestIdList, type IngestIdListRequest } from '~/repositories/ingest'
 
 import type { IngestIdListParams } from './types'
 

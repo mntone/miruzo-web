@@ -7,7 +7,7 @@ import { setImageStore } from '~/stores/images'
 import { setupEnvStub } from '~/test-utils/env'
 import { buildOriginalVariantEntry, buildVariantLayerEntries } from '~/test-utils/stubs/domain/variant'
 
-import { applyContext, initStatsEntry, loadContextIntoStore } from './contexts'
+import { applyContext, initStatsEntry, loadContextIntoStore } from './context'
 
 vi.mock('~/api/images', () => ({
 	fetchContextById: vi.fn(),
