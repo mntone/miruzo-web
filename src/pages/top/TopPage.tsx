@@ -1,6 +1,7 @@
 import type { Accessor } from 'solid-js'
 
 import { Header } from '~/components/Header/Header'
+import { HorizontalEdgeInsetBoundary } from '~/components/HorizontalEdgeInsetBoundary'
 import { GridImageLayout, ImageLayoutController } from '~/components/ImageLayout'
 import type { LayoutChildAccessors, LayoutInterval } from '~/components/ImageLayout/shared/types'
 import type { ImageEntry } from '~/domain'
@@ -14,9 +15,9 @@ import { TopCard } from './TopCard'
 import * as styles from './TopPage.css'
 
 const intervals: readonly LayoutInterval[] = [
-	{ colMin: 1, colMax: 2, minItemWidth: 160, maxItemWidth: Infinity, spacing: 8, outerPadding: 12 },
-	{ col: 3, minItemWidth: 240, maxItemWidth: 320, spacing: 8, outerPadding: 16 },
-	{ colMin: 4, itemWidth: 320, spacing: 8, outerPadding: 24 },
+	{ colMin: 1, colMax: 2, minItemWidth: 160, maxItemWidth: Infinity, spacing: 8, outerPadding: 0 },
+	{ col: 3, minItemWidth: 240, maxItemWidth: 320, spacing: 8, outerPadding: 0 },
+	{ colMin: 4, itemWidth: 320, spacing: 8, outerPadding: 8 },
 ]
 
 function CardDelegate(
@@ -54,7 +55,10 @@ export function TopPage() {
 	return (
 		<>
 			<Header />
-			<main>
+			<HorizontalEdgeInsetBoundary
+				as='main'
+				minHorizontalEdgeInset={16}
+			>
 				<ImageLayoutController
 					children={CardDelegate.bind(null, '5 / 4')}
 					as='section'
@@ -99,7 +103,7 @@ export function TopPage() {
 						limit: 10,
 					}}
 				/>
-			</main>
+			</HorizontalEdgeInsetBoundary>
 		</>
 	)
 }

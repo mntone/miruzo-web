@@ -1,6 +1,7 @@
 import type { Accessor } from 'solid-js'
 
 import { Header } from '~/components/Header/Header'
+import { HorizontalEdgeInsetBoundary } from '~/components/HorizontalEdgeInsetBoundary'
 import { ImageLayoutController, MasonryImageLayout } from '~/components/ImageLayout'
 import type { LayoutChildAccessors } from '~/components/ImageLayout/shared/types'
 import type { ImageEntry, ImageListType } from '~/domain'
@@ -26,13 +27,15 @@ export function ListPage(props: ListPageProps) {
 	return (
 		<>
 			<Header />
-			<ImageLayoutController
-				children={CardDelegate}
-				as='main'
-				layout={MasonryImageLayout}
-				requestParams={{ type: props.params }}
-				useMoreButton
-			/>
+			<HorizontalEdgeInsetBoundary minHorizontalEdgeInset={16}>
+				<ImageLayoutController
+					children={CardDelegate}
+					as='main'
+					layout={MasonryImageLayout}
+					requestParams={{ type: props.params }}
+					useMoreButton
+				/>
+			</HorizontalEdgeInsetBoundary>
 		</>
 	)
 }
