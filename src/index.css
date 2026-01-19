@@ -152,6 +152,22 @@ body {
 	margin: 0;
 }
 
+.layout-root {
+	box-sizing: border-box;
+	margin-inline: auto;
+	-webkit-user-select: none;
+	user-select: none;
+}
+.hstack { display: flex; }
+.vstack {
+	display: flex;
+	flex-direction: column;
+}
+.grid {
+	display: flex;
+	flex-wrap: wrap;
+}
+
 a {
 	font-weight: 500;
 	color: #646cff;

@@ -60,8 +60,8 @@ export interface LayoutMetrics {
 }
 
 export interface LayoutChildAccessors {
-	getChildStyle: (itemHeight: number) => JSX.CSSProperties
-	getChildWidth: Accessor<number>
+	getChildStyle?: (itemHeight: number) => JSX.CSSProperties
+	getChildWidth?: Accessor<number>
 	getNativeChildWidth: Accessor<number>
 }
 

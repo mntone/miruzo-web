@@ -10,10 +10,9 @@ import { DetailPage } from '../detail'
 import * as styles from './TopCard.css'
 
 interface TopCardProps {
-	aspectRatio: string
 	getImage: Accessor<ImageEntry>
-	getLayoutStyle: (itemHeight: number) => JSX.CSSProperties
 	getNativeCardWidth: Accessor<number>
+	readonly style: JSX.CSSProperties
 }
 
 export function TopCard(props: TopCardProps) {
@@ -29,10 +28,7 @@ export function TopCard(props: TopCardProps) {
 	return (
 		<div
 			class={styles.card}
-			style={{
-				...props.getLayoutStyle(0),
-				'aspect-ratio': props.aspectRatio,
-			}}
+			style={props.style}
 			onClick={function() {
 				push(DetailPage, props.getImage().id)
 			}}

@@ -1,4 +1,4 @@
-import type { Accessor } from 'solid-js'
+import type { Accessor, JSX } from 'solid-js'
 
 import { Header } from '~/components/Header/Header'
 import { HorizontalEdgeInsetBoundary } from '~/components/HorizontalEdgeInsetBoundary'
@@ -14,23 +14,28 @@ import { ListPage } from '../list'
 import { TopCard } from './TopCard'
 import * as styles from './TopPage.css'
 
+// TopPage keeps bespoke intervals to preserve its intended grid density.
 const intervals: readonly LayoutInterval[] = [
+	// 1–2 columns (minItemWidth=160, gap=8)
 	{ colMin: 1, colMax: 2, minItemWidth: 160, maxItemWidth: Infinity, spacing: 8, outerPadding: 0 },
+
+	// 3 columns (minItemWidth=240–320, gap=16)
 	{ col: 3, minItemWidth: 240, maxItemWidth: 320, spacing: 8, outerPadding: 0 },
+
+	// 4+ columns (open-ended range)
 	{ colMin: 4, itemWidth: 320, spacing: 8, outerPadding: 8 },
 ]
 
 function CardDelegate(
-	aspect: string,
+	style: JSX.CSSProperties,
 	accessors: LayoutChildAccessors,
 	getImage: Accessor<ImageEntry>,
 ) {
 	return (
 		<TopCard
-			aspectRatio={aspect}
 			getImage={getImage}
-			getLayoutStyle={accessors.getChildStyle}
 			getNativeCardWidth={accessors.getNativeChildWidth}
+			style={style}
 		/>
 	)
 }
@@ -60,7 +65,7 @@ export function TopPage() {
 				minHorizontalEdgeInset={16}
 			>
 				<ImageLayoutController
-					children={CardDelegate.bind(null, '5 / 4')}
+					children={CardDelegate.bind(null, { 'aspect-ratio': '1.25' })}
 					as='section'
 					header={<SectionHeader type='latest' />}
 					layout={GridImageLayout}
@@ -75,7 +80,7 @@ export function TopPage() {
 				/>
 
 				<ImageLayoutController
-					children={CardDelegate.bind(null, '4 / 5')}
+					children={CardDelegate.bind(null, { 'aspect-ratio': '0.8' })}
 					as='section'
 					header={<SectionHeader type='engaged' />}
 					layout={GridImageLayout}
@@ -90,7 +95,7 @@ export function TopPage() {
 				/>
 
 				<ImageLayoutController
-					children={CardDelegate.bind(null, '1')}
+					children={CardDelegate.bind(null, { 'aspect-ratio': '1' })}
 					as='section'
 					header={<SectionHeader type='hall_of_fame' />}
 					layout={GridImageLayout}

@@ -1,12 +1,5 @@
 import { style } from '@vanilla-extract/css'
 
-export const container = style({
-	boxSizing: 'border-box',
-	marginInline: 'auto',
-	WebkitUserSelect: 'none',
-	userSelect: 'none',
-})
-
 export const layout = style({
 	display: 'grid',
 	columnGap: 'var(--g-spacing-x, 8px)',

@@ -15,9 +15,9 @@ interface ListPageProps {
 function CardDelegate(accessors: LayoutChildAccessors, getImage: Accessor<ImageEntry>) {
 	return (
 		<ListCard
-			getCardWidth={accessors.getChildWidth}
+			getCardWidth={accessors.getChildWidth!}
 			getImage={getImage}
-			getLayoutStyle={accessors.getChildStyle}
+			getLayoutStyle={accessors.getChildStyle!}
 			getNativeCardWidth={accessors.getNativeChildWidth}
 		/>
 	)

@@ -65,7 +65,7 @@ export function MasonryImageLayout<Item>(props: MasonryImageLayoutProps<Item>) {
 	return (
 		<Dynamic
 			ref={setEl}
-			class={styles.container}
+			class='layout-root'
 			component={props.as}
 			style={getContainerStyle()}
 		>

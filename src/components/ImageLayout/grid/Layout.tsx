@@ -4,10 +4,10 @@ import { Dynamic } from 'solid-js/web'
 
 import { useParentContentSize } from '~/hooks'
 
+import * as styleUtils from '../../shared/style'
 import { computeLayoutMetrics, normalizeIntervals } from '../shared/layoutMetrics'
 
 import { defaultIntervals } from './config'
-import * as styles from './Layout.css'
 import type { GridImageLayoutProps } from './types'
 
 export function GridImageLayout<Item>(props: GridImageLayoutProps<Item>) {
@@ -28,32 +28,15 @@ export function GridImageLayout<Item>(props: GridImageLayoutProps<Item>) {
 		return props.getItems().slice(0, metrics.cols * props.maxRows)
 	})
 
-	const getContainerStyle = createMemo(function() {
+	const getLayoutStyle = createMemo(function() {
 		const metrics = getMetrics()
 		const style: JSX.CSSProperties = {
-			'padding-inline': `${metrics.outerPadding}px`,
-			'--m-spacing-x': `${metrics.horizontalSpacing}px`,
-			'--m-spacing-y': `${metrics.verticalSpacing}px`,
-		}
-		if (metrics.containerWidth !== undefined) {
-			style.width = `${metrics.containerWidth}px`
-		}
-		return style
-	})
-
-	const getChildStyle = createMemo(function() {
-		const metrics = getMetrics()
-		const style: JSX.CSSProperties = {
-			width: metrics.itemWidthMode == 'fixed'
+			'gap': `${metrics.verticalSpacing}px ${metrics.horizontalSpacing}px`,
+			'--g-item-width': metrics.itemWidthMode == 'fixed'
 				? `${metrics.itemWidth}px`
 				: `calc((100% - ${metrics.totalHorizontalSpacing}px) / ${metrics.cols})`,
 		}
 		return style
-	})
-
-	const getChildWidth = createMemo(function() {
-		const metrics = getMetrics()
-		return metrics.itemWidth
 	})
 
 	const getNativeChildWidth = createMemo(function() {
@@ -64,18 +47,19 @@ export function GridImageLayout<Item>(props: GridImageLayoutProps<Item>) {
 	return (
 		<Dynamic
 			ref={setEl}
-			class={styles.container}
+			class='layout-root'
 			component={props.as}
-			style={getContainerStyle()}
+			style={{
+				padding: styleUtils.zeroVerticalHorizontalPxNonZero(getMetrics().outerPadding),
+				width: styleUtils.px(getMetrics().containerWidth),
+			}}
 		>
 			{props.header}
 
-			<div class={styles.layout}>
+			<div class='grid' style={getLayoutStyle()}>
 				<For each={getConstrainItems()}>
 					{props.children.bind(null,
 						{
-							getChildStyle,
-							getChildWidth,
 							getNativeChildWidth,
 						},
 					)}
