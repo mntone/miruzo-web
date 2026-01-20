@@ -103,6 +103,8 @@
 	--scrollbar-width: 0px;
 	--base-primary: #000;
 	--base-secondary: #1C1C1E;
+	--base-section-primary: #000;
+	--base-section-secondary: #2C2C2E;
 	--text-primary: #FFF;
 	--text-secondary: rgba(235, 235, 245, .6);
 	--text-tertiary: rgba(235, 235, 245, .3);
@@ -154,6 +156,10 @@ html {
 html[data-surface='secondary'] {
 	background-color: var(--base-secondary);
 	scrollbar-color: var(--text-secondary) var(--base-secondary);
+}
+html[data-surface='section'] {
+	background-color: var(--base-section-primary);
+	scrollbar-color: var(--text-secondary) var(--base-section-primary);
 }
 
 body {
@@ -255,6 +261,8 @@ button:focus-visible {
 		color-scheme: light;
 		--base-primary: #FFF;
 		--base-secondary: #F2F2F7;
+		--base-section-primary: #F2F2F7;
+		--base-section-secondary: #FFF;
 		--text-primary: #000;
 		--text-secondary: rgba(60, 60, 67, .6);
 		--text-tertiary: rgba(60, 60, 67, .3);

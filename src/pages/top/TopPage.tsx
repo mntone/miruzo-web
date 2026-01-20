@@ -1,7 +1,8 @@
 import { Header } from '~/components/Header/Header'
 import { HorizontalEdgeInsetBoundary } from '~/components/HorizontalEdgeInsetBoundary'
-import { GridImageLayout, ImageLayoutController } from '~/components/ImageLayout'
+import { GridImageLayout, ImageLayoutController, type ImageLayoutControllerProps } from '~/components/ImageLayout'
 import type { LayoutInterval } from '~/components/ImageLayout/shared/types'
+import { useSurfaceScope } from '~/hooks/useSurfaceScope'
 import { useI18n } from '~/i18n/Context'
 import type { TextTranslationKey } from '~/i18n/types'
 import { Link } from '~/navigation/Link'
@@ -14,13 +15,13 @@ import * as styles from './TopPage.css'
 // TopPage keeps bespoke intervals to preserve its intended grid density.
 const intervals: readonly LayoutInterval[] = [
 	// 1–2 columns (minItemWidth=160–, gap=8)
-	{ colMin: 1, colMax: 2, minItemWidth: 160, spacing: 8 },
+	{ colMin: 1, colMax: 2, minItemWidth: 160, spacing: 10, outerPadding: 14 },
 
-	// 3 columns (minItemWidth=211–320, gap=8)
-	{ col: 3, minItemWidth: 211, maxItemWidth: 320, spacing: 8 },
+	// 3 columns (minItemWidth=210–320, gap=8)
+	{ col: 3, minItemWidth: 210, maxItemWidth: 320, spacing: 10, outerPadding: 14 },
 
 	// 4+ columns (open-ended range)
-	{ colMin: 4, itemWidth: 320, spacing: 8, outerPadding: 8 },
+	{ colMin: 4, itemWidth: 320, spacing: 10, outerPadding: 14 },
 ] as const
 
 function SectionHeader(props: { readonly type: 'latest' | 'engaged' | 'hall_of_fame' }) {
@@ -40,6 +41,16 @@ function SectionHeader(props: { readonly type: 'latest' | 'engaged' | 'hall_of_f
 }
 
 export function TopPage() {
+	useSurfaceScope(function() {
+		return 'section'
+	})
+
+	const baseLayoutProps: (ImageLayoutControllerProps<typeof GridImageLayout>)['layoutProps'] = {
+		as: 'section',
+		class: styles.section,
+		intervals,
+		maxRows: 1,
+	}
 	return (
 		<>
 			<Header />
@@ -52,8 +63,7 @@ export function TopPage() {
 					itemComponent={TopCard}
 					layout={GridImageLayout}
 					layoutProps={{
-						as: 'section',
-						intervals,
+						...baseLayoutProps,
 						maxRows: 2,
 						style: {
 							'--g-item-aspect': '1.25',
@@ -70,9 +80,7 @@ export function TopPage() {
 					itemComponent={TopCard}
 					layout={GridImageLayout}
 					layoutProps={{
-						as: 'section',
-						intervals,
-						maxRows: 1,
+						...baseLayoutProps,
 						style: {
 							'--g-item-aspect': '.8',
 						},
@@ -88,9 +96,7 @@ export function TopPage() {
 					itemComponent={TopCard}
 					layout={GridImageLayout}
 					layoutProps={{
-						as: 'section',
-						intervals,
-						maxRows: 1,
+						...baseLayoutProps,
 						style: {
 							'--g-item-aspect': '1',
 						},

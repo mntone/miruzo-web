@@ -1,7 +1,14 @@
 import { style } from '@vanilla-extract/css'
 
+export const section = style({
+	backgroundColor: 'var(--base-section-secondary)',
+	borderRadius: '24px',
+	marginBlock: '8px 24px',
+	paddingBlock: '4px 14px',
+})
+
 export const sectionHeader = style({
-	margin: '.25em 0 .125em',
+	margin: '.125em 0',
 	fontSize: '1.5em',
 	fontWeight: 400,
 	lineHeight: 2,

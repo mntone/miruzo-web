@@ -7,7 +7,7 @@ export const card = style({
 	position: 'relative',
 
 	aspectRatio: 'var(--g-item-aspect, 1.333)',
-	borderRadius: '4px',
+	borderRadius: '10px',
 	boxSizing: 'content-box',
 	width: 'var(--g-item-width, 100%)',
 

@@ -2,7 +2,7 @@ import { createRenderEffect, onCleanup, type Accessor } from 'solid-js'
 
 const DATA_SURFACE_KEY = 'surface' as const
 
-type SurfaceType = 'primary' | 'secondary'
+type SurfaceType = 'primary' | 'secondary' | 'section'
 
 export function useSurfaceScope(
 	getSurface: Accessor<SurfaceType>,

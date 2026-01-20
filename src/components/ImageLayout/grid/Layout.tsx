@@ -46,8 +46,8 @@ export function GridImageLayout<Item>(props: GridImageLayoutProps<Item>) {
 			component={props.as || 'div'}
 			style={{
 				...props.style,
-				padding: styleUtils.zeroVerticalHorizontalPxNonZero(getMetrics().outerPadding),
-				width: styleUtils.px(getMetrics().containerWidth),
+				'padding-inline': styleUtils.pxNonZero(getMetrics().outerPadding),
+				'width': styleUtils.px(getMetrics().containerWidth),
 			}}
 		>
 			{props.header}
