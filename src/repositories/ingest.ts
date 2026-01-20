@@ -14,10 +14,18 @@ export interface IngestIdListRequest {
 }
 
 export function initIngestIdListResponse(r: ImageListResponse): IngestIdListResponse {
+	let ids: IngestId[]
+	if (r.items !== undefined) {
+		ids = new Array<IngestId>(r.items.length)
+		for (let i = 0; i < r.items.length; ++i) {
+			ids[i] = r.items[i].id
+		}
+	} else {
+		ids = []
+	}
+
 	const newEntry: Writable<IngestIdListResponse> = {
-		ids: r.items?.map(function(item) {
-			return item.id
-		}) ?? [],
+		ids,
 	}
 	if (r.cursor !== undefined) {
 		newEntry.cursor = r.cursor
