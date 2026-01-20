@@ -7,6 +7,7 @@ import type { ImageEntry, IngestId } from '~/domain'
 import { mockEvents } from '~/domain/event.mock'
 import { useContextResource } from '~/hooks/useContextResource'
 import { useQuota } from '~/hooks/useQuota'
+import { useSurfaceScope } from '~/hooks/useSurfaceScope'
 import { imageStore } from '~/stores/image'
 
 import * as styles from './DetailPage.css'
@@ -16,6 +17,10 @@ interface DetailPageProps {
 }
 
 export function DetailPage(props: DetailPageProps) {
+	useSurfaceScope(function() {
+		return 'secondary'
+	})
+
 	const getEntry = createMemo(function(): ImageEntry | undefined {
 		return imageStore.imagesById[props.params]
 	})

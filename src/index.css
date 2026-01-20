@@ -101,6 +101,8 @@
 	text-autospace: normal;
 
 	--scrollbar-width: 0px;
+	--base-primary: #000;
+	--base-secondary: #1C1C1E;
 	--text-primary: #FFF;
 	--text-secondary: rgba(235, 235, 245, .6);
 	--text-tertiary: rgba(235, 235, 245, .3);
@@ -145,8 +147,13 @@ html {
 	padding-inline: env(safe-area-inset-left) env(safe-area-inset-right);
 
 	color: var(--text-primary);
-	background-color: #1C1C1E;
+	background-color: var(--base-primary);
+	scrollbar-color: var(--text-secondary) var(--base-primary);
 	-webkit-text-size-adjust: none;
+}
+html[data-surface='secondary'] {
+	background-color: var(--base-secondary);
+	scrollbar-color: var(--text-secondary) var(--base-secondary);
 }
 
 body {
@@ -246,14 +253,12 @@ button:focus-visible {
 @media (prefers-color-scheme: light) {
 	:root {
 		color-scheme: light;
+		--base-primary: #FFF;
+		--base-secondary: #F2F2F7;
 		--text-primary: #000;
 		--text-secondary: rgba(60, 60, 67, .6);
 		--text-tertiary: rgba(60, 60, 67, .3);
 		--fill-tertiary: rgba(118, 118, 128, .12);
-	}
-
-	html {
-		background-color: #FCFCFE;
 	}
 
 	button:hover::after {
