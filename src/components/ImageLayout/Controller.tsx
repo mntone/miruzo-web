@@ -1,20 +1,19 @@
 import { Show, type Component } from 'solid-js'
 
 import type { Writable } from '~/@types/utils'
-import type { IngestId } from '~/domain'
-import { useIngestIdList } from '~/hooks/useIngestIdList'
+import type { ImageEntry } from '~/domain'
+import { useImageEntries } from '~/hooks/useImageEntries'
 import { useI18n } from '~/i18n/Context'
-import { imageStore } from '~/stores/image'
 import { getExcludeFormats } from '~/utils/imageSupport'
 
 import * as styles from './Controller.css'
 import type { LayoutProps, LayoutPropsBase } from './shared/types'
 import type { ImageLayoutControllerProps } from './types'
 
-export function ImageLayoutController<Layout extends Component<LayoutProps<IngestId>>>(props: ImageLayoutControllerProps<Layout>) {
+export function ImageLayoutController<Layout extends Component<LayoutProps<ImageEntry>>>(props: ImageLayoutControllerProps<Layout>) {
 	const { t } = useI18n()
 	/* eslint-disable solid/reactivity */
-	const [getIngestIds, listPage, loadMore] = useIngestIdList(
+	const [getImageEntries, listPage, loadMore] = useImageEntries(
 		props.requestParams,
 		getExcludeFormats(),
 	)
@@ -25,7 +24,7 @@ export function ImageLayoutController<Layout extends Component<LayoutProps<Inges
 		return p ? Boolean(p.cursor) : false
 	}
 
-	const nextProps: Writable<LayoutPropsBase<IngestId>> = {
+	const nextProps: Writable<LayoutPropsBase<ImageEntry>> = {
 		header: (
 			<>
 				<Show when={props.header}>
@@ -47,22 +46,9 @@ export function ImageLayoutController<Layout extends Component<LayoutProps<Inges
 				</Show>
 			</>
 		),
-		itemComponent(templateProps) {
-			return (
-				<Show when={imageStore.imagesById[templateProps.item]}>
-					{function(getImageEntry) {
-						const Component = props.itemComponent
-						return (
-							<Component
-								{...templateProps}
-								item={getImageEntry()}
-							/>
-						)
-					}}
-				</Show>
-			)
-		},
-		getItems: getIngestIds,
+		// eslint-disable-next-line solid/reactivity
+		itemComponent: props.itemComponent,
+		getItems: getImageEntries,
 	}
 
 	// eslint-disable-next-line solid/reactivity
@@ -80,7 +66,7 @@ export function ImageLayoutController<Layout extends Component<LayoutProps<Inges
 					</button>
 				</Show>
 
-				<Show when={!hasNext() && getIngestIds().length > 0}>
+				<Show when={!hasNext() && getImageEntries().length > 0}>
 					<div class='image-page__status'>
 						No more images
 					</div>
