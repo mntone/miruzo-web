@@ -1,5 +1,4 @@
 import { createMemo, useContext, type Accessor } from 'solid-js'
-import type { JSX } from 'solid-js/jsx-runtime'
 
 import { getPreferredVariant } from '~/components/ImageLayout/utils'
 import type { ImageEntry } from '~/domain'
@@ -12,7 +11,6 @@ import * as styles from './TopCard.css'
 interface TopCardProps {
 	getImage: Accessor<ImageEntry>
 	getNativeCardWidth: Accessor<number>
-	readonly style: JSX.CSSProperties
 }
 
 export function TopCard(props: TopCardProps) {
@@ -28,7 +26,6 @@ export function TopCard(props: TopCardProps) {
 	return (
 		<div
 			class={styles.card}
-			style={props.style}
 			onClick={function() {
 				push(DetailPage, props.getImage().id)
 			}}

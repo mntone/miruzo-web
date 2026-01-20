@@ -1,4 +1,4 @@
-import type { Accessor, JSX } from 'solid-js'
+import type { Accessor } from 'solid-js'
 
 import { Header } from '~/components/Header/Header'
 import { HorizontalEdgeInsetBoundary } from '~/components/HorizontalEdgeInsetBoundary'
@@ -27,7 +27,6 @@ const intervals: readonly LayoutInterval[] = [
 ]
 
 function CardDelegate(
-	style: JSX.CSSProperties,
 	accessors: LayoutChildAccessors,
 	getImage: Accessor<ImageEntry>,
 ) {
@@ -35,7 +34,6 @@ function CardDelegate(
 		<TopCard
 			getImage={getImage}
 			getNativeCardWidth={accessors.getNativeChildWidth}
-			style={style}
 		/>
 	)
 }
@@ -65,13 +63,16 @@ export function TopPage() {
 				minHorizontalEdgeInset={16}
 			>
 				<ImageLayoutController
-					children={CardDelegate.bind(null, { 'aspect-ratio': '1.25' })}
+					children={CardDelegate}
 					header={<SectionHeader type='latest' />}
 					layout={GridImageLayout}
 					layoutProps={{
 						as: 'section',
 						intervals,
 						maxRows: 2,
+						style: {
+							'--g-item-aspect': '1.25',
+						},
 					}}
 					requestParams={{
 						type: 'latest',
@@ -80,13 +81,16 @@ export function TopPage() {
 				/>
 
 				<ImageLayoutController
-					children={CardDelegate.bind(null, { 'aspect-ratio': '0.8' })}
+					children={CardDelegate}
 					header={<SectionHeader type='engaged' />}
 					layout={GridImageLayout}
 					layoutProps={{
 						as: 'section',
 						intervals,
 						maxRows: 1,
+						style: {
+							'--g-item-aspect': '.8',
+						},
 					}}
 					requestParams={{
 						type: 'engaged',
@@ -95,13 +99,16 @@ export function TopPage() {
 				/>
 
 				<ImageLayoutController
-					children={CardDelegate.bind(null, { 'aspect-ratio': '1' })}
+					children={CardDelegate}
 					header={<SectionHeader type='hall_of_fame' />}
 					layout={GridImageLayout}
 					layoutProps={{
 						as: 'section',
 						intervals,
 						maxRows: 1,
+						style: {
+							'--g-item-aspect': '1',
+						},
 					}}
 					requestParams={{
 						type: 'hall_of_fame',
