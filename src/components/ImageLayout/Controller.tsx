@@ -47,10 +47,18 @@ export function ImageLayoutController<Layout extends Component<LayoutProps<Inges
 				</Show>
 			</>
 		),
-		children(accessors, ingestId: IngestId) {
+		itemComponent(templateProps) {
 			return (
-				<Show when={imageStore.imagesById[ingestId]}>
-					{props.children.bind(null, accessors)}
+				<Show when={imageStore.imagesById[templateProps.item]}>
+					{function(getImageEntry) {
+						const Component = props.itemComponent
+						return (
+							<Component
+								{...templateProps}
+								item={getImageEntry()}
+							/>
+						)
+					}}
 				</Show>
 			)
 		},

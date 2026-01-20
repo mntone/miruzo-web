@@ -1,6 +1,6 @@
-import { createMemo, useContext, type Accessor } from 'solid-js'
-import type { JSX } from 'solid-js/jsx-runtime'
+import { createMemo, useContext } from 'solid-js'
 
+import type { LayoutItemPropsBase } from '~/components/ImageLayout/types'
 import { getPreferredVariant } from '~/components/ImageLayout/utils'
 import type { ImageEntry } from '~/domain'
 import { NavigationStackContext } from '~/navigation/Provider'
@@ -9,28 +9,23 @@ import { DetailPage } from '../detail'
 
 import * as styles from './ListCard.css'
 
-interface ListCardProps {
-	getImage: Accessor<ImageEntry>
-	getLayoutStyle: (itemHeight: number) => JSX.CSSProperties
-	getCardWidth: Accessor<number>
-	getNativeCardWidth: Accessor<number>
-}
+type ListCardProps = LayoutItemPropsBase<ImageEntry>
 
 export function ListCard(props: ListCardProps) {
 	const { push } = useContext(NavigationStackContext)
 
 	const getVariant = createMemo(function() {
 		return getPreferredVariant(
-			props.getImage().variants,
-			props.getNativeCardWidth(),
+			props.item.variants,
+			props.nativeItemWidth,
 		)
 	})
 
 	const getStyle = createMemo(function() {
 		const variant = getVariant()
-		const cardWidth = props.getCardWidth()
+		const cardWidth = props.itemWidth
 		const scaledHeight = variant.height * (cardWidth / variant.width)
-		const layoutStyle = props.getLayoutStyle(scaledHeight)
+		const layoutStyle = props.getItemStyle!(scaledHeight)
 		return layoutStyle
 	})
 
@@ -39,11 +34,11 @@ export function ListCard(props: ListCardProps) {
 			class={styles.card}
 			style={getStyle()}
 			onClick={function() {
-				push(DetailPage, props.getImage().id)
+				push(DetailPage, props.item.id)
 			}}
 		>
 			<img
-				alt={props.getImage().id.toString()}
+				alt={`${props.item.id}`}
 				class={styles.image}
 				decoding='async'
 				loading='lazy'

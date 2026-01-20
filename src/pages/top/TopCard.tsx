@@ -1,5 +1,6 @@
-import { createMemo, useContext, type Accessor } from 'solid-js'
+import { createMemo, useContext } from 'solid-js'
 
+import type { LayoutItemPropsBase } from '~/components/ImageLayout/types'
 import { getPreferredVariant } from '~/components/ImageLayout/utils'
 import type { ImageEntry } from '~/domain'
 import { NavigationStackContext } from '~/navigation/Provider'
@@ -8,18 +9,15 @@ import { DetailPage } from '../detail'
 
 import * as styles from './TopCard.css'
 
-interface TopCardProps {
-	getImage: Accessor<ImageEntry>
-	getNativeCardWidth: Accessor<number>
-}
+type TopCardProps = LayoutItemPropsBase<ImageEntry>
 
 export function TopCard(props: TopCardProps) {
 	const { push } = useContext(NavigationStackContext)
 
 	const getVariant = createMemo(function() {
 		return getPreferredVariant(
-			props.getImage().variants,
-			props.getNativeCardWidth(),
+			props.item.variants,
+			props.nativeItemWidth,
 		)
 	})
 
@@ -27,7 +25,7 @@ export function TopCard(props: TopCardProps) {
 		<div
 			class={styles.card}
 			onClick={function() {
-				push(DetailPage, props.getImage().id)
+				push(DetailPage, props.item.id)
 			}}
 		>
 			<div
@@ -37,7 +35,7 @@ export function TopCard(props: TopCardProps) {
 				}}
 			/>
 			<img
-				alt={props.getImage().id.toString()}
+				alt={`${props.item.id}`}
 				class={styles.image}
 				decoding='async'
 				loading='lazy'

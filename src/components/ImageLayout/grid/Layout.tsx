@@ -39,11 +39,6 @@ export function GridImageLayout<Item>(props: GridImageLayoutProps<Item>) {
 		return style
 	})
 
-	const getNativeChildWidth = createMemo(function() {
-		const metrics = getMetrics()
-		return metrics.nativeItemWidth
-	})
-
 	return (
 		<Dynamic
 			ref={setEl}
@@ -59,11 +54,16 @@ export function GridImageLayout<Item>(props: GridImageLayoutProps<Item>) {
 
 			<div class='grid' style={getLayoutStyle()}>
 				<For each={getConstrainItems()}>
-					{props.children.bind(null,
-						{
-							getNativeChildWidth,
-						},
-					)}
+					{function(item) {
+						const Component = props.itemComponent
+						return (
+							<Component
+								item={item}
+								itemWidth={getMetrics().itemWidth}
+								nativeItemWidth={getMetrics().nativeItemWidth}
+							/>
+						)
+					}}
 				</For>
 			</div>
 

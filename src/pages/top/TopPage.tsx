@@ -1,10 +1,7 @@
-import type { Accessor } from 'solid-js'
-
 import { Header } from '~/components/Header/Header'
 import { HorizontalEdgeInsetBoundary } from '~/components/HorizontalEdgeInsetBoundary'
 import { GridImageLayout, ImageLayoutController } from '~/components/ImageLayout'
-import type { LayoutChildAccessors, LayoutInterval } from '~/components/ImageLayout/shared/types'
-import type { ImageEntry } from '~/domain'
+import type { LayoutInterval } from '~/components/ImageLayout/shared/types'
 import { useI18n } from '~/i18n/Context'
 import type { TextTranslationKey } from '~/i18n/types'
 import { Link } from '~/navigation/Link'
@@ -25,18 +22,6 @@ const intervals: readonly LayoutInterval[] = [
 	// 4+ columns (open-ended range)
 	{ colMin: 4, itemWidth: 320, spacing: 8, outerPadding: 8 },
 ]
-
-function CardDelegate(
-	accessors: LayoutChildAccessors,
-	getImage: Accessor<ImageEntry>,
-) {
-	return (
-		<TopCard
-			getImage={getImage}
-			getNativeCardWidth={accessors.getNativeChildWidth}
-		/>
-	)
-}
 
 function SectionHeader(props: { readonly type: 'latest' | 'engaged' | 'hall_of_fame' }) {
 	const { t, tt } = useI18n()
@@ -63,8 +48,8 @@ export function TopPage() {
 				minHorizontalEdgeInset={16}
 			>
 				<ImageLayoutController
-					children={CardDelegate}
 					header={<SectionHeader type='latest' />}
+					itemComponent={TopCard}
 					layout={GridImageLayout}
 					layoutProps={{
 						as: 'section',
@@ -81,8 +66,8 @@ export function TopPage() {
 				/>
 
 				<ImageLayoutController
-					children={CardDelegate}
 					header={<SectionHeader type='engaged' />}
+					itemComponent={TopCard}
 					layout={GridImageLayout}
 					layoutProps={{
 						as: 'section',
@@ -99,8 +84,8 @@ export function TopPage() {
 				/>
 
 				<ImageLayoutController
-					children={CardDelegate}
 					header={<SectionHeader type='hall_of_fame' />}
+					itemComponent={TopCard}
 					layout={GridImageLayout}
 					layoutProps={{
 						as: 'section',

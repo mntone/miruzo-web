@@ -1,4 +1,4 @@
-import type { Accessor, JSX } from 'solid-js'
+import type { Accessor, Component, JSX } from 'solid-js'
 
 export interface NormalizedLayoutInterval {
 	colMin: number
@@ -59,17 +59,18 @@ export interface LayoutMetrics {
 	containerWidth?: number | undefined
 }
 
-export interface LayoutChildAccessors {
-	getChildStyle?: (itemHeight: number) => JSX.CSSProperties
-	getChildWidth?: Accessor<number>
-	getNativeChildWidth: Accessor<number>
+export interface LayoutItemPropsBase<Item> {
+	readonly item: Item
+	readonly itemWidth: number
+	readonly nativeItemWidth: number
+	readonly getItemStyle?: (itemHeight: number) => JSX.CSSProperties
 }
 
 export interface LayoutPropsBase<Item> {
 	readonly header: JSX.Element
-	readonly children: (accessors: LayoutChildAccessors, item: Item) => JSX.Element
 	readonly footer?: JSX.Element
 	readonly getItems: Accessor<readonly Item[]>
+	readonly itemComponent: Component<LayoutItemPropsBase<Item>>
 }
 
 export interface LayoutProps<Item> extends LayoutPropsBase<Item> {
@@ -78,3 +79,5 @@ export interface LayoutProps<Item> extends LayoutPropsBase<Item> {
 	readonly intervals?: LayoutIntervals | undefined
 	readonly style?: JSX.CSSProperties | undefined
 }
+
+export type LayoutComponent<Item> = Component<LayoutProps<Item>>

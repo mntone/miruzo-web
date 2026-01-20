@@ -49,16 +49,6 @@ export function MasonryImageLayout<Item>(props: MasonryImageLayoutProps<Item>) {
 		return style
 	})
 
-	const getChildWidth = createMemo(function() {
-		const metrics = getMetrics()
-		return metrics.itemWidth
-	})
-
-	const getNativeChildWidth = createMemo(function() {
-		const metrics = getMetrics()
-		return metrics.nativeItemWidth
-	})
-
 	return (
 		<Dynamic
 			ref={setEl}
@@ -74,14 +64,17 @@ export function MasonryImageLayout<Item>(props: MasonryImageLayoutProps<Item>) {
 
 			<div class={styles.layout} style={getLayoutStyle()}>
 				<For each={props.getItems()}>
-					{props.children.bind(
-						null,
-						{
-							getChildStyle: getChildrenStyleBase.bind(null, getMetrics),
-							getChildWidth,
-							getNativeChildWidth,
-						},
-					)}
+					{function(item) {
+						const Component = props.itemComponent
+						return (
+							<Component
+								getItemStyle={getChildrenStyleBase.bind(null, getMetrics)}
+								item={item}
+								itemWidth={getMetrics().itemWidth}
+								nativeItemWidth={getMetrics().nativeItemWidth}
+							/>
+						)
+					}}
 				</For>
 			</div>
 
