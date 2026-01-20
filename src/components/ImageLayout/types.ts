@@ -6,7 +6,6 @@ import type { IngestIdListParams } from '~/hooks/types'
 import type { LayoutChildAccessors, LayoutProps, LayoutPropsBase } from './shared/types'
 
 export interface ImageLayoutControllerProps<Layout extends Component<LayoutProps<IngestId>>> {
-	readonly as?: keyof HTMLElementTagNameMap
 	readonly children: (
 		accessors: LayoutChildAccessors,
 		getImage: Accessor<ImageEntry>,

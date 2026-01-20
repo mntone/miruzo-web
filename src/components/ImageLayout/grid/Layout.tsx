@@ -47,9 +47,10 @@ export function GridImageLayout<Item>(props: GridImageLayoutProps<Item>) {
 	return (
 		<Dynamic
 			ref={setEl}
-			class='layout-root'
-			component={props.as}
+			class={styleUtils.classOptional('layout-root', props.class)}
+			component={props.as || 'div'}
 			style={{
+				...props.style,
 				padding: styleUtils.zeroVerticalHorizontalPxNonZero(getMetrics().outerPadding),
 				width: styleUtils.px(getMetrics().containerWidth),
 			}}

@@ -66,7 +66,6 @@ export interface LayoutChildAccessors {
 }
 
 export interface LayoutPropsBase<Item> {
-	readonly as: keyof HTMLElementTagNameMap
 	readonly header: JSX.Element
 	readonly children: (accessors: LayoutChildAccessors, item: Item) => JSX.Element
 	readonly footer?: JSX.Element
@@ -74,5 +73,8 @@ export interface LayoutPropsBase<Item> {
 }
 
 export interface LayoutProps<Item> extends LayoutPropsBase<Item> {
+	readonly as?: keyof HTMLElementTagNameMap | undefined
+	readonly class?: string | undefined
 	readonly intervals?: LayoutIntervals | undefined
+	readonly style?: JSX.CSSProperties | undefined
 }

@@ -26,8 +26,6 @@ export function ImageLayoutController<Layout extends Component<LayoutProps<Inges
 	}
 
 	const nextProps: Writable<LayoutPropsBase<IngestId>> = {
-		// eslint-disable-next-line solid/reactivity
-		as: props.as || 'div',
 		header: (
 			<>
 				<Show when={props.header}>

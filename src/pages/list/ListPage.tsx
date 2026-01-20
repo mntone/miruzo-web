@@ -30,8 +30,10 @@ export function ListPage(props: ListPageProps) {
 			<HorizontalEdgeInsetBoundary minHorizontalEdgeInset={16}>
 				<ImageLayoutController
 					children={CardDelegate}
-					as='main'
 					layout={MasonryImageLayout}
+					layoutProps={{
+						as: 'main',
+					}}
 					requestParams={{ type: props.params }}
 					useMoreButton
 				/>

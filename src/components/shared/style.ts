@@ -1,3 +1,7 @@
+export function classOptional(baseClass: string, extraClass?: string): string {
+	return extraClass !== undefined ? baseClass + ' ' + extraClass : baseClass
+}
+
 export function px(length: number | undefined): string | undefined {
 	return length !== undefined ? `${length}px` : undefined
 }

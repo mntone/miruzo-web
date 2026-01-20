@@ -66,10 +66,10 @@ export function TopPage() {
 			>
 				<ImageLayoutController
 					children={CardDelegate.bind(null, { 'aspect-ratio': '1.25' })}
-					as='section'
 					header={<SectionHeader type='latest' />}
 					layout={GridImageLayout}
 					layoutProps={{
+						as: 'section',
 						intervals,
 						maxRows: 2,
 					}}
@@ -81,10 +81,10 @@ export function TopPage() {
 
 				<ImageLayoutController
 					children={CardDelegate.bind(null, { 'aspect-ratio': '0.8' })}
-					as='section'
 					header={<SectionHeader type='engaged' />}
 					layout={GridImageLayout}
 					layoutProps={{
+						as: 'section',
 						intervals,
 						maxRows: 1,
 					}}
@@ -96,10 +96,10 @@ export function TopPage() {
 
 				<ImageLayoutController
 					children={CardDelegate.bind(null, { 'aspect-ratio': '1' })}
-					as='section'
 					header={<SectionHeader type='hall_of_fame' />}
 					layout={GridImageLayout}
 					layoutProps={{
+						as: 'section',
 						intervals,
 						maxRows: 1,
 					}}

@@ -3,6 +3,7 @@ import { Dynamic } from 'solid-js/web'
 
 import { useParentContentSize } from '~/hooks'
 
+import * as styleUtils from '../../shared/style'
 import { normalizeIntervals } from '../shared/layoutMetrics'
 
 import { defaultIntervals } from './config'
@@ -34,10 +35,9 @@ export function MasonryImageLayout<Item>(props: MasonryImageLayoutProps<Item>) {
 		return computeMasonryMetrics(width, intervals)
 	})
 
-	const getContainerStyle = createMemo(function() {
+	const getLayoutStyle = createMemo(function() {
 		const metrics = getMetrics()
 		const style: JSX.CSSProperties = {
-			'padding': `0 ${metrics.outerPadding}px`,
 			'--m-columns': metrics.cols,
 			'--g-spacing-x': `${metrics.horizontalSpacing}px`,
 			'--g-spacing-y': `${metrics.verticalSpacing}px`,
@@ -45,9 +45,6 @@ export function MasonryImageLayout<Item>(props: MasonryImageLayoutProps<Item>) {
 				? `${metrics.itemWidth}px`
 				: '1fr',
 			'--m-row-unit': `${metrics.rowUnit}px`,
-		}
-		if (metrics.containerWidth !== undefined) {
-			style.width = `${metrics.containerWidth}px`
 		}
 		return style
 	})
@@ -65,13 +62,17 @@ export function MasonryImageLayout<Item>(props: MasonryImageLayoutProps<Item>) {
 	return (
 		<Dynamic
 			ref={setEl}
-			class='layout-root'
-			component={props.as}
-			style={getContainerStyle()}
+			class={styleUtils.classOptional('layout-root', props.class)}
+			component={props.as || 'div'}
+			style={{
+				...props.style,
+				padding: styleUtils.zeroVerticalHorizontalPxNonZero(getMetrics().outerPadding),
+				width: styleUtils.px(getMetrics().containerWidth),
+			}}
 		>
 			{props.header}
 
-			<div class={styles.layout}>
+			<div class={styles.layout} style={getLayoutStyle()}>
 				<For each={props.getItems()}>
 					{props.children.bind(
 						null,
