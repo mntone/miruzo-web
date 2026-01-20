@@ -119,6 +119,7 @@
 }
 
 .scroll-lock {
+	overflow: hidden;
 	overflow: clip;
 	padding-right: var(--scrollbar-width);
 }

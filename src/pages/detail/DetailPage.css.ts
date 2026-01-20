@@ -34,6 +34,12 @@ export const main = style({
 
 	backgroundColor: '#000',
 	colorScheme: 'only dark',
+
+	'@supports': {
+		'not (overflow: clip)': {
+			overflow: 'hidden',
+		},
+	},
 })
 
 export const aside = style({

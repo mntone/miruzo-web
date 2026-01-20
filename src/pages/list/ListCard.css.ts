@@ -22,6 +22,9 @@ export const card = style({
 		'(font: -apple-system-body)': {
 			contentVisibility: 'visible',
 		},
+		'not (overflow: clip)': {
+			overflow: 'hidden',
+		},
 	},
 })
 
