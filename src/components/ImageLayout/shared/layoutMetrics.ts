@@ -1,7 +1,7 @@
 import type { ItemWidthMode, LayoutIntervals, LayoutMetrics, NormalizedLayoutInterval, NormalizedLayoutIntervals } from './types'
 
 export function normalizeIntervals(intervals: LayoutIntervals): NormalizedLayoutIntervals {
-	const normalized = intervals.map(function({ outerPadding, ...interval }) {
+	const normalized = intervals.map(function(interval) {
 		let colMin: number
 		let colMax: number = Infinity
 		if ('col' in interval) {
@@ -14,8 +14,17 @@ export function normalizeIntervals(intervals: LayoutIntervals): NormalizedLayout
 			}
 		}
 
-		const minItemWidth = 'minItemWidth' in interval ? interval.minItemWidth : interval.itemWidth
-		const maxItemWidth = 'maxItemWidth' in interval ? interval.maxItemWidth : interval.itemWidth
+		let minItemWidth: number
+		let maxItemWidth: number = Infinity
+		if ('itemWidth' in interval) {
+			minItemWidth = interval.itemWidth
+			maxItemWidth = interval.itemWidth
+		} else {
+			minItemWidth = interval.minItemWidth
+			if (interval.maxItemWidth !== undefined) {
+				maxItemWidth = Math.max(minItemWidth, interval.maxItemWidth)
+			}
+		}
 
 		const horizontalSpacing = 'horizontalSpacing' in interval ? interval.horizontalSpacing : interval.spacing
 		const verticalSpacing = 'verticalSpacing' in interval ? interval.verticalSpacing : interval.spacing
@@ -26,7 +35,7 @@ export function normalizeIntervals(intervals: LayoutIntervals): NormalizedLayout
 			maxItemWidth,
 			horizontalSpacing,
 			verticalSpacing,
-			outerPadding,
+			outerPadding: interval.outerPadding || 0,
 		}
 	})
 	return normalized

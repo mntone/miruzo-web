@@ -67,6 +67,17 @@ describe('normalizeIntervals', () => {
 
 		expect(normalized[0].colMax).toBe(Infinity)
 	})
+
+	it('defaults optional values and clamps max item width', () => {
+		const normalized = normalizeIntervals([
+			{ col: 2, minItemWidth: 240, spacing: 12 },
+			{ col: 3, minItemWidth: 200, maxItemWidth: 160, spacing: 12, outerPadding: 8 },
+		] satisfies LayoutIntervals)
+
+		expect(normalized[0].outerPadding).toBe(0)
+		expect(normalized[0].maxItemWidth).toBe(Infinity)
+		expect(normalized[1].maxItemWidth).toBe(200)
+	})
 })
 
 describe('computeFluidWidth', () => {

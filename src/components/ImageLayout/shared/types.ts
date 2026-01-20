@@ -24,7 +24,7 @@ type ColRange =
 type ItemWidthRange =
 	| {
 		minItemWidth: number
-		maxItemWidth: number
+		maxItemWidth?: number
 	}
 	| {
 		itemWidth: number
@@ -40,7 +40,7 @@ type SpacingRange =
 	}
 
 export type LayoutInterval = ColRange & ItemWidthRange & SpacingRange & {
-	outerPadding: number
+	outerPadding?: number
 }
 
 export type LayoutIntervals = readonly LayoutInterval[]
