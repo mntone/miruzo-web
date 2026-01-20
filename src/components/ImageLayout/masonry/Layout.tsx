@@ -41,9 +41,7 @@ export function MasonryImageLayout<Item>(props: MasonryImageLayoutProps<Item>) {
 			'--m-columns': metrics.cols,
 			'--g-spacing-x': `${metrics.horizontalSpacing}px`,
 			'--g-spacing-y': `${metrics.verticalSpacing}px`,
-			'--m-item-width': metrics.itemWidthMode == 'fixed'
-				? `${metrics.itemWidth}px`
-				: '1fr',
+			'--m-item-width': `${metrics.itemWidth}px`,
 			'--m-row-unit': `${metrics.rowUnit}px`,
 		}
 		return style
