@@ -1,4 +1,4 @@
-function normalizeError(err: unknown): Error {
+export function normalizeError(err: unknown): Error {
 	if (err instanceof Error) {
 		return err
 	}

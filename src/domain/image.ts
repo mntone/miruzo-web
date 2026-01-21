@@ -42,3 +42,8 @@ export function assertHasStats(entry: ImageEntry | undefined): asserts entry is 
 export function hasStats(entry: ImageEntry | undefined): entry is ImageEntryWithStats {
 	return entry?.stats !== undefined
 }
+
+export interface ImageEntrySlice {
+	readonly entries: readonly ImageEntry[]
+	readonly cursor?: string
+}

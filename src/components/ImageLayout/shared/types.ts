@@ -67,7 +67,7 @@ export interface LayoutItemPropsBase<Item> {
 }
 
 export interface LayoutPropsBase<Item> {
-	readonly header: JSX.Element
+	readonly header?: JSX.Element
 	readonly footer?: JSX.Element
 	readonly getItems: Accessor<readonly Item[]>
 	readonly itemComponent: Component<LayoutItemPropsBase<Item>>
