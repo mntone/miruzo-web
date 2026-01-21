@@ -75,7 +75,10 @@ describe('loadIngestIdList', () => {
 		})
 		expect(result.ids).toEqual([5])
 		expect(result.cursor).toBe('next-cursor')
-		expect(fetchImageListMock).toHaveBeenCalledWith('latest', undefined)
+		expect(fetchImageListMock).toHaveBeenCalledWith({
+			type: 'latest',
+			limit: 50,
+		})
 		expect(setImageStoreMock).toHaveBeenCalledWith('imagesById', expect.any(Function))
 
 		const updater = setImageStoreMock.mock.calls[0][1] as (

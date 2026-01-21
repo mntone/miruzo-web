@@ -1,18 +1,12 @@
-import type { ImageListType } from '~/domain'
-
 import { apiClient } from '../client'
-import type { ImageListResponse } from '../types'
+import type { ImageListRequest, ImageListResponse } from '../types'
 
-function buildImageListUrl(type: ImageListType, query: URLSearchParams | undefined): string {
-	if (query !== undefined && query.size !== 0) {
-		const search = query.toString()
-		return '/i/' + type + '?' + search
-	} else {
-		return '/i/' + type
-	}
-}
+import { buildImageListParams } from './query'
 
-export function fetchImageList(type: ImageListType, query?: URLSearchParams): Promise<ImageListResponse> {
-	const url = buildImageListUrl(type, query)
+export function fetchImageList(request: ImageListRequest): Promise<ImageListResponse> {
+	const query = buildImageListParams(request)
+	const url = query !== undefined
+		? '/i/' + request.type + '?' + query.toString()
+		: '/i/' + request.type
 	return apiClient<ImageListResponse>('GET', url)
 }

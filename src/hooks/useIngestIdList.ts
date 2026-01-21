@@ -2,8 +2,9 @@ import { createEffect, createResource, createSignal, type Accessor, type Resourc
 
 import type { Writable } from '~/@types/utils'
 import { DEFAULT_IMAGE_LIST_LIMIT } from '~/api/images'
+import type { ImageListRequest } from '~/api/types'
 import type { IngestId, IngestIdListResponse } from '~/domain'
-import { loadIngestIdList, type IngestIdListRequest } from '~/repositories/ingest'
+import { loadIngestIdList } from '~/repositories/ingest'
 
 import type { IngestIdListParams } from './types'
 
@@ -15,7 +16,7 @@ export function useIngestIdList(
 	const [getIngestIds, setIngestIds] = createSignal<IngestId[]>([])
 
 	const [listPage] = createResource(function() {
-		const request: Writable<IngestIdListRequest> = {
+		const request: Writable<ImageListRequest> = {
 			type: params.type,
 			limit: params.limit ?? DEFAULT_IMAGE_LIST_LIMIT,
 		}
