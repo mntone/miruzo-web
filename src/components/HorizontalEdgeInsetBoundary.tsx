@@ -54,6 +54,7 @@ interface HorizontalEdgeInsetBoundaryProps {
 	readonly class?: string
 	readonly minHorizontalEdgeInset: number
 	readonly preferMeasuredHorizontalInset?: boolean
+	readonly style?: JSX.CSSProperties
 }
 
 export function HorizontalEdgeInsetBoundary(props: HorizontalEdgeInsetBoundaryProps) {
@@ -65,6 +66,7 @@ export function HorizontalEdgeInsetBoundary(props: HorizontalEdgeInsetBoundaryPr
 			? props.minHorizontalEdgeInset
 			: Math.max(props.minHorizontalEdgeInset, edgeInset[0], edgeInset[1])
 		return {
+			...props.style,
 			'padding-left': `${Math.max(0, minLength - edgeInset[0])}px`,
 			'padding-right': `${Math.max(0, minLength - edgeInset[1])}px`,
 		}
