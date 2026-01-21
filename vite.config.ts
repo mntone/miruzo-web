@@ -29,13 +29,28 @@ export default defineConfig(({ mode }) => {
 			}),
 		],
 		build: {
+			cssCodeSplit: false,
+			modulePreload: {
+				polyfill: false,
+			},
 			rollupOptions: {
 				output: {
 					assetFileNames: 'a/[name]-[hash:3].[ext]',
 					chunkFileNames: 'a/[name]-[hash:6].js',
 					entryFileNames: 'a/main-[hash:6].js',
+					generatedCode: {
+						constBindings: true,
+						objectShorthand: true,
+					},
 				},
 			},
+			target: [
+				'chrome108',
+				'edge108',
+				'firefox101',
+				'safari15.4',
+				'ios15.4',
+			],
 		},
 		server: {
 			port: 3326,
