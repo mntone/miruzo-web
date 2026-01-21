@@ -63,9 +63,15 @@ Follow these steps to run miruzo-web locally.
 
 ## 🌐 Browser support
 
-- Latest stable release of Chrome, Edge, or Firefox
-- Safari (latest stable) on macOS and iOS
-- Previous stable release of the same browsers (n-1)
+- Primary verification targets: latest stable and previous stable (n-1)
+  releases.
+- Feature-based minimum versions:
+  - Chrome 108+
+  - Firefox 101+
+  - Safari 15.4+
+  - iOS 15.4+
+- See [docs/browser-support.md](./docs/browser-support.md) for the
+  feature list and update process.
 
 
 ## 📜 License

@@ -29,7 +29,8 @@ them.
 - Follow the JSON formatting rules (tabs, multi-line objects for 2+ keys)
 - Comments must be written in English and limited to intent/behavior,
   not obvious statements
-- Markdown files must be wrapped at 80 characters
+- Markdown files must be wrapped at 80 characters; Markdown tables may
+  exceed this, but try to keep table rows within 120 characters
 - Localization resources: keep common UI labels under `labels.*` and user
   actions under `actions.*`; update `en.json` and `ja.json` together.
 - Test utility code must be placed under `test-utils` at the project root
