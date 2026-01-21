@@ -108,7 +108,10 @@
 	--text-primary: #FFF;
 	--text-secondary: #EBEBF599;
 	--text-tertiary: rgb(235 235 245/.3);
-	--fill-tertiary: rgb(118 118 128/12%);
+	--fill-primary: rgb(120 120 128/36%);
+	--fill-secondary: rgb(120 120 128/32%);
+	--fill-tertiary: rgb(118 118 128/24%);
+	--fill-quaternary: rgb(118 118 128/18%);
 
 	--base-padding-left: 16px;
 	--base-padding-right: 16px;
@@ -266,7 +269,10 @@ button:focus-visible {
 		--text-primary: #000;
 		--text-secondary: #3C3C4399;
 		--text-tertiary: rgb(60 60 67/.3);
+		--fill-primary: #78787833;
+		--fill-secondary: rgb(120 120 128/16%);
 		--fill-tertiary: rgb(118 118 128/12%);
+		--fill-quaternary: rgb(116 116 128/8%);
 	}
 
 	button:hover::after {
