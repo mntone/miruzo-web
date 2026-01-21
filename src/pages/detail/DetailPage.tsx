@@ -50,7 +50,7 @@ export function DetailPage(props: DetailPageProps) {
 				<main class={styles.main}>
 					<Show when={getLoResVisible()}>
 						<img
-							alt={props.params.toString()}
+							alt={`${props.params}`}
 							class={styles.imageLow[getLoResVisible() ? 'visible' : 'revealed']}
 							decoding='sync'
 							src={getEntry()?.variants[0][0].src}
@@ -60,7 +60,7 @@ export function DetailPage(props: DetailPageProps) {
 					<figure class={styles.imageBox}>
 						<img
 							ref={setElement}
-							alt={props.params.toString()}
+							alt={`${props.params}`}
 							class={styles.imageHigh[getHiResLoaded() ? 'visible' : 'none']}
 							classList={{
 								[styles.imageHighInstant]: getSkipAnimation(),

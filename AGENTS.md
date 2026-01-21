@@ -88,7 +88,8 @@ them.
 - miruzo-web does not use SSR. Assume browser-only execution when writing code
   (access to `window`, `document`, etc. is always available).
 - Prefer string concatenation (`a + b`) only when all operands are strings;
-  use template literals when any operand needs string coercion.
+  use template literals when any operand needs string coercion. When
+  converting numbers to strings, use template literals (e.g. `${count}`).
 - TSX component files and their paired vanilla-extract styles should start with
   the component name in PascalCase (e.g., `Controller.tsx`,
   `Controller.css.ts`). When the directory hierarchy already conveys the
