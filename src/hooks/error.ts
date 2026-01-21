@@ -1,12 +1,4 @@
-export function normalizeError(err: unknown): Error {
-	if (err instanceof Error) {
-		return err
-	}
-	if (err instanceof DOMException) {
-		return Error(err.message)
-	}
-	return Error(String(err))
-}
+import { normalizeError } from '~/utils/error'
 
 export function reportAndIgnore(setError: (err: Error) => void) {
 	return function(err: unknown): void {
