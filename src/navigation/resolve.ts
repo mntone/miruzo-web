@@ -1,5 +1,4 @@
 import type { Writable } from '~/@types/utils'
-import { hasOwn } from '~/repositories/utils'
 
 import type { NavigationEntry, NavigationLocation, NavigationRoute, NavigationRoutes, NavigationSnapshot } from './types'
 
@@ -50,7 +49,7 @@ export function resolveSnapshotFromLocation(
 function isNavigationSnapshot(state: unknown): state is NavigationSnapshot {
 	return state != null
 		&& typeof state === 'object'
-		&& hasOwn(state, 'routeId')
+		&& Object.hasOwn(state, 'routeId')
 }
 
 export function resolveSnapshotFromState(state: unknown): NavigationSnapshot | undefined {

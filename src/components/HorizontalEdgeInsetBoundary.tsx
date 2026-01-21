@@ -19,9 +19,8 @@ function useHorizontalEdgeInset(getElement: Accessor<HTMLElement | undefined>): 
 	}
 
 	const observer = new ResizeObserver(function(entries) {
-		const root = document.documentElement
 		const { left: leftInset, right } = entries[0].target.getBoundingClientRect()
-		const rightInset = Math.max(0, (window.visualViewport?.width ?? root.clientWidth) - right)
+		const rightInset = Math.max(0, window.visualViewport!.width - right)
 		const next: Writable<HorizontalEdgeInset> = [leftInset, rightInset]
 
 		// NOTE:
@@ -29,7 +28,7 @@ function useHorizontalEdgeInset(getElement: Accessor<HTMLElement | undefined>): 
 		// This project currently assumes LTR only, so scrollbar width is always
 		// applied to the physical right side. Revisit this logic if RTL support
 		// becomes necessary.
-		const scrollbarWidth = window.innerWidth - root.clientWidth
+		const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth
 		if (scrollbarWidth > 0) {
 			next[1] += scrollbarWidth
 		}

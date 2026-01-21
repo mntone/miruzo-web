@@ -126,7 +126,7 @@ describe('createSnapshotFromEntry', () => {
 		const entry = createEntryFromRoute(routes[0])
 
 		const snapshot = createSnapshotFromEntry(entry, true)
-		expect(Object.prototype.hasOwnProperty.call(snapshot, 'params')).toBe(false)
+		expect(Object.hasOwn(snapshot, 'params')).toBe(false)
 		expect(snapshot.root).toBe(true)
 		expect(snapshot.routeId).toBe('alpha')
 	})
