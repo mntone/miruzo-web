@@ -33,7 +33,7 @@ export function ImageLayoutController<Layout extends Component<LayoutProps<Image
 
 				<Show when={listPage.loading}>
 					<div class='image-page_status'>
-						{t('labels.loading')}
+						{t('labels.state_load')}
 					</div>
 				</Show>
 
@@ -62,7 +62,7 @@ export function ImageLayoutController<Layout extends Component<LayoutProps<Image
 						type='button'
 						onClick={loadMore}
 					>
-						{t(listPage.loading ? 'labels.loading' : 'actions.more')}
+						{t(listPage.loading ? 'labels.state_load' : 'actions.more')}
 					</button>
 				</Show>
 

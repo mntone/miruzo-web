@@ -16,9 +16,10 @@
 		}
 	},
 	"labels": {
-		"loading": "Loading…",
 		"love_remaining": "You can love {0} more today",
 		"open": "Open {0}",
+		"state_error": "Failed to load",
+		"state_load": "Loading…",
 		"view": {
 			"one": "{0} view",
 			"other": "{0} views"
