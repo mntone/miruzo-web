@@ -185,6 +185,20 @@ body {
 	flex-wrap: wrap;
 }
 
+.card {
+	contain: paint;
+	content-visibility: auto;
+	overflow: hidden;
+	overflow: clip;
+
+	background-color: var(--fill-primary);
+}
+@supports (font: -apple-system-body) {
+	.card {
+		content-visibility: visible;
+	}
+}
+
 a {
 	font-weight: 500;
 	color: #646cff;

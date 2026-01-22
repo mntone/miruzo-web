@@ -31,7 +31,7 @@ export function ListCard(props: ListCardProps) {
 
 	return (
 		<div
-			class={styles.card}
+			class={'card ' + styles.card}
 			style={getStyle()}
 			onClick={function() {
 				push(DetailPage, props.item.id)
