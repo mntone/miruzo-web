@@ -1,4 +1,4 @@
-import { type Accessor, createMemo, createSignal, onCleanup } from 'solid-js'
+import { type Accessor, createEffect, createMemo, createSignal, onCleanup, type Setter } from 'solid-js'
 import type { JSX } from 'solid-js/jsx-runtime'
 import { Dynamic } from 'solid-js/web'
 
@@ -10,7 +10,12 @@ function equalsHorizontalEdgeInset(val1: HorizontalEdgeInset, val2: HorizontalEd
 	return val1[0] === val2[0] && val1[1] === val2[1]
 }
 
-function useHorizontalEdgeInset(getElement: Accessor<HTMLElement | undefined>): Accessor<HorizontalEdgeInset> {
+function useHorizontalEdgeInset(
+	getElement: Accessor<HTMLElement | undefined>,
+	options: {
+		readonly observeParent: boolean
+	} | undefined,
+): Accessor<HorizontalEdgeInset> {
 	const [getEdgeInset, setEdgeInset] = createSignal<HorizontalEdgeInset>([0, 0])
 
 	if (typeof ResizeObserver === 'undefined') {
@@ -39,12 +44,25 @@ function useHorizontalEdgeInset(getElement: Accessor<HTMLElement | undefined>): 
 	})
 	onCleanup(observer.disconnect.bind(observer))
 
-	queueMicrotask(function() {
+	let observedEl: HTMLElement | undefined
+	createEffect(function() {
 		const el = getElement()
-		if (el !== undefined && el.parentElement !== null) {
-			observer.observe(el.parentElement)
+		const next = options?.observeParent === true
+			? el?.parentElement ?? undefined
+			: el
+		if (observedEl === next) {
+			return
 		}
+
+		if (observedEl !== undefined) {
+			observer.unobserve(observedEl)
+		}
+		if (next !== undefined) {
+			observer.observe(next)
+		}
+		observedEl = next
 	})
+
 	return getEdgeInset
 }
 
@@ -53,13 +71,29 @@ interface HorizontalEdgeInsetBoundaryProps {
 	readonly children: JSX.Element
 	readonly class?: string
 	readonly minHorizontalEdgeInset: number
+	readonly observeParent?: boolean
 	readonly preferMeasuredHorizontalInset?: boolean
+	readonly ref?: Setter<HTMLElement | undefined>
 	readonly style?: JSX.CSSProperties
 }
 
 export function HorizontalEdgeInsetBoundary(props: HorizontalEdgeInsetBoundaryProps) {
+	// eslint-disable-next-line solid/reactivity -- read once on setup
+	const setRef = props.ref
+	onCleanup(function() {
+		setRef?.(undefined)
+	})
+
 	const [getEl, setEl] = createSignal<HTMLElement | undefined>(undefined)
-	const getEdgeInset = useHorizontalEdgeInset(getEl)
+	function setElementDelegate(element: HTMLElement | undefined) {
+		setEl(element)
+		setRef?.(element)
+	}
+
+	// eslint-disable-next-line solid/reactivity -- fixed observe parent flag at setup
+	const observeParent = props.observeParent
+	const options = observeParent !== undefined ? { observeParent } : undefined
+	const getEdgeInset = useHorizontalEdgeInset(getEl, options)
 	const getStyle = createMemo(function(): JSX.CSSProperties {
 		const edgeInset = getEdgeInset()
 		const minLength = props.preferMeasuredHorizontalInset
@@ -72,11 +106,13 @@ export function HorizontalEdgeInsetBoundary(props: HorizontalEdgeInsetBoundaryPr
 		}
 	})
 
+	// eslint-disable-next-line solid/reactivity -- fixed tag at setup
+	const as = props.as ?? 'div'
 	return (
 		<Dynamic
-			ref={setEl}
+			ref={setElementDelegate}
 			class={props.class}
-			component={props.as || 'div'}
+			component={as}
 			style={getStyle()}
 		>
 			{props.children}
