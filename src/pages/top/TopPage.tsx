@@ -1,24 +1,23 @@
+import { createResource, Suspense, Switch, Match, For } from 'solid-js'
+
+import { ErrorMessage } from '~/components/ErrorMessage'
 import { Header } from '~/components/Header/Header'
 import { HorizontalEdgeInsetBoundary } from '~/components/HorizontalEdgeInsetBoundary'
-import { GridImageLayout, ImageLayoutController, type ImageLayoutControllerProps } from '~/components/ImageLayout'
 import { useSurfaceScope } from '~/hooks/useSurfaceScope'
+import { useI18n } from '~/i18n/Context'
 
-import { topPageIntervals } from './interval'
-import { SectionHeader } from './SectionHeader'
-import { TopCard } from './TopCard'
-import * as styles from './TopPage.css'
+import { topPageConfigs } from './config'
+import { loadTopPageData } from './data'
+import { GridImageList } from './GridImageList'
 
 export function TopPage() {
 	useSurfaceScope(function() {
 		return 'section'
 	})
 
-	const baseLayoutProps: (ImageLayoutControllerProps<typeof GridImageLayout>)['layoutProps'] = {
-		as: 'section',
-		class: styles.section,
-		intervals: topPageIntervals,
-		maxRows: 1,
-	}
+	const [resource] = createResource(topPageConfigs, loadTopPageData)
+
+	const { t } = useI18n()
 	return (
 		<>
 			<Header />
@@ -26,54 +25,32 @@ export function TopPage() {
 				as='main'
 				minHorizontalEdgeInset={16}
 			>
-				<ImageLayoutController
-					header={<SectionHeader type='latest' />}
-					itemComponent={TopCard}
-					layout={GridImageLayout}
-					layoutProps={{
-						...baseLayoutProps,
-						maxRows: 2,
-						style: {
-							'--g-item-aspect': '1.25',
-						},
-					}}
-					requestParams={{
-						type: 'latest',
-						limit: 20,
-					}}
-				/>
+				<Suspense fallback={t('labels.state_load')}>
+					<Switch>
+						<Match when={resource.error as unknown}>
+							{function(getError) {
+								return <ErrorMessage error={getError()} label={t('labels.state_error')} />
+							}}
+						</Match>
 
-				<ImageLayoutController
-					header={<SectionHeader type='engaged' />}
-					itemComponent={TopCard}
-					layout={GridImageLayout}
-					layoutProps={{
-						...baseLayoutProps,
-						style: {
-							'--g-item-aspect': '.8',
-						},
-					}}
-					requestParams={{
-						type: 'engaged',
-						limit: 10,
-					}}
-				/>
-
-				<ImageLayoutController
-					header={<SectionHeader type='hall_of_fame' />}
-					itemComponent={TopCard}
-					layout={GridImageLayout}
-					layoutProps={{
-						...baseLayoutProps,
-						style: {
-							'--g-item-aspect': '1',
-						},
-					}}
-					requestParams={{
-						type: 'hall_of_fame',
-						limit: 10,
-					}}
-				/>
+						<Match when={resource()}>
+							{function(getInitials) {
+								return (
+									<For each={getInitials()}>
+										{function(initial, getIndex) {
+											return (
+												<GridImageList
+													config={topPageConfigs[getIndex()]}
+													initial={initial}
+												/>
+											)
+										}}
+									</For>
+								)
+							}}
+						</Match>
+					</Switch>
+				</Suspense>
 			</HorizontalEdgeInsetBoundary>
 		</>
 	)

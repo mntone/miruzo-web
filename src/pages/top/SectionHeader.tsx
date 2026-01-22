@@ -6,9 +6,14 @@ import { Link } from '~/navigation/Link'
 
 import { ListPage } from '../list'
 
+import type { TopPageImageListType } from './config'
 import * as styles from './SectionHeader.css'
 
-export function SectionHeader(props: { readonly type: 'latest' | 'engaged' | 'hall_of_fame' }) {
+interface SectionHeaderProps {
+	readonly type: TopPageImageListType
+}
+
+export function SectionHeader(props: SectionHeaderProps) {
 	const { t, tt } = useI18n()
 
 	const getLabel = createMemo(function() {
