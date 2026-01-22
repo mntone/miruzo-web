@@ -1,4 +1,4 @@
-import type { LayoutInterval } from '../shared/types'
+import type { LayoutInterval } from '../types'
 
 // minItemWidth and gap scale in steps by column range.
 export const defaultIntervals: readonly LayoutInterval[] = [

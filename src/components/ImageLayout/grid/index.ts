@@ -1,2 +1,2 @@
 export * from './types'
-export * from './Layout'
+export { GridLayout } from './GridLayout'

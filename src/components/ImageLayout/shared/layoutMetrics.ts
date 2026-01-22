@@ -1,4 +1,6 @@
-import type { ItemWidthMode, LayoutIntervals, LayoutMetrics, NormalizedLayoutInterval, NormalizedLayoutIntervals } from './types'
+import type { LayoutIntervals } from '../types'
+
+import type { ItemWidthMode, LayoutMetrics, NormalizedLayoutInterval, NormalizedLayoutIntervals } from './types'
 
 export function normalizeIntervals(intervals: LayoutIntervals): NormalizedLayoutIntervals {
 	const normalized = intervals.map(function(interval) {

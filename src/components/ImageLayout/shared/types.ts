@@ -1,5 +1,7 @@
 import type { Accessor, Component, JSX } from 'solid-js'
 
+import type { LayoutIntervals } from '../types'
+
 export interface NormalizedLayoutInterval {
 	colMin: number
 	colMax: number
@@ -11,39 +13,6 @@ export interface NormalizedLayoutInterval {
 }
 
 export type NormalizedLayoutIntervals = readonly NormalizedLayoutInterval[]
-
-type ColRange =
-	| {
-		colMin: number
-		colMax?: number
-	}
-	| {
-		col: number
-	}
-
-type ItemWidthRange =
-	| {
-		minItemWidth: number
-		maxItemWidth?: number
-	}
-	| {
-		itemWidth: number
-	}
-
-type SpacingRange =
-	| {
-		horizontalSpacing: number
-		verticalSpacing: number
-	}
-	| {
-		spacing: number
-	}
-
-export type LayoutInterval = ColRange & ItemWidthRange & SpacingRange & {
-	outerPadding?: number
-}
-
-export type LayoutIntervals = readonly LayoutInterval[]
 
 export type ItemWidthMode = 'fixed' | 'fluid'
 
@@ -59,25 +28,28 @@ export interface LayoutMetrics {
 	containerWidth?: number | undefined
 }
 
-export interface LayoutItemPropsBase<Item> {
+export interface LayoutItemProps<Item> {
 	readonly item: Item
 	readonly itemWidth: number
 	readonly nativeItemWidth: number
 	readonly getItemStyle?: (itemHeight: number) => JSX.CSSProperties
 }
 
-export interface LayoutPropsBase<Item> {
-	readonly header?: JSX.Element
-	readonly footer?: JSX.Element
-	readonly getItems: Accessor<readonly Item[]>
-	readonly itemComponent: Component<LayoutItemPropsBase<Item>>
-}
-
-export interface LayoutProps<Item> extends LayoutPropsBase<Item> {
+export interface LayoutRootProps {
 	readonly as?: keyof HTMLElementTagNameMap | undefined
 	readonly class?: string | undefined
+	readonly footer?: JSX.Element
+	readonly header?: JSX.Element
 	readonly intervals?: LayoutIntervals | undefined
 	readonly style?: JSX.CSSProperties | undefined
+}
+
+export interface LayoutItemsProps<Item> {
+	readonly getItems: Accessor<readonly Item[]>
+	readonly itemComponent: Component<LayoutItemProps<Item>>
+}
+
+export interface LayoutProps<Item> extends LayoutRootProps, LayoutItemsProps<Item> {
 }
 
 export type LayoutComponent<Item> = Component<LayoutProps<Item>>

@@ -7,9 +7,9 @@ import * as styleUtils from '../../shared/style'
 import { normalizeIntervals } from '../shared/layoutMetrics'
 
 import { defaultIntervals } from './config'
-import * as styles from './Layout.css'
 import { computeMasonryMetrics } from './layoutMetrics'
-import type { MasonryImageLayoutProps, MasonryLayoutMetrics } from './types'
+import * as styles from './MasonryLayout.css'
+import type { MasonryLayoutProps, MasonryLayoutMetrics } from './types'
 
 function getChildrenStyleBase(
 	getMetrics: Accessor<MasonryLayoutMetrics>,
@@ -25,7 +25,7 @@ function getChildrenStyleBase(
 	return style
 }
 
-export function MasonryImageLayout<Item>(props: MasonryImageLayoutProps<Item>) {
+export function MasonryLayout<Item>(props: MasonryLayoutProps<Item>) {
 	const [getEl, setEl] = createSignal<HTMLElement | undefined>(undefined)
 	const getLayoutSize = useParentContentSize(getEl)
 

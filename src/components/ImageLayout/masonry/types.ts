@@ -5,4 +5,4 @@ export interface MasonryLayoutMetrics extends LayoutMetrics {
 	rowUnit: number
 }
 
-export type MasonryImageLayoutProps<Item> = LayoutProps<Item>
+export type MasonryLayoutProps<Item> = LayoutProps<Item>

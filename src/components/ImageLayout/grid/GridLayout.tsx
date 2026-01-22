@@ -8,9 +8,9 @@ import * as styleUtils from '../../shared/style'
 import { computeLayoutMetrics, normalizeIntervals } from '../shared/layoutMetrics'
 
 import { defaultIntervals } from './config'
-import type { GridImageLayoutProps } from './types'
+import type { GridLayoutProps } from './types'
 
-export function GridImageLayout<Item>(props: GridImageLayoutProps<Item>) {
+export function GridLayout<Item>(props: GridLayoutProps<Item>) {
 	const [getEl, setEl] = createSignal<HTMLElement | undefined>(undefined)
 	const getLayoutSize = useParentContentSize(getEl)
 

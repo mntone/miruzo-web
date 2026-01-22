@@ -1,6 +1,6 @@
 import { Show, untrack } from 'solid-js'
 
-import { MasonryImageLayout } from '~/components/ImageLayout'
+import { MasonryLayout } from '~/components/ImageLayout'
 import { ImageLayoutHost } from '~/components/ImageLayout/ImageLayoutHost'
 import type { ImageEntrySlice } from '~/domain'
 import { useImageEntryList, type ImageEntryListOptions } from '~/hooks/useImageEntryList'
@@ -30,7 +30,7 @@ export function MasonryImageList(props: MasonryImageListProps) {
 			<ImageLayoutHost
 				itemComponent={ListCard}
 				items={images()}
-				layout={MasonryImageLayout}
+				layout={MasonryLayout}
 				layoutProps={{
 					as: 'main',
 				}}

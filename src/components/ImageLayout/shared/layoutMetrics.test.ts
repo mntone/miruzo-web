@@ -1,5 +1,6 @@
+import type { LayoutIntervals } from '../types'
+
 import { computeFluidWidth, computeLayoutMetrics, computeTotalInnerGap, estimateColumnCount, normalizeIntervals, resolveInterval } from './layoutMetrics'
-import type { LayoutIntervals } from './types'
 
 beforeAll(() => {
 	vi.stubGlobal('window', { devicePixelRatio: 1 })

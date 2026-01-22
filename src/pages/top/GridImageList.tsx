@@ -1,4 +1,4 @@
-import { GridImageLayout } from '~/components/ImageLayout'
+import { GridLayout } from '~/components/ImageLayout'
 import { ImageLayoutHost } from '~/components/ImageLayout/ImageLayoutHost'
 import type { ImageEntrySlice } from '~/domain'
 
@@ -16,13 +16,13 @@ interface GridImageListProps {
 export function GridImageList(props: GridImageListProps) {
 	return (
 		<ImageLayoutHost
-			header={<SectionHeader type={props.config.listType} />}
 			itemComponent={TopCard}
 			items={props.initial.entries}
-			layout={GridImageLayout}
+			layout={GridLayout}
 			layoutProps={{
 				as: 'section',
 				class: styles.section,
+				header: <SectionHeader type={props.config.listType} />,
 				intervals: topPageIntervals,
 				maxRows: props.config.maxRows,
 				style: {

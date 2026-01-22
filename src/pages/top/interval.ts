@@ -1,4 +1,4 @@
-import type { LayoutInterval } from '~/components/ImageLayout/shared/types'
+import type { LayoutInterval } from '~/components/ImageLayout'
 
 // TopPage keeps bespoke intervals to preserve its intended grid density.
 export const topPageIntervals: readonly LayoutInterval[] = [

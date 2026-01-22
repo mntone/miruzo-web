@@ -1,6 +1,6 @@
 import { createMemo, useContext } from 'solid-js'
 
-import type { LayoutItemPropsBase } from '~/components/ImageLayout/shared/types'
+import type { LayoutItemProps } from '~/components/ImageLayout/shared/types'
 import { getPreferredVariant } from '~/components/ImageLayout/utils'
 import type { ImageEntry } from '~/domain'
 import { NavigationStackContext } from '~/navigation/Provider'
@@ -9,7 +9,7 @@ import { DetailPage } from '../detail'
 
 import * as styles from './TopCard.css'
 
-type TopCardProps = LayoutItemPropsBase<ImageEntry>
+type TopCardProps = LayoutItemProps<ImageEntry>
 
 export function TopCard(props: TopCardProps) {
 	const { push } = useContext(NavigationStackContext)
