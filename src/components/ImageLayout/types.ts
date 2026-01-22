@@ -30,3 +30,17 @@ export type LayoutInterval = ColRange & ItemWidthRange & SpacingRange & {
 }
 
 export type LayoutIntervals = readonly LayoutInterval[]
+
+export type ItemWidthMode = 'fixed' | 'fluid'
+
+export interface LayoutMetrics {
+	cols: number
+	horizontalSpacing: number
+	totalHorizontalSpacing: number
+	verticalSpacing: number
+	outerPadding: number
+	itemWidth: number
+	itemWidthMode: ItemWidthMode
+	nativeItemWidth: number
+	containerWidth?: number | undefined
+}

@@ -1,13 +1,16 @@
-import { createResource, Match, Suspense, Switch, untrack } from 'solid-js'
+import { createResource, createSignal, Match, Suspense, Switch, untrack } from 'solid-js'
 
 import { DEFAULT_IMAGE_LIST_LIMIT } from '~/api/images'
 import { ErrorMessage } from '~/components/ErrorMessage'
 import { Header } from '~/components/Header/Header'
 import { HorizontalEdgeInsetBoundary } from '~/components/HorizontalEdgeInsetBoundary'
+import { useLayoutMetrics } from '~/components/ImageLayout'
 import type { ImageListType } from '~/domain'
+import { useContentSize } from '~/hooks'
 import { useI18n } from '~/i18n/Context'
 import { loadImageEntryList } from '~/repositories'
 
+import { listPageIntervals } from './interval'
 import { MasonryImageList } from './MasonryImageList'
 
 interface ListPageProps {
@@ -22,6 +25,14 @@ export function ListPage(props: ListPageProps) {
 		}
 	})
 
+	const [getElement, setElement] = createSignal<HTMLElement | undefined>(undefined)
+	const getLayoutSize = useContentSize(getElement)
+	const getMetrics = useLayoutMetrics(function() {
+		return getLayoutSize()[0]
+	}, {
+		intervals: listPageIntervals,
+	})
+
 	const [resource] = createResource(options, loadImageEntryList)
 
 	const { t } = useI18n()
@@ -29,6 +40,7 @@ export function ListPage(props: ListPageProps) {
 		<>
 			<Header />
 			<HorizontalEdgeInsetBoundary
+				ref={setElement}
 				minHorizontalEdgeInset={16}
 				style={{
 					'margin-bottom': '16px',
@@ -46,6 +58,7 @@ export function ListPage(props: ListPageProps) {
 							{function(getInitial) {
 								return (
 									<MasonryImageList
+										getMetrics={getMetrics}
 										initial={getInitial()}
 										options={options}
 									/>

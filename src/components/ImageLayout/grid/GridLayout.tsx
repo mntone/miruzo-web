@@ -1,37 +1,21 @@
-import { createMemo, createSignal, For, untrack } from 'solid-js'
+import { createMemo, For } from 'solid-js'
 import type { JSX } from 'solid-js/h/jsx-runtime'
 import { Dynamic } from 'solid-js/web'
 
-import { useParentContentSize } from '~/hooks'
-
 import * as styleUtils from '../../shared/style'
-import { useLayoutMetrics } from '../shared/useLayoutMetrics'
 
-import { defaultIntervals } from './config'
 import type { GridLayoutProps } from './types'
 
 export function GridLayout<Item>(props: GridLayoutProps<Item>) {
-	const [getEl, setEl] = createSignal<HTMLElement | undefined>(undefined)
-	const getLayoutSize = useParentContentSize(getEl)
-
-	const getMetrics = useLayoutMetrics(function() {
-		return getLayoutSize()[0]
-	}, {
-		intervals: untrack(function() {
-			return props.intervals || defaultIntervals
-		}),
-	})
-
 	const getConstrainItems = createMemo(function() {
-		const metrics = getMetrics()
 		if (props.maxRows === undefined) {
 			return props.getItems()
 		}
-		return props.getItems().slice(0, metrics.cols * props.maxRows)
+		return props.getItems().slice(0, props.getMetrics().cols * props.maxRows)
 	})
 
 	const getLayoutStyle = createMemo(function() {
-		const metrics = getMetrics()
+		const metrics = props.getMetrics()
 		const style: JSX.CSSProperties = {
 			'gap': `${metrics.verticalSpacing}px ${metrics.horizontalSpacing}px`,
 			'--g-item-width': metrics.itemWidthMode == 'fixed'
@@ -43,13 +27,12 @@ export function GridLayout<Item>(props: GridLayoutProps<Item>) {
 
 	return (
 		<Dynamic
-			ref={setEl}
 			class={styleUtils.classOptional('layout-root', props.class)}
 			component={props.as || 'div'}
 			style={{
 				...props.style,
-				'padding-inline': styleUtils.pxNonZero(getMetrics().outerPadding),
-				'width': styleUtils.px(getMetrics().containerWidth),
+				'padding-inline': styleUtils.pxNonZero(props.getMetrics().outerPadding),
+				'width': styleUtils.px(props.getMetrics().containerWidth),
 			}}
 		>
 			{props.header}
@@ -61,8 +44,8 @@ export function GridLayout<Item>(props: GridLayoutProps<Item>) {
 						return (
 							<Component
 								item={item}
-								itemWidth={getMetrics().itemWidth}
-								nativeItemWidth={getMetrics().nativeItemWidth}
+								itemWidth={props.getMetrics().itemWidth}
+								nativeItemWidth={props.getMetrics().nativeItemWidth}
 							/>
 						)
 					}}

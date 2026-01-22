@@ -1,6 +1,6 @@
-import { Show, untrack } from 'solid-js'
+import { Show, untrack, type Accessor } from 'solid-js'
 
-import { MasonryLayout } from '~/components/ImageLayout'
+import { MasonryLayout, type LayoutMetrics } from '~/components/ImageLayout'
 import { ImageLayoutHost } from '~/components/ImageLayout/ImageLayoutHost'
 import type { ImageEntrySlice } from '~/domain'
 import { useImageEntryList, type ImageEntryListOptions } from '~/hooks/useImageEntryList'
@@ -11,6 +11,7 @@ import { MoreButton } from './MoreButton'
 interface MasonryImageListProps {
 	readonly initial: ImageEntrySlice
 	readonly options: ImageEntryListOptions
+	readonly getMetrics: Accessor<LayoutMetrics>
 }
 
 export function MasonryImageList(props: MasonryImageListProps) {
@@ -28,6 +29,7 @@ export function MasonryImageList(props: MasonryImageListProps) {
 	return (
 		<>
 			<ImageLayoutHost
+				getMetrics={props.getMetrics}
 				itemComponent={ListCard}
 				items={images()}
 				layout={MasonryLayout}

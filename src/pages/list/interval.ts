@@ -1,7 +1,7 @@
-import type { LayoutInterval } from '../types'
+import type { LayoutInterval } from '~/components/ImageLayout'
 
 // minItemWidth and gap scale in steps by column range.
-export const defaultIntervals: readonly LayoutInterval[] = [
+export const listPageIntervals: readonly LayoutInterval[] = [
 	// 1–2 columns (minItemWidth=160–, gap=8)
 	{ colMin: 1, colMax: 2, minItemWidth: 160, spacing: 8 },
 

@@ -1,9 +1,8 @@
 import { createMemo, type Accessor } from 'solid-js'
 
-import type { LayoutIntervals } from '../types'
-
-import { computeLayoutMetrics, normalizeIntervals } from './layoutMetrics'
-import type { LayoutMetrics, NormalizedLayoutIntervals } from './types'
+import { computeLayoutMetrics, normalizeIntervals } from './shared/layoutMetrics'
+import type { NormalizedLayoutIntervals } from './shared/types'
+import type { LayoutIntervals, LayoutMetrics } from './types'
 
 export interface LayoutMetricsOptions {
 	readonly intervals: LayoutIntervals

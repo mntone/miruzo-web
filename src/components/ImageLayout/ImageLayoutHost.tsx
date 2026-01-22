@@ -1,12 +1,15 @@
-import { untrack, type Component, type ComponentProps } from 'solid-js'
+import { untrack, type Accessor, type Component, type ComponentProps } from 'solid-js'
 
 import type { ImageEntry } from '~/domain'
 
 import type { LayoutItemsProps, LayoutComponent, LayoutItemProps } from './shared/types'
+import type { LayoutMetrics } from './types'
 
 type ImageLayoutComponentBase = LayoutComponent<ImageEntry>
 
 interface ImageLayoutHostProps<Layout extends ImageLayoutComponentBase> {
+	readonly getMetrics: Accessor<LayoutMetrics>
+
 	readonly itemComponent: Component<LayoutItemProps<ImageEntry>>
 	/** Render order is preserved; no sorting/filtering is applied. */
 	readonly items: readonly ImageEntry[]
@@ -25,6 +28,7 @@ export function ImageLayoutHost<Layout extends ImageLayoutComponentBase>(props: 
 			getItems={function() {
 				return props.items
 			}}
+			getMetrics={props.getMetrics}
 			itemComponent={props.itemComponent}
 			{...props.layoutProps}
 		/>

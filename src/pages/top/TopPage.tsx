@@ -1,18 +1,29 @@
-import { createResource, Suspense, Switch, Match, For } from 'solid-js'
+import { createResource, Suspense, Switch, Match, For, createSignal } from 'solid-js'
 
 import { ErrorMessage } from '~/components/ErrorMessage'
 import { Header } from '~/components/Header/Header'
 import { HorizontalEdgeInsetBoundary } from '~/components/HorizontalEdgeInsetBoundary'
+import { useLayoutMetrics } from '~/components/ImageLayout'
+import { useContentSize } from '~/hooks'
 import { useSurfaceScope } from '~/hooks/useSurfaceScope'
 import { useI18n } from '~/i18n/Context'
 
 import { topPageConfigs } from './config'
 import { loadTopPageData } from './data'
 import { GridImageList } from './GridImageList'
+import { topPageIntervals } from './interval'
 
 export function TopPage() {
 	useSurfaceScope(function() {
 		return 'section'
+	})
+
+	const [getElement, setElement] = createSignal<HTMLElement | undefined>(undefined)
+	const getLayoutSize = useContentSize(getElement)
+	const getMetrics = useLayoutMetrics(function() {
+		return getLayoutSize()[0]
+	}, {
+		intervals: topPageIntervals,
 	})
 
 	const [resource] = createResource(topPageConfigs, loadTopPageData)
@@ -22,6 +33,7 @@ export function TopPage() {
 		<>
 			<Header />
 			<HorizontalEdgeInsetBoundary
+				ref={setElement}
 				as='main'
 				minHorizontalEdgeInset={16}
 			>
@@ -41,6 +53,7 @@ export function TopPage() {
 											return (
 												<GridImageList
 													config={topPageConfigs[getIndex()]}
+													getMetrics={getMetrics}
 													initial={initial}
 												/>
 											)

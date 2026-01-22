@@ -2,3 +2,5 @@ export * from './types'
 
 export * from './grid'
 export * from './masonry'
+
+export * from './useLayoutMetrics'

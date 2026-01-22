@@ -1,13 +1,9 @@
-import { createMemo, createSignal, For, untrack, type Accessor, type JSX } from 'solid-js'
+import { createMemo, For, type Accessor, type JSX } from 'solid-js'
 import { Dynamic } from 'solid-js/web'
 
-import { useParentContentSize } from '~/hooks'
-
 import * as styleUtils from '../../shared/style'
-import type { LayoutMetrics } from '../shared/types'
-import { useLayoutMetrics } from '../shared/useLayoutMetrics'
+import type { LayoutMetrics } from '../types'
 
-import { defaultIntervals } from './config'
 import { computeMasonryExtraLayoutMetrics, type MasonryExtraLayoutMetrics } from './extraLayoutMetrics'
 import * as styles from './MasonryLayout.css'
 import type { MasonryLayoutProps } from './types'
@@ -27,20 +23,9 @@ function getChildrenStyleBase(
 }
 
 export function MasonryLayout<Item>(props: MasonryLayoutProps<Item>) {
-	const [getEl, setEl] = createSignal<HTMLElement | undefined>(undefined)
-	const getLayoutSize = useParentContentSize(getEl)
-
-	const getMetrics = useLayoutMetrics(function() {
-		return getLayoutSize()[0]
-	}, {
-		intervals: untrack(function() {
-			return props.intervals || defaultIntervals
-		}),
-	})
-
 	const extraMetrics = computeMasonryExtraLayoutMetrics()
 	const getLayoutStyle = createMemo(function() {
-		const metrics = getMetrics()
+		const metrics = props.getMetrics()
 		const style: JSX.CSSProperties = {
 			'--m-columns': metrics.cols,
 			'--g-spacing-x': `${metrics.horizontalSpacing}px`,
@@ -53,13 +38,12 @@ export function MasonryLayout<Item>(props: MasonryLayoutProps<Item>) {
 
 	return (
 		<Dynamic
-			ref={setEl}
 			class={styleUtils.classOptional('layout-root', props.class)}
 			component={props.as || 'div'}
 			style={{
 				...props.style,
-				padding: styleUtils.zeroVerticalHorizontalPxNonZero(getMetrics().outerPadding),
-				width: styleUtils.px(getMetrics().containerWidth),
+				padding: styleUtils.zeroVerticalHorizontalPxNonZero(props.getMetrics().outerPadding),
+				width: styleUtils.px(props.getMetrics().containerWidth),
 			}}
 		>
 			{props.header}
@@ -70,10 +54,10 @@ export function MasonryLayout<Item>(props: MasonryLayoutProps<Item>) {
 						const Component = props.itemComponent
 						return (
 							<Component
-								getItemStyle={getChildrenStyleBase.bind(null, getMetrics, extraMetrics)}
+								getItemStyle={getChildrenStyleBase.bind(null, props.getMetrics, extraMetrics)}
 								item={item}
-								itemWidth={getMetrics().itemWidth}
-								nativeItemWidth={getMetrics().nativeItemWidth}
+								itemWidth={props.getMetrics().itemWidth}
+								nativeItemWidth={props.getMetrics().nativeItemWidth}
 							/>
 						)
 					}}
