@@ -1,3 +1,2 @@
-export * from './useContentSize'
+export * from './useContentWidth'
 export * from './useDevicePixelRatio'
-export * from './useParentContentSize'

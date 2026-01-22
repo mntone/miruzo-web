@@ -6,7 +6,7 @@ import { Header } from '~/components/Header/Header'
 import { HorizontalEdgeInsetBoundary } from '~/components/HorizontalEdgeInsetBoundary'
 import { useLayoutMetrics } from '~/components/ImageLayout'
 import type { ImageListType } from '~/domain'
-import { useContentSize } from '~/hooks'
+import { useContentWidth } from '~/hooks'
 import { useI18n } from '~/i18n/Context'
 import { loadImageEntryList } from '~/repositories'
 
@@ -26,10 +26,8 @@ export function ListPage(props: ListPageProps) {
 	})
 
 	const [getElement, setElement] = createSignal<HTMLElement | undefined>(undefined)
-	const getLayoutSize = useContentSize(getElement)
-	const getMetrics = useLayoutMetrics(function() {
-		return getLayoutSize()[0]
-	}, {
+	const getLayoutWidth = useContentWidth(getElement)
+	const getMetrics = useLayoutMetrics(getLayoutWidth, {
 		intervals: listPageIntervals,
 	})
 

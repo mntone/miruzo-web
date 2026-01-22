@@ -4,7 +4,7 @@ import { ErrorMessage } from '~/components/ErrorMessage'
 import { Header } from '~/components/Header/Header'
 import { HorizontalEdgeInsetBoundary } from '~/components/HorizontalEdgeInsetBoundary'
 import { useLayoutMetrics } from '~/components/ImageLayout'
-import { useContentSize } from '~/hooks'
+import { useContentWidth } from '~/hooks'
 import { useSurfaceScope } from '~/hooks/useSurfaceScope'
 import { useI18n } from '~/i18n/Context'
 
@@ -19,10 +19,8 @@ export function TopPage() {
 	})
 
 	const [getElement, setElement] = createSignal<HTMLElement | undefined>(undefined)
-	const getLayoutSize = useContentSize(getElement)
-	const getMetrics = useLayoutMetrics(function() {
-		return getLayoutSize()[0]
-	}, {
+	const getLayoutWidth = useContentWidth(getElement)
+	const getMetrics = useLayoutMetrics(getLayoutWidth, {
 		intervals: topPageIntervals,
 	})
 

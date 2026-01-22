@@ -1,24 +1,17 @@
 import { createEffect, createSignal, onCleanup, type Accessor } from 'solid-js'
 
-import type { Size } from './types'
-
-function equalsSize(val1: Size, val2: Size): boolean {
-	return val1[0] === val2[0] && val1[1] === val2[1]
-}
-
-export function useContentSize(getElement: Accessor<HTMLElement | undefined>): Accessor<Size> {
-	const [getSize, setSize] = createSignal<Size>([0, 0])
+export function useContentWidth(getElement: Accessor<HTMLElement | undefined>): Accessor<number> {
+	const [getWidth, setWidth] = createSignal<number>(0)
 
 	if (typeof ResizeObserver === 'undefined') {
 		console.warn('ResizeObserver is not supported')
-		return getSize
+		return getWidth
 	}
 
 	const observer = new ResizeObserver(function(entries) {
-		const nextSize = entries[0].contentRect
-		const next: Size = [nextSize.width, nextSize.height]
-		if (!equalsSize(next, getSize())) {
-			setSize(next)
+		const next = entries[0].contentRect.width
+		if (next !== getWidth()) {
+			setWidth(next)
 		}
 	})
 	onCleanup(observer.disconnect.bind(observer))
@@ -39,5 +32,5 @@ export function useContentSize(getElement: Accessor<HTMLElement | undefined>): A
 		observedElement = next
 	})
 
-	return getSize
+	return getWidth
 }
