@@ -2,7 +2,7 @@ import 'csstype'
 
 declare module 'csstype' {
 	interface StandardLonghandProperties {
-		cornerShape?: CornerShape
+		cornerShape?: Globals | CornerShape
 	}
 
 	export type CornerShape =

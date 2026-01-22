@@ -5,4 +5,11 @@ export const section = style({
 	borderRadius: '24px',
 	marginBlock: '8px 24px',
 	paddingBlock: '4px 14px',
+
+	'@supports': {
+		'(corner-shape: superellipse(1.333))': {
+			borderRadius: '26px',
+			cornerShape: 'superellipse(1.333)',
+		},
+	},
 })

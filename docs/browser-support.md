@@ -24,6 +24,7 @@ versions.
 ### CSS features
 | Feature                                  | Reason             | Chrome | Firefox | Safari | iOS   |
 | ---------------------------------------- | ------------------ | ------ | ------- | ------ | ----- |
+| [CSS masks][css-masks]                   | Card borders       | 120+ (4+ -webkit-) | 53+ | 15.4+ | 15.4+ |
 | [object-fit][object-fit]                 | Image cropping     | 32+    | 36+     | 10+    | 10+   |
 | [CSS variables][css-variables]           | Theme tokens       | 49+    | 31+     | 10+    | 10+   |
 | [CSS filters][css-filters]               | Image effects      | 53+    | 35+     | 9.1+   | 9.3+  |
@@ -65,6 +66,7 @@ These are the highest minimums across the required feature list.
 [array-at]: https://caniuse.com/wf-array-at
 [color-scheme]: https://caniuse.com/wf-color-scheme
 [css-filters]: https://caniuse.com/css-filters
+[css-masks]: https://caniuse.com/css-masks
 [css-variables]: https://caniuse.com/css-variables
 [fetch-api]: https://caniuse.com/fetch
 [hex-alpha]: https://caniuse.com/mdn-css_types_color_rgb_hexadecimal_notation_alpha_hexadecimal_notation

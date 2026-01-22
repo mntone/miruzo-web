@@ -20,12 +20,31 @@ export const card = style({
 	},
 
 	'@supports': {
+		'(corner-shape: superellipse(1.333))': {
+			borderRadius: '12px',
+			cornerShape: 'superellipse(1.333)',
+		},
 		'(font: -apple-system-body)': {
 			contentVisibility: 'visible',
 		},
 		'not (overflow: clip)': {
 			overflow: 'hidden',
 		},
+	},
+
+	'::after': {
+		position: 'absolute',
+		inset: 0,
+
+		backgroundColor: 'var(--fill-quaternary)',
+		borderRadius: 'inherit',
+		content: '',
+		cornerShape: 'inherit',
+		WebkitMask: 'linear-gradient(#000) content-box, linear-gradient(#000)',
+		WebkitMaskComposite: 'destination-out',
+		mask: 'linear-gradient(#000) content-box exclude, linear-gradient(#000)',
+		padding: 1,
+		pointerEvents: 'none',
 	},
 })
 
