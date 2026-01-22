@@ -17,7 +17,7 @@ interface GridImageListProps {
 export function GridImageList(props: GridImageListProps) {
 	return (
 		<ImageLayoutHost
-			getMetrics={props.getMetrics}
+			getMetrics={/* @once */ props.getMetrics}
 			itemComponent={TopCard}
 			items={props.initial.entries}
 			layout={GridLayout}

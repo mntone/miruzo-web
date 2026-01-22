@@ -26,7 +26,7 @@ export function SectionHeader(props: SectionHeaderProps) {
 				alternateLabel={tt('labels.open', getLabel())}
 				class={styles.button}
 				component={ListPage}
-				params={props.type}
+				params={/* @once */ props.type}
 			>
 				{getLabel()}
 			</Link>

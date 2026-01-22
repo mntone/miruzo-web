@@ -23,7 +23,7 @@ export function TopCard(props: TopCardProps) {
 
 	return (
 		<div
-			class={'card ' + styles.card}
+			class={/* @once */ 'card ' + styles.card}
 			onClick={function() {
 				push(DetailPage, props.item.id)
 			}}

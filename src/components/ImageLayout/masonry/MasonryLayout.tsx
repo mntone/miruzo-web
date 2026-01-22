@@ -38,15 +38,15 @@ export function MasonryLayout<Item>(props: MasonryLayoutProps<Item>) {
 
 	return (
 		<Dynamic
-			class={styleUtils.classOptional('layout-root', props.class)}
-			component={props.as || 'div'}
+			class={/* @once */ styleUtils.classOptional('layout-root', props.class)}
+			component={/* @once */ props.as || 'div'}
 			style={{
 				...props.style,
 				padding: styleUtils.zeroVerticalHorizontalPxNonZero(props.getMetrics().outerPadding),
 				width: styleUtils.px(props.getMetrics().containerWidth),
 			}}
 		>
-			{props.header}
+			{/* @once */ props.header}
 
 			<div class={styles.layout} style={getLayoutStyle()}>
 				<For each={props.getItems()}>
@@ -64,7 +64,7 @@ export function MasonryLayout<Item>(props: MasonryLayoutProps<Item>) {
 				</For>
 			</div>
 
-			{props.footer}
+			{/* @once */ props.footer}
 		</Dynamic>
 	)
 }

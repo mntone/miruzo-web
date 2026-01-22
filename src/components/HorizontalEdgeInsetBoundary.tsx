@@ -106,16 +106,14 @@ export function HorizontalEdgeInsetBoundary(props: HorizontalEdgeInsetBoundaryPr
 		}
 	})
 
-	// eslint-disable-next-line solid/reactivity -- fixed tag at setup
-	const as = props.as ?? 'div'
 	return (
 		<Dynamic
 			ref={setElementDelegate}
-			class={props.class}
-			component={as}
+			class={/* @once */ props.class}
+			component={/* @once */ props.as || 'div'}
 			style={getStyle()}
 		>
-			{props.children}
+			{/* @once */ props.children}
 		</Dynamic>
 	)
 }

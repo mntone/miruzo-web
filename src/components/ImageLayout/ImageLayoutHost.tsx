@@ -27,15 +27,12 @@ export function ImageLayoutHost<Layout extends ImageLayoutComponentBase>(props: 
 		return props.items
 	}
 
-	// eslint-disable-next-line solid/reactivity -- fixed at setup
-	const getMetrics = props.getMetrics
-
 	return (
 		<Layout
 			{...props.layoutProps}
 			getItems={getItems}
-			getMetrics={getMetrics}
-			itemComponent={props.itemComponent}
+			getMetrics={/* @once */ props.getMetrics}
+			itemComponent={/* @once */ props.itemComponent}
 		/>
 	)
 }

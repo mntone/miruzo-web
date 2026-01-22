@@ -28,7 +28,7 @@ export function MasonryImageList(props: MasonryImageListProps) {
 	return (
 		<>
 			<ImageLayoutHost
-				getMetrics={props.getMetrics}
+				getMetrics={/* @once */ props.getMetrics}
 				itemComponent={ListCard}
 				items={images()}
 				layout={MasonryLayout}

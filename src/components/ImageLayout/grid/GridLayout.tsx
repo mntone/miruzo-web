@@ -27,15 +27,15 @@ export function GridLayout<Item>(props: GridLayoutProps<Item>) {
 
 	return (
 		<Dynamic
-			class={styleUtils.classOptional('layout-root', props.class)}
-			component={props.as || 'div'}
+			class={/* @once */ styleUtils.classOptional('layout-root', props.class)}
+			component={/* @once */ props.as || 'div'}
 			style={{
 				...props.style,
 				'padding-inline': styleUtils.pxNonZero(props.getMetrics().outerPadding),
 				'width': styleUtils.px(props.getMetrics().containerWidth),
 			}}
 		>
-			{props.header}
+			{/* @once */ props.header}
 
 			<div class='grid' style={getLayoutStyle()}>
 				<For each={getConstrainItems()}>
@@ -52,7 +52,7 @@ export function GridLayout<Item>(props: GridLayoutProps<Item>) {
 				</For>
 			</div>
 
-			{props.footer}
+			{/* @once */ props.footer}
 		</Dynamic>
 	)
 }
