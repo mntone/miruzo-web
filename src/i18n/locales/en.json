@@ -20,6 +20,7 @@
 		"open": "Open {0}",
 		"state_error": "Failed to load",
 		"state_load": "Loading…",
+		"state_none": "No images available",
 		"view": {
 			"one": "{0} view",
 			"other": "{0} views"

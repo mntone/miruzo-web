@@ -48,12 +48,16 @@ export function useImageEntryList(
 	const [tail, setTail] = createSignal<string | undefined>(initial.cursor)
 	const [images, setImages] = createSignal<readonly ImageEntry[]>(initial.entries)
 
-	function _processResponse(response: ImageEntrySlice): void {
+	function _processResponse(response: ImageEntrySlice | undefined): void {
 		batch(function() {
-			setImages(function(prev) {
-				return [...prev, ...response.entries]
-			})
-			setTail(response.cursor)
+			if (response !== undefined) {
+				setImages(function(prev) {
+					return [...prev, ...response.entries]
+				})
+				setTail(response.cursor)
+			} else {
+				setTail(undefined)
+			}
 			setIsPending(false)
 		})
 	}

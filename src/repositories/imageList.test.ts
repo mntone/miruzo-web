@@ -28,6 +28,9 @@ describe('createImageEntrySlice', () => {
 		}
 
 		const slice = createImageEntrySlice(response)
+		if (slice === undefined) {
+			throw Error('Expected slice to be defined')
+		}
 		expect(slice.entries).toEqual([second, first])
 		expect(slice.cursor).toBe('next')
 	})
@@ -41,8 +44,19 @@ describe('createImageEntrySlice', () => {
 		}
 
 		const slice = createImageEntrySlice(response)
+		if (slice === undefined) {
+			throw Error('Expected slice to be defined')
+		}
 		expect(slice.entries).toEqual([entry])
 		expect(slice.cursor).toBeUndefined()
+	})
+
+	it('returns undefined when ids are empty', () => {
+		const response: IngestIdListResponse = {
+			ids: [],
+		}
+
+		expect(createImageEntrySlice(response)).toBeUndefined()
 	})
 
 	it('throws when an entry is missing from the store', () => {

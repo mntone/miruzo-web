@@ -17,6 +17,7 @@
 		"open": "{0}を開く",
 		"state_error": "読み込み失敗",
 		"state_load": "読み込み中…",
+		"state_none": "画像がありません",
 		"view": "{0}回閲覧"
 	},
 	"sections": {

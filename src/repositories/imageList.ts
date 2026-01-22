@@ -5,7 +5,11 @@ import { imageStore } from '~/stores/image'
 
 import { loadIngestIdList } from './ingest'
 
-export function createImageEntrySlice(r: IngestIdListResponse): ImageEntrySlice {
+export function createImageEntrySlice(r: IngestIdListResponse): ImageEntrySlice | undefined {
+	if (r.ids.length === 0) {
+		return undefined
+	}
+
 	const entries = new Array<ImageEntry>(r.ids.length)
 	for (let i = 0; i < r.ids.length; ++i) {
 		const id = r.ids[i]
@@ -23,6 +27,6 @@ export function createImageEntrySlice(r: IngestIdListResponse): ImageEntrySlice 
 	return slice
 }
 
-export function loadImageEntryList(request: ImageListRequest): Promise<ImageEntrySlice> {
+export function loadImageEntryList(request: ImageListRequest): Promise<ImageEntrySlice | undefined> {
 	return loadIngestIdList(request).then(createImageEntrySlice)
 }

@@ -19,10 +19,18 @@ function buildRequest(type: ImageListType, rows: number, excludeFormats?: readon
 	return request
 }
 
-export function loadTopPageData(configs: TopPageSectionConfigs): Promise<readonly ImageEntrySlice[]> {
+export function loadTopPageData(configs: TopPageSectionConfigs): Promise<readonly (ImageEntrySlice | undefined)[] | undefined> {
 	const excludeFormats = getExcludeFormats()
 	const tasks = configs.map(function(config) {
 		return loadImageEntryList(buildRequest(config.listType, config.maxRows, excludeFormats))
 	})
-	return Promise.all(tasks)
+	return Promise.all(tasks).then(function(responses) {
+		for (let i = 0; i < responses.length; ++i) {
+			const r = responses[i]
+			if (r !== undefined && r.entries.length !== 0) {
+				return responses
+			}
+		}
+		return undefined
+	})
 }

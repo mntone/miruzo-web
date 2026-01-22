@@ -47,7 +47,7 @@ export function ListPage(props: ListPageProps) {
 				}}
 			>
 				<Suspense fallback={t('labels.state_load')}>
-					<Switch>
+					<Switch fallback={t('labels.state_none')}>
 						<Match when={resource.error as unknown}>
 							{function(getError) {
 								return <ErrorMessage error={getError()} label={t('labels.state_error')} />

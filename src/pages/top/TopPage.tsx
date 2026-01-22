@@ -1,4 +1,4 @@
-import { createResource, Suspense, Switch, Match, For, createSignal } from 'solid-js'
+import { createResource, Suspense, Switch, Match, For, createSignal, Show } from 'solid-js'
 
 import { ErrorMessage } from '~/components/ErrorMessage'
 import { Header } from '~/components/Header/Header'
@@ -38,7 +38,7 @@ export function TopPage() {
 				minHorizontalEdgeInset={16}
 			>
 				<Suspense fallback={t('labels.state_load')}>
-					<Switch>
+					<Switch fallback={t('labels.state_none')}>
 						<Match when={resource.error as unknown}>
 							{function(getError) {
 								return <ErrorMessage error={getError()} label={t('labels.state_error')} />
@@ -51,11 +51,17 @@ export function TopPage() {
 									<For each={getInitials()}>
 										{function(initial, getIndex) {
 											return (
-												<GridImageList
-													config={topPageConfigs[getIndex()]}
-													getMetrics={getMetrics}
-													initial={initial}
-												/>
+												<Show when={initial}>
+													{function(getEntries) {
+														return (
+															<GridImageList
+																config={topPageConfigs[getIndex()]}
+																getMetrics={getMetrics}
+																initial={getEntries()}
+															/>
+														)
+													}}
+												</Show>
 											)
 										}}
 									</For>
