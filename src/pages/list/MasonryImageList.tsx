@@ -1,7 +1,6 @@
 import { Show, untrack, type Accessor } from 'solid-js'
 
-import { MasonryLayout, type LayoutMetrics } from '~/components/ImageLayout'
-import { ImageLayoutHost } from '~/components/ImageLayout/ImageLayoutHost'
+import { ImageLayoutHost, MasonryLayout, type LayoutMetrics } from '~/components/ImageLayout'
 import type { ImageEntrySlice } from '~/domain'
 import { useImageEntryList, type ImageEntryListOptions } from '~/hooks/useImageEntryList'
 

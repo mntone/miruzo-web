@@ -1,4 +1,4 @@
-import { untrack, type Accessor, type Component, type ComponentProps } from 'solid-js'
+import { type Accessor, type Component, type ComponentProps } from 'solid-js'
 
 import type { ImageEntry } from '~/domain'
 
@@ -20,17 +20,22 @@ interface ImageLayoutHostProps<Layout extends ImageLayoutComponentBase> {
 }
 
 export function ImageLayoutHost<Layout extends ImageLayoutComponentBase>(props: ImageLayoutHostProps<Layout>) {
-	const Layout = untrack(function() {
-		return props.layout
-	})
+	// eslint-disable-next-line solid/reactivity -- fixed at setup
+	const Layout = props.layout
+
+	function getItems() {
+		return props.items
+	}
+
+	// eslint-disable-next-line solid/reactivity -- fixed at setup
+	const getMetrics = props.getMetrics
+
 	return (
 		<Layout
-			getItems={function() {
-				return props.items
-			}}
-			getMetrics={props.getMetrics}
-			itemComponent={props.itemComponent}
 			{...props.layoutProps}
+			getItems={getItems}
+			getMetrics={getMetrics}
+			itemComponent={props.itemComponent}
 		/>
 	)
 }

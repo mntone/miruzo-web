@@ -1,7 +1,6 @@
 import { type Accessor } from 'solid-js'
 
-import { GridLayout, type LayoutMetrics } from '~/components/ImageLayout'
-import { ImageLayoutHost } from '~/components/ImageLayout/ImageLayoutHost'
+import { GridLayout, ImageLayoutHost, type LayoutMetrics } from '~/components/ImageLayout'
 import type { ImageEntrySlice } from '~/domain'
 
 import type { TopPageSectionConfig } from './config'
