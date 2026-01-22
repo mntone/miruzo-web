@@ -1,8 +1,3 @@
-import { computeLayoutMetrics } from '../shared/layoutMetrics'
-import type { NormalizedLayoutIntervals } from '../shared/types'
-
-import type { MasonryLayoutMetrics } from './types'
-
 let needsIntegerGridRows: boolean | undefined
 
 /**
@@ -37,14 +32,19 @@ function hasBrokenFractionalGridAutoRows(): boolean {
 	return flag
 }
 
-/**
- * Combines the interval specification (piecewise-linear segments) with a custom
- * fixed-width resolver to derive the spacing, track width, and overall layout metrics.
- */
-export function computeMasonryMetrics(containerWidth: number, intervals: NormalizedLayoutIntervals): MasonryLayoutMetrics {
-	const baseMetrics = computeLayoutMetrics(containerWidth, intervals)
+export interface MasonryExtraLayoutMetrics {
+	rowSize: number
+	rowUnit: number
+}
 
+/**
+ * Derive grid row sizing for masonry, accounting for fractional auto-row bugs.
+ */
+export function computeMasonryExtraLayoutMetrics(): MasonryExtraLayoutMetrics {
 	const rowSize = hasBrokenFractionalGridAutoRows() ? 1 : window.devicePixelRatio
 	const rowUnit = 1 / rowSize
-	return Object.assign(baseMetrics, { rowSize, rowUnit })
+	return {
+		rowSize,
+		rowUnit,
+	}
 }

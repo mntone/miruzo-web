@@ -1,8 +1,3 @@
-import type { LayoutProps, LayoutMetrics } from '../shared/types'
-
-export interface MasonryLayoutMetrics extends LayoutMetrics {
-	rowSize: number
-	rowUnit: number
-}
+import type { LayoutProps } from '../shared/types'
 
 export type MasonryLayoutProps<Item> = LayoutProps<Item>

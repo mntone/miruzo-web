@@ -1,11 +1,11 @@
-import { createMemo, createSignal, For } from 'solid-js'
+import { createMemo, createSignal, For, untrack } from 'solid-js'
 import type { JSX } from 'solid-js/h/jsx-runtime'
 import { Dynamic } from 'solid-js/web'
 
 import { useParentContentSize } from '~/hooks'
 
 import * as styleUtils from '../../shared/style'
-import { computeLayoutMetrics, normalizeIntervals } from '../shared/layoutMetrics'
+import { useLayoutMetrics } from '../shared/useLayoutMetrics'
 
 import { defaultIntervals } from './config'
 import type { GridLayoutProps } from './types'
@@ -14,10 +14,12 @@ export function GridLayout<Item>(props: GridLayoutProps<Item>) {
 	const [getEl, setEl] = createSignal<HTMLElement | undefined>(undefined)
 	const getLayoutSize = useParentContentSize(getEl)
 
-	const getMetrics = createMemo(function() {
-		const width = getLayoutSize()[0]
-		const intervals = normalizeIntervals(props.intervals || defaultIntervals)
-		return computeLayoutMetrics(width, intervals)
+	const getMetrics = useLayoutMetrics(function() {
+		return getLayoutSize()[0]
+	}, {
+		intervals: untrack(function() {
+			return props.intervals || defaultIntervals
+		}),
 	})
 
 	const getConstrainItems = createMemo(function() {

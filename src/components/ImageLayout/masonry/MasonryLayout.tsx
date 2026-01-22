@@ -1,23 +1,24 @@
-import { createMemo, createSignal, For, type Accessor, type JSX } from 'solid-js'
+import { createMemo, createSignal, For, untrack, type Accessor, type JSX } from 'solid-js'
 import { Dynamic } from 'solid-js/web'
 
 import { useParentContentSize } from '~/hooks'
 
 import * as styleUtils from '../../shared/style'
-import { normalizeIntervals } from '../shared/layoutMetrics'
+import type { LayoutMetrics } from '../shared/types'
+import { useLayoutMetrics } from '../shared/useLayoutMetrics'
 
 import { defaultIntervals } from './config'
-import { computeMasonryMetrics } from './layoutMetrics'
+import { computeMasonryExtraLayoutMetrics, type MasonryExtraLayoutMetrics } from './extraLayoutMetrics'
 import * as styles from './MasonryLayout.css'
-import type { MasonryLayoutProps, MasonryLayoutMetrics } from './types'
+import type { MasonryLayoutProps } from './types'
 
 function getChildrenStyleBase(
-	getMetrics: Accessor<MasonryLayoutMetrics>,
+	getMetrics: Accessor<LayoutMetrics>,
+	extraMetrics: MasonryExtraLayoutMetrics,
 	scaledHeight: number,
 ) {
-	const metrics = getMetrics()
 	const roundedScaledHeight = 0.0001 * Math.round(10000 * scaledHeight)
-	const gridHeight = Math.round(metrics.rowSize * (scaledHeight + metrics.verticalSpacing))
+	const gridHeight = Math.round(extraMetrics.rowSize * (scaledHeight + getMetrics().verticalSpacing))
 	const style: JSX.CSSProperties = {
 		'grid-row-end': `span ${gridHeight}`,
 		'height': `${roundedScaledHeight}px`,
@@ -29,12 +30,15 @@ export function MasonryLayout<Item>(props: MasonryLayoutProps<Item>) {
 	const [getEl, setEl] = createSignal<HTMLElement | undefined>(undefined)
 	const getLayoutSize = useParentContentSize(getEl)
 
-	const getMetrics = createMemo(function() {
-		const width = getLayoutSize()[0]
-		const intervals = normalizeIntervals(props.intervals || defaultIntervals)
-		return computeMasonryMetrics(width, intervals)
+	const getMetrics = useLayoutMetrics(function() {
+		return getLayoutSize()[0]
+	}, {
+		intervals: untrack(function() {
+			return props.intervals || defaultIntervals
+		}),
 	})
 
+	const extraMetrics = computeMasonryExtraLayoutMetrics()
 	const getLayoutStyle = createMemo(function() {
 		const metrics = getMetrics()
 		const style: JSX.CSSProperties = {
@@ -42,7 +46,7 @@ export function MasonryLayout<Item>(props: MasonryLayoutProps<Item>) {
 			'--g-spacing-x': `${metrics.horizontalSpacing}px`,
 			'--g-spacing-y': `${metrics.verticalSpacing}px`,
 			'--m-item-width': `${metrics.itemWidth}px`,
-			'--m-row-unit': `${metrics.rowUnit}px`,
+			'--m-row-unit': `${extraMetrics.rowUnit}px`,
 		}
 		return style
 	})
@@ -66,7 +70,7 @@ export function MasonryLayout<Item>(props: MasonryLayoutProps<Item>) {
 						const Component = props.itemComponent
 						return (
 							<Component
-								getItemStyle={getChildrenStyleBase.bind(null, getMetrics)}
+								getItemStyle={getChildrenStyleBase.bind(null, getMetrics, extraMetrics)}
 								item={item}
 								itemWidth={getMetrics().itemWidth}
 								nativeItemWidth={getMetrics().nativeItemWidth}
