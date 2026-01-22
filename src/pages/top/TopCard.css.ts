@@ -8,12 +8,11 @@ export const card = style({
 
 	aspectRatio: 'var(--g-item-aspect, 1.333)',
 	borderRadius: '10px',
-	boxSizing: 'content-box',
 	width: 'var(--g-item-width, 100%)',
 
 	boxShadow: '0 1px 3px 0 rgb(0 0 0/.1), 0 1px 2px -1px rgb(0 0 0/.1)',
 	color: '#0a0a0a',
-	backgroundColor: '#FFF',
+	backgroundColor: 'var(--fill-primary)',
 	transition: 'transform ease-out 123ms',
 
 	':hover': {
@@ -35,7 +34,7 @@ export const backgroundImage = style({
 	inset: 0,
 	backgroundSize: 'cover',
 	backgroundPosition: 'center',
-	filter: 'blur(32px) brightness(0.4)',
+	filter: 'blur(32px) brightness(0.45)',
 	transform: 'scale(1.1)',
 	pointerEvents: 'none',
 
