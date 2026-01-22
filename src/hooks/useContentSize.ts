@@ -1,4 +1,4 @@
-import { createSignal, onCleanup, type Accessor } from 'solid-js'
+import { createEffect, createSignal, onCleanup, type Accessor } from 'solid-js'
 
 import type { Size } from './types'
 
@@ -23,11 +23,21 @@ export function useContentSize(getElement: Accessor<HTMLElement | undefined>): A
 	})
 	onCleanup(observer.disconnect.bind(observer))
 
-	queueMicrotask(function() {
-		const el = getElement()
-		if (el) {
-			observer.observe(el)
+	let observedElement: HTMLElement | undefined
+	createEffect(function() {
+		const next = getElement()
+		if (observedElement === next) {
+			return
 		}
+
+		if (observedElement !== undefined) {
+			observer.unobserve(observedElement)
+		}
+		if (next !== undefined) {
+			observer.observe(next)
+		}
+		observedElement = next
 	})
+
 	return getSize
 }
