@@ -1,6 +1,6 @@
 import { createMemo, useContext } from 'solid-js'
 
-import type { LayoutItemPropsBase } from '~/components/ImageLayout/types'
+import type { LayoutItemPropsBase } from '~/components/ImageLayout/shared/types'
 import { getPreferredVariant } from '~/components/ImageLayout/utils'
 import type { ImageEntry } from '~/domain'
 import { NavigationStackContext } from '~/navigation/Provider'
