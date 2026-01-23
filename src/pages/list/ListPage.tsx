@@ -42,11 +42,8 @@ export function ListPage(props: ListPageProps) {
 				ref={setElement}
 				aria-busy={resource.loading}
 				minHorizontalEdgeInset={16}
-				style={{
-					'margin-bottom': '16px',
-				}}
 			>
-				<Suspense fallback={<LoadingView height='calc(100svh - 64px)' />}>
+				<Suspense fallback={<LoadingView height='calc(100svh - 48px)' />}>
 					<Switch fallback={t('labels.state_none')}>
 						<Match when={resource.error as unknown}>
 							{function(getError) {

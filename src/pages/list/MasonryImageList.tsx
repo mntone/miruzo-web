@@ -1,4 +1,4 @@
-import { Show, untrack, type Accessor } from 'solid-js'
+import { Show, type Accessor } from 'solid-js'
 
 import { ImageLayoutHost, MasonryLayout, type LayoutMetrics } from '~/components/ImageLayout'
 import type { ImageEntrySlice } from '~/domain'
@@ -14,10 +14,8 @@ interface MasonryImageListProps {
 }
 
 export function MasonryImageList(props: MasonryImageListProps) {
-	const options = untrack(function() {
-		return props.options
-	})
-
+	// eslint-disable-next-line solid/reactivity -- fixed at setup
+	const options = props.options
 	const {
 		images,
 		isPending,
@@ -26,23 +24,25 @@ export function MasonryImageList(props: MasonryImageListProps) {
 	} = useImageEntryList(props.initial, options)
 
 	return (
-		<>
-			<ImageLayoutHost
-				getMetrics={/* @once */ props.getMetrics}
-				itemComponent={ListCard}
-				items={images()}
-				layout={MasonryLayout}
-				layoutProps={{
-					as: 'main',
-				}}
-			/>
-
-			<Show when={hasNext()}>
-				<MoreButton
-					pending={isPending()}
-					onMore={loadNext}
-				/>
-			</Show>
-		</>
+		<ImageLayoutHost
+			getMetrics={/* @once */ props.getMetrics}
+			itemComponent={ListCard}
+			items={images()}
+			layout={MasonryLayout}
+			layoutProps={{
+				as: 'main',
+				footer: (
+					<Show when={hasNext()}>
+						<MoreButton
+							pending={isPending()}
+							onMore={loadNext}
+						/>
+					</Show>
+				),
+				style: {
+					'margin-bottom': '16px',
+				},
+			}}
+		/>
 	)
 }
