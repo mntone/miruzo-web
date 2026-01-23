@@ -3,6 +3,10 @@ import './index.css'
 /* @refresh reload */
 import { render } from 'solid-js/web'
 
+if (import.meta.env.DEV) {
+	await import('./_dev/latency')
+}
+
 import { I18nProvider } from '~/i18n/Context.tsx'
 import { preloadImageFormatSupport } from '~/utils/imageSupport'
 
