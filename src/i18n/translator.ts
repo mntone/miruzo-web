@@ -6,7 +6,7 @@ const warnedKeys = new Set<string>()
 function warnMissingKey(key: string) {
 	if (import.meta.env.DEV && !warnedKeys.has(key)) {
 		warnedKeys.add(key)
-		console.warn(`Missing translation key: ${key}`)
+		console.warn('Missing translation key: ' + key)
 	}
 }
 
