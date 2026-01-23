@@ -4,6 +4,7 @@ import { ErrorMessage } from '~/components/ErrorMessage'
 import { Header } from '~/components/Header/Header'
 import { HorizontalEdgeInsetBoundary } from '~/components/HorizontalEdgeInsetBoundary'
 import { useLayoutMetrics } from '~/components/ImageLayout'
+import { LoadingView } from '~/components/progress'
 import { useContentWidth } from '~/hooks'
 import { useSurfaceScope } from '~/hooks/useSurfaceScope'
 import { useI18n } from '~/i18n/Context'
@@ -32,10 +33,11 @@ export function TopPage() {
 			<Header />
 			<HorizontalEdgeInsetBoundary
 				ref={setElement}
+				aria-busy={resource.loading}
 				as='main'
 				minHorizontalEdgeInset={16}
 			>
-				<Suspense fallback={t('labels.state_load')}>
+				<Suspense fallback={<LoadingView delayStep={1} height='calc(100svh - 48px)' />}>
 					<Switch fallback={t('labels.state_none')}>
 						<Match when={resource.error as unknown}>
 							{function(getError) {

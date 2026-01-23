@@ -66,7 +66,7 @@ function useHorizontalEdgeInset(
 	return getEdgeInset
 }
 
-interface HorizontalEdgeInsetBoundaryProps {
+interface HorizontalEdgeInsetBoundaryProps extends Pick<JSX.AriaAttributes, 'aria-busy'> {
 	readonly as?: keyof HTMLElementTagNameMap
 	readonly children: JSX.Element
 	readonly class?: string
@@ -109,6 +109,7 @@ export function HorizontalEdgeInsetBoundary(props: HorizontalEdgeInsetBoundaryPr
 	return (
 		<Dynamic
 			ref={setElementDelegate}
+			aria-busy={props['aria-busy']}
 			class={/* @once */ props.class}
 			component={/* @once */ props.as || 'div'}
 			style={getStyle()}

@@ -169,6 +169,10 @@ body {
 	margin: 0;
 }
 
+.lucide {
+	stroke-linecap: square;
+}
+
 .layout-root {
 	box-sizing: border-box;
 	margin-inline: auto;
@@ -178,7 +182,9 @@ body {
 .hstack { display: flex; }
 .vstack {
 	display: flex;
+	align-items: center;
 	flex-direction: column;
+	justify-content: center;
 }
 .grid {
 	display: flex;
