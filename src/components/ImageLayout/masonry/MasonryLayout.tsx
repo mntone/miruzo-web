@@ -50,15 +50,12 @@ export function MasonryLayout<Item>(props: MasonryLayoutProps<Item>) {
 
 			<div class={styles.layout} style={getLayoutStyle()}>
 				<For each={props.getItems()}>
-					{function(item) {
-						const Component = props.itemComponent
-						return (
-							<Component
-								getItemStyle={getChildrenStyleBase.bind(null, props.getMetrics, extraMetrics)}
-								item={item}
-								itemWidth={props.getMetrics().itemWidth}
-								nativeItemWidth={props.getMetrics().nativeItemWidth}
-							/>
+					{function(item, getIndex) {
+						// eslint-disable-next-line solid/reactivity
+						return props.children(
+							item,
+							getIndex,
+							getChildrenStyleBase.bind(null, props.getMetrics, extraMetrics),
 						)
 					}}
 				</For>

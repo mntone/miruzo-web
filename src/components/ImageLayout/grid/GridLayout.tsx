@@ -32,16 +32,7 @@ export function GridLayout<Item>(props: GridLayoutProps<Item>) {
 
 			<div class='grid' style={getLayoutStyle()}>
 				<For each={props.getItems()}>
-					{function(item) {
-						const Component = props.itemComponent
-						return (
-							<Component
-								item={item}
-								itemWidth={props.getMetrics().itemWidth}
-								nativeItemWidth={props.getMetrics().nativeItemWidth}
-							/>
-						)
-					}}
+					{/* @once */ props.children}
 				</For>
 			</div>
 

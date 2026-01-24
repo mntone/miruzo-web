@@ -1,16 +1,17 @@
-import { type Accessor, type Component, type ComponentProps } from 'solid-js'
+import type { Accessor, ComponentProps } from 'solid-js'
 
 import type { ImageEntry } from '~/domain'
 
-import type { LayoutItemsProps, LayoutComponent, LayoutItemProps } from './shared/types'
+import type { LayoutComponent, LayoutItemsProps } from './shared/types'
 import type { LayoutMetrics } from './types'
 
 type ImageLayoutComponentBase = LayoutComponent<ImageEntry>
 
 interface ImageLayoutHostProps<Layout extends ImageLayoutComponentBase> {
-	readonly getMetrics: Accessor<LayoutMetrics>
+	/** Read once on mount; changes after mount are ignored. */
+	readonly children: LayoutItemsProps<ImageEntry>['children']
 
-	readonly itemComponent: Component<LayoutItemProps<ImageEntry>>
+	readonly getMetrics: Accessor<LayoutMetrics>
 	/** Render order is preserved; no sorting/filtering is applied. */
 	readonly getImages: Accessor<readonly ImageEntry[]>
 	/** Read once on mount; changes after mount are ignored. */
@@ -27,7 +28,8 @@ export function ImageLayoutHost<Layout extends ImageLayoutComponentBase>(props: 
 			{...props.layoutProps}
 			getItems={/* @once */ props.getImages}
 			getMetrics={/* @once */ props.getMetrics}
-			itemComponent={/* @once */ props.itemComponent}
-		/>
+		>
+			{/* @once */ props.children}
+		</Layout>
 	)
 }

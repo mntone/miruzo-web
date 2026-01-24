@@ -23,7 +23,6 @@ export function GridImageList(props: GridImageListProps) {
 		<ImageLayoutHost
 			getImages={/* @once */ getImages}
 			getMetrics={/* @once */ props.getMetrics}
-			itemComponent={TopCard}
 			layout={GridLayout}
 			layoutProps={{
 				as: 'section',
@@ -33,6 +32,15 @@ export function GridImageList(props: GridImageListProps) {
 					'--g-item-aspect': props.config.aspectRatio,
 				},
 			}}
-		/>
+		>
+			{function(item) {
+				return (
+					<TopCard
+						item={item}
+						nativeItemWidth={props.getMetrics().nativeItemWidth}
+					/>
+				)
+			}}
+		</ImageLayoutHost>
 	)
 }

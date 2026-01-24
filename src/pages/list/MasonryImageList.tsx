@@ -27,7 +27,6 @@ export function MasonryImageList(props: MasonryImageListProps) {
 		<ImageLayoutHost
 			getImages={images}
 			getMetrics={/* @once */ props.getMetrics}
-			itemComponent={ListCard}
 			layout={MasonryLayout}
 			layoutProps={{
 				as: 'main',
@@ -43,6 +42,17 @@ export function MasonryImageList(props: MasonryImageListProps) {
 					'margin-bottom': '16px',
 				},
 			}}
-		/>
+		>
+			{function(item, _, getItemStyle) {
+				return (
+					<ListCard
+						getItemStyle={/* @once */ getItemStyle!}
+						item={item}
+						itemWidth={props.getMetrics().itemWidth}
+						nativeItemWidth={props.getMetrics().nativeItemWidth}
+					/>
+				)
+			}}
+		</ImageLayoutHost>
 	)
 }

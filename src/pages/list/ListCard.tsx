@@ -1,6 +1,5 @@
-import { createMemo, useContext } from 'solid-js'
+import { createMemo, useContext, type JSX } from 'solid-js'
 
-import type { LayoutItemProps } from '~/components/ImageLayout/shared/types'
 import { getPreferredVariant } from '~/components/ImageLayout/utils'
 import type { ImageEntry } from '~/domain'
 import { NavigationStackContext } from '~/navigation/Provider'
@@ -9,7 +8,12 @@ import { DetailPage } from '../detail'
 
 import * as styles from './ListCard.css'
 
-type ListCardProps = LayoutItemProps<ImageEntry>
+interface ListCardProps {
+	readonly item: ImageEntry
+	readonly itemWidth: number
+	readonly nativeItemWidth: number
+	readonly getItemStyle: (itemHeight: number) => JSX.CSSProperties
+}
 
 export function ListCard(props: ListCardProps) {
 	const { push } = useContext(NavigationStackContext)
@@ -25,7 +29,7 @@ export function ListCard(props: ListCardProps) {
 		const variant = getVariant()
 		const cardWidth = props.itemWidth
 		const scaledHeight = variant.height * (cardWidth / variant.width)
-		const layoutStyle = props.getItemStyle!(scaledHeight)
+		const layoutStyle = props.getItemStyle(scaledHeight)
 		return layoutStyle
 	})
 

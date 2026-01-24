@@ -14,13 +14,6 @@ export interface NormalizedLayoutInterval {
 
 export type NormalizedLayoutIntervals = readonly NormalizedLayoutInterval[]
 
-export interface LayoutItemProps<Item> {
-	readonly item: Item
-	readonly itemWidth: number
-	readonly nativeItemWidth: number
-	readonly getItemStyle?: (itemHeight: number) => JSX.CSSProperties
-}
-
 export interface LayoutRootProps {
 	readonly as?: keyof HTMLElementTagNameMap | undefined
 	readonly class?: string | undefined
@@ -30,9 +23,13 @@ export interface LayoutRootProps {
 }
 
 export interface LayoutItemsProps<Item> {
+	readonly children: (
+		item: Item,
+		getIndex: Accessor<number>,
+		getItemStyle?: (itemHeight: number) => JSX.CSSProperties,
+	) => JSX.Element
 	readonly getItems: Accessor<readonly Item[]>
 	readonly getMetrics: Accessor<LayoutMetrics>
-	readonly itemComponent: Component<LayoutItemProps<Item>>
 }
 
 export interface LayoutProps<Item> extends LayoutRootProps, LayoutItemsProps<Item> {
