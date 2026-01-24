@@ -7,13 +7,6 @@ import * as styleUtils from '../../shared/style'
 import type { GridLayoutProps } from './types'
 
 export function GridLayout<Item>(props: GridLayoutProps<Item>) {
-	const getConstrainItems = createMemo(function() {
-		if (props.maxRows === undefined) {
-			return props.getItems()
-		}
-		return props.getItems().slice(0, props.getMetrics().cols * props.maxRows)
-	})
-
 	const getLayoutStyle = createMemo(function() {
 		const metrics = props.getMetrics()
 		const style: JSX.CSSProperties = {
@@ -38,7 +31,7 @@ export function GridLayout<Item>(props: GridLayoutProps<Item>) {
 			{/* @once */ props.header}
 
 			<div class='grid' style={getLayoutStyle()}>
-				<For each={getConstrainItems()}>
+				<For each={props.getItems()}>
 					{function(item) {
 						const Component = props.itemComponent
 						return (

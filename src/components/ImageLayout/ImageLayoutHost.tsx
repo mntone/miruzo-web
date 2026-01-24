@@ -12,7 +12,7 @@ interface ImageLayoutHostProps<Layout extends ImageLayoutComponentBase> {
 
 	readonly itemComponent: Component<LayoutItemProps<ImageEntry>>
 	/** Render order is preserved; no sorting/filtering is applied. */
-	readonly items: readonly ImageEntry[]
+	readonly getImages: Accessor<readonly ImageEntry[]>
 	/** Read once on mount; changes after mount are ignored. */
 	readonly layout: Layout
 	/** Forwarded to the layout component and updated reactively. */
@@ -22,15 +22,10 @@ interface ImageLayoutHostProps<Layout extends ImageLayoutComponentBase> {
 export function ImageLayoutHost<Layout extends ImageLayoutComponentBase>(props: ImageLayoutHostProps<Layout>) {
 	// eslint-disable-next-line solid/reactivity -- fixed at setup
 	const Layout = props.layout
-
-	function getItems() {
-		return props.items
-	}
-
 	return (
 		<Layout
 			{...props.layoutProps}
-			getItems={getItems}
+			getItems={/* @once */ props.getImages}
 			getMetrics={/* @once */ props.getMetrics}
 			itemComponent={/* @once */ props.itemComponent}
 		/>

@@ -15,17 +15,20 @@ interface GridImageListProps {
 }
 
 export function GridImageList(props: GridImageListProps) {
+	function getImages() {
+		return props.initial.entries.slice(0, props.getMetrics().cols * props.config.maxRows)
+	}
+
 	return (
 		<ImageLayoutHost
+			getImages={/* @once */ getImages}
 			getMetrics={/* @once */ props.getMetrics}
 			itemComponent={TopCard}
-			items={props.initial.entries}
 			layout={GridLayout}
 			layoutProps={{
 				as: 'section',
 				class: styles.section,
 				header: <SectionHeader type={props.config.listType} />,
-				maxRows: props.config.maxRows,
 				style: {
 					'--g-item-aspect': props.config.aspectRatio,
 				},
