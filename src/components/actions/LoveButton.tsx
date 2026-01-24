@@ -29,6 +29,7 @@ export function LoveButton(props: LoveButtonProps) {
 		<>
 			<button
 				aria-describedby={props.remainingLoves !== 0 ? getDescriptionId() : undefined}
+				class='button'
 				disabled={getIsPending() || !props.canLove}
 				title={props.remainingLoves !== 0 ? getTooltipLabel() : undefined}
 				type='button'

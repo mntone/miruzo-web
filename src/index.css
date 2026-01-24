@@ -219,32 +219,42 @@ a:hover {
 }
 
 button {
+	appearance: none;
+	background-color: transparent;
 	border: 0 none transparent;
+	color: inherit;
+	cursor: pointer;
+	font: inherit;
+	line-height: inherit;
+	padding: 0;
+	-webkit-user-select: none;
+	user-select: none;
+}
+button:focus-visible {
+	outline: 2px solid var(--text-primary);
+}
+
+.button {
 	border-radius: 6px;
 	padding: .375em .5em;
 	position: relative;
 	min-height: 32px;
 
-	appearance: none;
 	background-color: var(--fill-tertiary);
-	color: inherit;
+	overflow: hidden;
 	overflow: clip;
-	-webkit-user-select: none;
-	user-select: none;
 
-	cursor: pointer;
 	font-size: 1em;
 	font-weight: 500;
-	font-family: inherit;
 	line-height: 1.25;
 }
 
-button:disabled {
+.button:disabled {
 	color: var(--text-tertiary);
 	pointer-events: none;
 }
 
-button::after {
+.button:after {
 	position: absolute;
 	inset: 0;
 
@@ -255,12 +265,8 @@ button::after {
 	transition: opacity 150ms ease-in-out;
 }
 
-button:hover::after {
+.button:hover:after {
 	opacity: .12;
-}
-
-button:focus-visible {
-	outline: 4px auto -webkit-focus-ring-color;
 }
 
 .button-group {
@@ -270,7 +276,7 @@ button:focus-visible {
 }
 
 @media (pointer:coarse) {
-	button {
+	.button {
 		padding-block: .6em;
 		min-height: 44px;
 	}
@@ -298,7 +304,7 @@ button:focus-visible {
 		--fill-quaternary: rgb(116 116 128/8%);
 	}
 
-	button:hover::after {
+	.button:hover:after {
 		opacity: .08;
 	}
 }

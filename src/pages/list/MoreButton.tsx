@@ -10,6 +10,7 @@ export function MoreButton(props: MoreButtonProps) {
 	const { t } = useI18n()
 	return (
 		<button
+			class='button'
 			disabled={props.pending}
 			style={{ width: '100%' }}
 			type='button'

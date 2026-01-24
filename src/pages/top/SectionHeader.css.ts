@@ -8,31 +8,15 @@ export const header = style({
 })
 
 export const button = style({
-	backgroundColor: 'transparent',
-	borderRadius: 0,
-	font: 'inherit',
-	lineHeight: 'inherit',
-	overflow: 'visible',
-	padding: 0,
-
 	':hover': {
 		textDecoration: 'underline',
 	},
-	':after': {
-		backgroundColor: 'unset',
-		opacity: 'unset',
 
-		position: 'static',
+	':after': {
 		content: '\\2006\\203A',
 		fontSize: '180%',
 		fontWeight: 300,
 		lineHeight: '.555',
 		verticalAlign: 'text-top',
-	},
-
-	selectors: {
-		[`&:hover::after`]: {
-			opacity: 'unset',
-		},
 	},
 })
