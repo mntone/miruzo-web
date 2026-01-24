@@ -1,12 +1,3 @@
-type ColRange =
-	| {
-		colMin: number
-		colMax?: number
-	}
-	| {
-		col: number
-	}
-
 type ItemWidthRange =
 	| {
 		minItemWidth: number
@@ -25,7 +16,8 @@ type SpacingRange =
 		spacing: number
 	}
 
-export type LayoutInterval = ColRange & ItemWidthRange & SpacingRange & {
+export type LayoutInterval = ItemWidthRange & SpacingRange & {
+	colEnd?: number
 	outerPadding?: number
 }
 

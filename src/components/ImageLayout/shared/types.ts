@@ -3,8 +3,7 @@ import type { Accessor, Component, JSX } from 'solid-js'
 import type { LayoutMetrics } from '../types'
 
 export interface NormalizedLayoutInterval {
-	colMin: number
-	colMax: number
+	colEnd: number
 	minItemWidth: number
 	maxItemWidth: number
 	horizontalSpacing: number

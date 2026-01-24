@@ -3,18 +3,21 @@ import type { ItemWidthMode, LayoutIntervals, LayoutMetrics } from '../types'
 import type { NormalizedLayoutInterval, NormalizedLayoutIntervals } from './types'
 
 export function normalizeIntervals(intervals: LayoutIntervals): NormalizedLayoutIntervals {
-	const normalized = intervals.map(function(interval) {
-		let colMin: number
-		let colMax: number = Infinity
-		if ('col' in interval) {
-			colMin = interval.col
-			colMax = interval.col
-		} else {
-			colMin = interval.colMin
-			if (interval.colMax !== undefined && interval.colMax >= colMin) {
-				colMax = interval.colMax
+	const normalized = new Array<NormalizedLayoutInterval>(intervals.length)
+
+	let colStart = 1
+	for (let i = 0; i < intervals.length; ++i) {
+		const interval = intervals[i]
+
+		const colEnd = interval.colEnd ?? Infinity
+		if (import.meta.env.DEV) {
+			if (interval.colEnd !== undefined && interval.colEnd < colStart) {
+				throw Error(`LayoutInterval.colEnd must be >= colStart (${colStart})`)
+			} else if (colEnd === Infinity && i < intervals.length - 1) {
+				throw Error('LayoutInterval.colEnd must be set before the last interval')
 			}
 		}
+		colStart = colEnd + 1
 
 		let minItemWidth: number
 		let maxItemWidth: number = Infinity
@@ -30,16 +33,16 @@ export function normalizeIntervals(intervals: LayoutIntervals): NormalizedLayout
 
 		const horizontalSpacing = 'horizontalSpacing' in interval ? interval.horizontalSpacing : interval.spacing
 		const verticalSpacing = 'verticalSpacing' in interval ? interval.verticalSpacing : interval.spacing
-		return {
-			colMin,
-			colMax,
+		normalized[i] = {
+			colEnd,
 			minItemWidth,
 			maxItemWidth,
 			horizontalSpacing,
 			verticalSpacing,
 			outerPadding: interval.outerPadding || 0,
 		}
-	})
+	}
+
 	return normalized
 }
 
@@ -54,20 +57,23 @@ export function estimateColumnCount(
 ): number {
 	let result = 1
 
+	let colStart = 1
 	for (const interval of intervals) {
-		const { colMin, colMax, minItemWidth, horizontalSpacing: innerGap, outerPadding } = interval
+		const { colEnd, minItemWidth, horizontalSpacing: innerGap, outerPadding } = interval
 
 		// Invert the width function to find the maximum allowed column count:
 		// widthNeeded(col) = col * minW + (col - 1) * innerGap + 2 * outerPadding
 		// => col <= floor((w - innerGap) / (minW + innerGap))
 		const maxByWidth = Math.floor((containerWidth + innerGap - 2 * outerPadding) / (minItemWidth + innerGap))
 
-		if (maxByWidth >= colMin) {
-			const constrained = Math.min(maxByWidth, colMax)
+		if (maxByWidth >= colStart) {
+			const constrained = Math.min(maxByWidth, colEnd)
 			if (constrained > result) {
 				result = constrained
 			}
 		}
+
+		colStart = colEnd + 1
 	}
 
 	return result
@@ -80,7 +86,7 @@ export function estimateColumnCount(
 export function resolveInterval(intervals: NormalizedLayoutIntervals, cols: number): NormalizedLayoutInterval {
 	const interval =
 		intervals.find(function(it) {
-			return cols >= it.colMin && cols <= it.colMax
+			return cols <= it.colEnd
 		})
 		?? intervals[intervals.length - 1]
 	return interval

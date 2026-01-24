@@ -11,9 +11,9 @@ afterAll(() => {
 })
 
 const intervals = normalizeIntervals([
-	{ colMin: 1, colMax: 2, minItemWidth: 200, maxItemWidth: Infinity, spacing: 8, outerPadding: 12 },
-	{ col: 3, minItemWidth: 200, maxItemWidth: 320, spacing: 16, outerPadding: 24 },
-	{ colMin: 4, colMax: Infinity, itemWidth: 320, spacing: 16, outerPadding: 24 },
+	{ colEnd: 2, minItemWidth: 200, maxItemWidth: Infinity, spacing: 8, outerPadding: 12 },
+	{ colEnd: 3, minItemWidth: 200, maxItemWidth: 320, spacing: 16, outerPadding: 24 },
+	{ itemWidth: 320, spacing: 16, outerPadding: 24 },
 ] satisfies LayoutIntervals)
 
 describe('estimateColumnCount', () => {
@@ -43,15 +43,14 @@ describe('resolveInterval', () => {
 })
 
 describe('normalizeIntervals', () => {
-	it('normalizes col and spacing shortcuts', () => {
+	it('normalizes spacing shortcuts', () => {
 		const normalized = normalizeIntervals([
-			{ col: 2, itemWidth: 240, spacing: 12, outerPadding: 20 },
+			{ colEnd: 2, itemWidth: 240, spacing: 12, outerPadding: 20 },
 		] satisfies LayoutIntervals)
 
 		expect(normalized).toEqual([
 			{
-				colMin: 2,
-				colMax: 2,
+				colEnd: 2,
 				minItemWidth: 240,
 				maxItemWidth: 240,
 				horizontalSpacing: 12,
@@ -61,23 +60,38 @@ describe('normalizeIntervals', () => {
 		])
 	})
 
-	it('fills missing colMax with Infinity', () => {
+	it('fills missing colEnd with Infinity', () => {
 		const normalized = normalizeIntervals([
-			{ colMin: 3, minItemWidth: 200, maxItemWidth: 320, spacing: 16, outerPadding: 24 },
+			{ minItemWidth: 200, maxItemWidth: 320, spacing: 16, outerPadding: 24 },
 		] satisfies LayoutIntervals)
 
-		expect(normalized[0].colMax).toBe(Infinity)
+		expect(normalized[0].colEnd).toBe(Infinity)
 	})
 
 	it('defaults optional values and clamps max item width', () => {
 		const normalized = normalizeIntervals([
-			{ col: 2, minItemWidth: 240, spacing: 12 },
-			{ col: 3, minItemWidth: 200, maxItemWidth: 160, spacing: 12, outerPadding: 8 },
+			{ colEnd: 2, minItemWidth: 240, spacing: 12 },
+			{ colEnd: 3, minItemWidth: 200, maxItemWidth: 160, spacing: 12, outerPadding: 8 },
 		] satisfies LayoutIntervals)
 
 		expect(normalized[0].outerPadding).toBe(0)
 		expect(normalized[0].maxItemWidth).toBe(Infinity)
 		expect(normalized[1].maxItemWidth).toBe(200)
+	})
+
+	it('rejects open-ended ranges before the last interval', () => {
+		const shouldThrow = import.meta.env.DEV
+		const run = () => normalizeIntervals([
+			{ colEnd: 2, minItemWidth: 200, spacing: 8 },
+			{ minItemWidth: 200, spacing: 8 },
+			{ itemWidth: 320, spacing: 16 },
+		] satisfies LayoutIntervals)
+
+		if (shouldThrow) {
+			expect(run).toThrow('LayoutInterval.colEnd must be set before the last interval')
+		} else {
+			expect(run).not.toThrow()
+		}
 	})
 })
 
