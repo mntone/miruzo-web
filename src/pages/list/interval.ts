@@ -2,12 +2,24 @@ import type { LayoutInterval } from '~/components/ImageLayout'
 
 // minItemWidth and gap scale in steps by column range.
 export const listPageIntervals: readonly LayoutInterval[] = [
-	// 1–2 columns (minItemWidth=160–, gap=8)
-	{ colEnd: 2, minItemWidth: 160, spacing: 8 },
+	// 1–2 columns
+	{
+		colEnd: 2,
+		minItemWidth: 160,
+		spacing: 8,
+	},
 
-	// 3 columns (minItemWidth=200–320, gap=16)
-	{ colEnd: 3, minItemWidth: 200, maxItemWidth: 320, spacing: 16, outerPadding: 8 },
+	// 3 columns
+	{
+		colEnd: 3,
+		minItemWidth: 200,
+		maxItemWidth: 320,
+		spacing: 16,
+	},
 
-	// 4+ columns (open-ended range)
-	{ itemWidth: 320, spacing: 16, outerPadding: 8 },
+	// 4+ columns
+	{
+		itemWidth: 320,
+		spacing: 16,
+	},
 ] as const
