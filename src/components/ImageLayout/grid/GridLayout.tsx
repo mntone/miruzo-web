@@ -11,7 +11,7 @@ export function GridLayout<Item>(props: GridLayoutProps<Item>) {
 		const metrics = props.getMetrics()
 		const style: JSX.CSSProperties = {
 			'gap': `${metrics.verticalSpacing}px ${metrics.horizontalSpacing}px`,
-			'--g-item-width': metrics.itemWidthMode == 'fixed'
+			'--layout-item-width': metrics.itemWidthMode == 'fixed'
 				? `${metrics.itemWidth}px`
 				: `calc((100% - ${metrics.totalHorizontalSpacing}px) / ${metrics.cols})`,
 		}
@@ -24,8 +24,8 @@ export function GridLayout<Item>(props: GridLayoutProps<Item>) {
 			component={/* @once */ props.as || 'div'}
 			style={{
 				...props.style,
-				'padding-inline': styleUtils.pxNonZero(props.getMetrics().outerPadding),
 				'width': styleUtils.px(props.getMetrics().containerWidth),
+				'--layout-padding': styleUtils.pxNonZero(props.getMetrics().outerPadding),
 			}}
 		>
 			{/* @once */ props.header}

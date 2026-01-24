@@ -1,14 +1,17 @@
-import { style } from '@vanilla-extract/css'
+import { globalStyle, style } from '@vanilla-extract/css'
 
 export const section = style({
-	backgroundColor: 'var(--base-section-secondary)',
-	borderRadius: '24px',
 	marginBlock: '8px 24px',
-	paddingBlock: '4px 14px',
+})
+
+globalStyle(`${section} .grid`, {
+	backgroundColor: 'var(--base-section-secondary)',
+	borderRadius: 'calc(10px + var(--layout-padding))',
+	padding: 'var(--layout-padding)',
 
 	'@supports': {
 		'(corner-shape: superellipse(1.333))': {
-			borderRadius: '26px',
+			borderRadius: 'calc(12px + var(--layout-padding))',
 			cornerShape: 'superellipse(1.333)',
 		},
 	},

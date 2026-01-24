@@ -29,7 +29,7 @@ export function GridImageList(props: GridImageListProps) {
 				class: styles.section,
 				header: <SectionHeader type={props.config.listType} />,
 				style: {
-					'--g-item-aspect': props.config.aspectRatio,
+					'--layout-item-aspect': props.config.aspectRatio,
 				},
 			}}
 		>

@@ -5,7 +5,6 @@ import * as styleUtils from '../../shared/style'
 import type { LayoutMetrics } from '../types'
 
 import { computeMasonryExtraLayoutMetrics, type MasonryExtraLayoutMetrics } from './extraLayoutMetrics'
-import * as styles from './MasonryLayout.css'
 import type { MasonryLayoutProps } from './types'
 
 function getChildrenStyleBase(
@@ -27,11 +26,11 @@ export function MasonryLayout<Item>(props: MasonryLayoutProps<Item>) {
 	const getLayoutStyle = createMemo(function() {
 		const metrics = props.getMetrics()
 		const style: JSX.CSSProperties = {
-			'--m-columns': metrics.cols,
-			'--g-spacing-x': `${metrics.horizontalSpacing}px`,
-			'--g-spacing-y': `${metrics.verticalSpacing}px`,
-			'--m-item-width': `${metrics.itemWidth}px`,
-			'--m-row-unit': `${extraMetrics.rowUnit}px`,
+			'display': 'grid',
+			'gap': `0 ${metrics.horizontalSpacing}px`,
+			'grid-auto-rows': `${extraMetrics.rowUnit}px`,
+			'grid-template-columns': `repeat(${metrics.cols}, ${metrics.itemWidth}px)`,
+			'padding': styleUtils.zeroVerticalHorizontalPxNonZero(props.getMetrics().outerPadding),
 		}
 		return style
 	})
@@ -42,13 +41,13 @@ export function MasonryLayout<Item>(props: MasonryLayoutProps<Item>) {
 			component={/* @once */ props.as || 'div'}
 			style={{
 				...props.style,
-				padding: styleUtils.zeroVerticalHorizontalPxNonZero(props.getMetrics().outerPadding),
-				width: styleUtils.px(props.getMetrics().containerWidth),
+				'width': styleUtils.px(props.getMetrics().containerWidth),
+				'--layout-padding': styleUtils.pxNonZero(props.getMetrics().outerPadding),
 			}}
 		>
 			{/* @once */ props.header}
 
-			<div class={styles.layout} style={getLayoutStyle()}>
+			<div style={getLayoutStyle()}>
 				<For each={props.getItems()}>
 					{function(item, getIndex) {
 						// eslint-disable-next-line solid/reactivity

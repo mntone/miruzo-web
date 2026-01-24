@@ -3,11 +3,11 @@ import { style } from '@vanilla-extract/css'
 export const card = style({
 	position: 'relative',
 
-	aspectRatio: 'var(--g-item-aspect, 1.333)',
+	aspectRatio: 'var(--layout-item-aspect, 1.333)',
 	borderRadius: '10px',
 	boxShadow: '0 1px 3px 0 rgb(0 0 0/.1), 0 1px 2px -1px rgb(0 0 0/.1)',
 	transition: 'transform ease-out 123ms',
-	width: 'var(--g-item-width, 100%)',
+	width: 'var(--layout-item-width, 100%)',
 
 	':hover': {
 		transform: 'translateY(-1px)',

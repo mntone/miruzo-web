@@ -1,8 +1,8 @@
 import { style } from '@vanilla-extract/css'
 
 export const header = style({
-	margin: '.125em 0',
-	fontSize: '1.5em',
+	margin: '0 var(--layout-padding)',
+	fontSize: '150%',
 	fontWeight: 400,
 	lineHeight: 2,
 })
