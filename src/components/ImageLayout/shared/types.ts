@@ -15,7 +15,8 @@ export interface NormalizedLayoutInterval {
 export type NormalizedLayoutIntervals = readonly NormalizedLayoutInterval[]
 
 export interface LayoutRootProps {
-	readonly as?: keyof HTMLElementTagNameMap | undefined
+	// Limit to content containers; avoid header/footer/article semantics.
+	readonly as?: 'aside' | 'div' | 'main' | 'section' | undefined
 	readonly class?: string | undefined
 	readonly footer?: JSX.Element
 	readonly header?: JSX.Element

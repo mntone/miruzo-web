@@ -67,7 +67,8 @@ function useHorizontalEdgeInset(
 }
 
 interface HorizontalEdgeInsetBoundaryProps extends Pick<JSX.AriaAttributes, 'aria-busy'> {
-	readonly as?: keyof HTMLElementTagNameMap
+	// Intentional broader set for generic container usage.
+	readonly as?: 'article' | 'aside' | 'div' | 'footer' | 'header' | 'main' | 'nav' | 'section'
 	readonly children: JSX.Element
 	readonly class?: string
 	readonly minHorizontalEdgeInset: number
