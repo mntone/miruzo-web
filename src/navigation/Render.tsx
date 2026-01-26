@@ -1,15 +1,11 @@
-import { Show, useContext } from 'solid-js'
+import { Show } from 'solid-js'
 
-import { NavigationStackContext } from './Provider'
+import { useNavigation } from './useNavigation'
 
 export function NavigationStackRender() {
-	const context = useContext(NavigationStackContext)
-	if (context === undefined) {
-		throw Error('NavigationStackContext must be used within a <NavigationStackProvider>.')
-	}
-
+	const { getEntry } = useNavigation()
 	return (
-		<Show keyed when={context.getEntry()}>
+		<Show keyed when={getEntry()}>
 			{function(item) {
 				const Comp = item.component
 				return <Comp params={item.params} />

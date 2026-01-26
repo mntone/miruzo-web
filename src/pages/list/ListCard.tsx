@@ -1,8 +1,8 @@
-import { createMemo, useContext, type JSX } from 'solid-js'
+import { createMemo, type JSX } from 'solid-js'
 
 import { getPreferredVariant } from '~/components/ImageLayout/utils'
 import type { ImageEntry } from '~/domain'
-import { NavigationStackContext } from '~/navigation/Provider'
+import { useNavigation } from '~/navigation'
 
 import { DetailPage } from '../detail'
 
@@ -16,7 +16,7 @@ interface ListCardProps {
 }
 
 export function ListCard(props: ListCardProps) {
-	const { push } = useContext(NavigationStackContext)
+	const { push } = useNavigation()
 
 	const getVariant = createMemo(function() {
 		return getPreferredVariant(

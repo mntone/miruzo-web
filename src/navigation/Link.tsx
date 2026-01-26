@@ -1,7 +1,7 @@
-import { createMemo, useContext } from 'solid-js'
+import { createMemo } from 'solid-js'
 
 import type { NavigationStackComponent } from './helpers'
-import { NavigationStackContext } from './Provider'
+import { useNavigation } from './useNavigation'
 
 interface LinkProps {
 	readonly alternateLabel?: string
@@ -12,7 +12,7 @@ interface LinkProps {
 }
 
 export function Link(props: LinkProps) {
-	const { getRouteByComponent, push } = useContext(NavigationStackContext)
+	const { getRouteByComponent, push } = useNavigation()
 
 	const getUrl = createMemo(function() {
 		const route = getRouteByComponent(props.component)
