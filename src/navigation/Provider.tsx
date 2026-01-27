@@ -10,6 +10,7 @@ import type {
 	NavigationStackComponent,
 	NavigationStackContextValue,
 	NavigationStackProviderProps,
+	NavigationTransitionInfo,
 } from './types'
 
 function getUndefined(): undefined {
@@ -24,6 +25,11 @@ const emptyContext: NavigationStackContextValue = {
 	getRouteById: getUndefined,
 	getRouteByComponent() {
 		throw Error('No routes registered')
+	},
+	getTransitionInfo() {
+		return {
+			action: 'replace',
+		}
 	},
 
 	push() {},
@@ -49,16 +55,24 @@ export function NavigationStackProvider(props: NavigationStackProviderProps) {
 	const [getEntry, setEntry] = createSignal<NavigationEntry | undefined>(undefined)
 	const [isRoot, setIsRoot] = createSignal<boolean>(true)
 	const [canPop, setCanPop] = createSignal<boolean>(false)
+	const [getTransitionInfo, setTransitionInfo] = createSignal<NavigationTransitionInfo>({
+		action: 'restore',
+	})
 
-	function dispatchEntry(entry: NavigationEntry | undefined, root: boolean): void {
+	function dispatchEntry(entry: NavigationEntry | undefined, root: boolean, info: NavigationTransitionInfo): void {
 		batch(function() {
 			setEntry(entry)
 			setIsRoot(root)
 			setCanPop(!root && props.driver.canPop())
+			setTransitionInfo(info)
 		})
 	}
 
 	function restoreEntry(state: unknown, initialState?: true): void {
+		const info: NavigationTransitionInfo = {
+			action: initialState === true ? 'restore' : 'pop',
+		}
+
 		// Try to restore from state
 		const snapshot = resolveSnapshotFromState(state)
 		if (snapshot !== undefined) {
@@ -67,7 +81,7 @@ export function NavigationStackProvider(props: NavigationStackProviderProps) {
 				getRouteById,
 			})
 			if (entry !== undefined) {
-				dispatchEntry(entry, snapshot?.root === true)
+				dispatchEntry(entry, snapshot?.root === true, info)
 				return
 			}
 		}
@@ -84,7 +98,7 @@ export function NavigationStackProvider(props: NavigationStackProviderProps) {
 					createSnapshotFromEntry(entry, true),
 					_buildUrlFromEntry(entry),
 				)
-				dispatchEntry(entry, locationSnapshot?.root === true)
+				dispatchEntry(entry, locationSnapshot?.root === true, info)
 				return
 			}
 		}
@@ -96,7 +110,7 @@ export function NavigationStackProvider(props: NavigationStackProviderProps) {
 				createSnapshotFromEntry(entry, true),
 				_buildUrlFromEntry(entry),
 			)
-			dispatchEntry(entry, true)
+			dispatchEntry(entry, true, info)
 			return
 		}
 
@@ -105,7 +119,7 @@ export function NavigationStackProvider(props: NavigationStackProviderProps) {
 			console.error('Invalid navigation state', state)
 		}
 		if (initialState !== true) {
-			dispatchEntry(undefined, true)
+			dispatchEntry(undefined, true, info)
 		}
 	}
 
@@ -118,7 +132,10 @@ export function NavigationStackProvider(props: NavigationStackProviderProps) {
 			createSnapshotFromEntry(entry),
 			_buildUrlFromEntry(entry),
 		)
-		dispatchEntry(entry, false)
+
+		dispatchEntry(entry, false, {
+			action: 'push',
+		})
 	}
 
 	function replace<C extends NavigationStackComponent>(component: C, params: NavigationParamsRequired<C>): void
@@ -131,7 +148,10 @@ export function NavigationStackProvider(props: NavigationStackProviderProps) {
 			createSnapshotFromEntry(entry, root ? true : undefined),
 			_buildUrlFromEntry(entry),
 		)
-		dispatchEntry(entry, root)
+
+		dispatchEntry(entry, root, {
+			action: 'replace',
+		})
 	}
 
 	function pop() {
@@ -149,6 +169,7 @@ export function NavigationStackProvider(props: NavigationStackProviderProps) {
 		getEntry,
 		getRouteById,
 		getRouteByComponent,
+		getTransitionInfo,
 		push,
 		replace,
 		canPop,

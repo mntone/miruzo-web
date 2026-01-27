@@ -52,11 +52,17 @@ export interface NavigationEntry {
 	readonly routeId: string
 }
 
+export type NavigationTransitionAction = 'push' | 'replace' | 'pop' | 'restore'
+export interface NavigationTransitionInfo {
+	readonly action: NavigationTransitionAction
+}
+
 export interface NavigationStackContextValue {
 	canPop: Accessor<boolean>
 	getEntry: Accessor<NavigationEntry | undefined>
 	getRouteById(this: void, id: string): NavigationRoute | undefined
 	getRouteByComponent(this: void, component: NavigationStackComponent): NavigationRoute
+	getTransitionInfo(this: void): NavigationTransitionInfo
 
 	push<C extends NavigationStackComponent>(this: void, component: C, params: NavigationParamsRequired<C>): void
 	push<C extends NavigationStackComponent>(this: void, component: C, params?: NavigationParamsOptional<C>): void

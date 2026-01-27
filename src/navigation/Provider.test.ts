@@ -8,6 +8,7 @@ import type { NavigationRoutes, NavigationStackComponent, NavigationStackContext
 
 interface SetupResult {
 	readonly context: NavigationStackContextValue
+	readonly driver: NavigationDriver
 	readonly dispose: () => void
 }
 
@@ -98,6 +99,7 @@ function setupProvider(
 	initialRouteId?: string | null,
 ): SetupResult {
 	let context: NavigationStackContextValue | undefined
+	let driver: NavigationDriver | undefined
 	let dispose: () => void = () => {}
 
 	createRoot(function(disposeFn) {
@@ -108,7 +110,7 @@ function setupProvider(
 			return null
 		}
 
-		const driver = createMockDriver()
+		driver = createMockDriver()
 		const providerProps: Writable<NavigationStackProviderProps> = {
 			get children() {
 				return createComponent(Capture, {})
@@ -133,8 +135,11 @@ function setupProvider(
 	if (!context) {
 		throw Error('NavigationStackContext was not captured')
 	}
+	if (!driver) {
+		throw Error('NavigationDriver was not captured')
+	}
 
-	return { context, dispose } as const
+	return { context, driver, dispose } as const
 }
 
 describe('NavigationStackProvider', () => {
@@ -147,7 +152,9 @@ describe('NavigationStackProvider', () => {
 		if (entry === undefined) {
 			throw Error('Expected entry to be defined')
 		}
+		expect(context.canPop()).toBe(false)
 		expect(entry.component).toBe(Initial)
+		expect(context.getTransitionInfo().action).toBe('restore')
 
 		dispose()
 	})
@@ -155,8 +162,21 @@ describe('NavigationStackProvider', () => {
 	it('reports canPop as false on an empty stack', () => {
 		const { context, dispose } = setupProvider([])
 
-		expect(context.getEntry()).toBeUndefined()
 		expect(context.canPop()).toBe(false)
+		expect(context.getEntry()).toBeUndefined()
+		expect(context.getTransitionInfo().action).toBe('restore')
+
+		dispose()
+	})
+
+	it('keeps entry empty when initialRouteId is null', () => {
+		const First = (() => null) as NavigationStackComponent
+		const routes = createRoutesFromComponents([First])
+		const { context, dispose } = setupProvider(routes, null)
+
+		expect(context.canPop()).toBe(false)
+		expect(context.getEntry()).toBeUndefined()
+		expect(context.getTransitionInfo().action).toBe('restore')
 
 		dispose()
 	})
@@ -197,10 +217,12 @@ describe('NavigationStackProvider', () => {
 		context.replace(Replacement)
 		expect(context.canPop()).toBe(true)
 		expect(context.getEntry()?.component).toBe(Replacement)
+		expect(context.getTransitionInfo().action).toBe('replace')
 
 		context.pop()
 		expect(context.canPop()).toBe(false)
 		expect(context.getEntry()?.component).toBe(First)
+		expect(context.getTransitionInfo().action).toBe('pop')
 
 		dispose()
 	})
@@ -215,14 +237,33 @@ describe('NavigationStackProvider', () => {
 		context.push(First)
 		expect(context.canPop()).toBe(false)
 		expect(context.getEntry()?.component).toBe(First)
+		expect(context.getTransitionInfo().action).toBe('push')
 
 		context.push(Second)
 		expect(context.canPop()).toBe(true)
 		expect(context.getEntry()?.component).toBe(Second)
+		expect(context.getTransitionInfo().action).toBe('push')
 
 		context.pop()
 		expect(context.canPop()).toBe(false)
 		expect(context.getEntry()?.component).toBe(First)
+		expect(context.getTransitionInfo().action).toBe('pop')
+
+		dispose()
+	})
+
+	it('falls back to an empty entry on invalid pop state', () => {
+		const First = (() => null) as NavigationStackComponent
+		const routes = createRoutesFromComponents([First])
+		const { context, driver, dispose } = setupProvider(routes)
+
+		driver.push({ routeId: 'Invalid' }, '/invalid')
+		context.push(First)
+
+		context.pop()
+		expect(context.canPop()).toBe(false)
+		expect(context.getEntry()).toBeUndefined()
+		expect(context.getTransitionInfo().action).toBe('pop')
 
 		dispose()
 	})
