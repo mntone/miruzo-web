@@ -25,6 +25,7 @@ export default defineConfig(({ mode }) => {
 				},
 				policy: {
 					'img-src': [assetHost, 'data:'],
+					'style-src-attr': ['\'unsafe-inline\''],
 				},
 			}),
 		],
