@@ -1,4 +1,4 @@
-import type { Accessor, JSX } from 'solid-js'
+import type { JSX } from 'solid-js'
 
 import type { NavigationDriver } from './drivers/types'
 import type { NavigationParamsOptional, NavigationParamsRequired, NavigationStackComponent } from './helpers'
@@ -58,8 +58,8 @@ export interface NavigationTransitionInfo {
 }
 
 export interface NavigationStackContextValue {
-	canPop: Accessor<boolean>
-	getEntry: Accessor<NavigationEntry | undefined>
+	canPop(this: void): boolean
+	getEntry(this: void): NavigationEntry | undefined
 	getRouteById(this: void, id: string): NavigationRoute | undefined
 	getRouteByComponent(this: void, component: NavigationStackComponent): NavigationRoute
 	getTransitionInfo(this: void): NavigationTransitionInfo

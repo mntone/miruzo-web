@@ -2,7 +2,7 @@ import { createMemo } from 'solid-js'
 
 import { useI18n } from '~/i18n/Context'
 import type { TextTranslationKey } from '~/i18n/types'
-import { Link } from '~/navigation/Link'
+import { Link } from '~/navigation'
 
 import { ListPage } from '../list'
 
