@@ -20,6 +20,13 @@ export interface LayoutRootProps {
 	readonly footer?: JSX.Element
 	readonly header?: JSX.Element
 	readonly style?: JSX.CSSProperties | undefined
+	readonly onAnimationEnd?: JSX.EventHandlerUnion<HTMLElement, AnimationEvent> | undefined
+}
+
+export interface DynamicLayoutRootProps {
+	readonly classList?: {
+		[k: string]: boolean | undefined
+	} | undefined
 }
 
 export interface LayoutItemsProps<Item> {
@@ -32,7 +39,7 @@ export interface LayoutItemsProps<Item> {
 	readonly getMetrics: Accessor<LayoutMetrics>
 }
 
-export interface LayoutProps<Item> extends LayoutRootProps, LayoutItemsProps<Item> {
+export interface LayoutProps<Item> extends LayoutRootProps, DynamicLayoutRootProps, LayoutItemsProps<Item> {
 }
 
 export type LayoutComponent<Item> = Component<LayoutProps<Item>>

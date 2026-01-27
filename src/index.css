@@ -288,6 +288,28 @@ button:focus-visible {
 	}
 }
 
+@keyframes page-entrance {
+	from {
+		opacity: 0;
+		transform: translateY(28px);
+	}
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+@media (prefers-reduced-motion: no-preference) {
+	/* min(333ms, calc(83ms * (sibling-index() - 1))) */
+	.entrance-animation {
+		animation: 1s cubic-bezier(0.1, 0.9, 0.2, 1) 333ms backwards page-entrance;
+		will-change: opacity, transform;
+	}
+	.entrance-animation:first-child { animation-delay: 0s; }
+	.entrance-animation:nth-child(2) { animation-delay: 83ms; }
+	.entrance-animation:nth-child(3) { animation-delay: 166ms; }
+	.entrance-animation:nth-child(4) { animation-delay: 249ms; }
+}
+
 @media (prefers-color-scheme: light) {
 	:root {
 		color-scheme: light;

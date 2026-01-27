@@ -8,6 +8,8 @@ import { LoadingView } from '~/components/progress'
 import { useContentWidth } from '~/hooks'
 import { useSurfaceScope } from '~/hooks/useSurfaceScope'
 import { useI18n } from '~/i18n/Context'
+import { shouldPlayEntranceAnimation, useNavigation } from '~/navigation'
+import { prefersReducedMotion } from '~/utils/motion'
 
 import { topPageConfigs } from './config'
 import { loadTopPageData } from './data'
@@ -18,6 +20,9 @@ export function TopPage() {
 	useSurfaceScope(function() {
 		return 'section'
 	})
+
+	const { getTransitionInfo } = useNavigation()
+	const enableEntranceAnimation = !prefersReducedMotion() && shouldPlayEntranceAnimation(getTransitionInfo())
 
 	const [getElement, setElement] = createSignal<HTMLElement | undefined>(undefined)
 	const getLayoutWidth = useContentWidth(getElement)
@@ -56,6 +61,7 @@ export function TopPage() {
 														return (
 															<GridImageList
 																config={topPageConfigs[getIndex()]}
+																enableEntranceAnimation={enableEntranceAnimation}
 																getMetrics={getMetrics}
 																initial={getEntries()}
 															/>

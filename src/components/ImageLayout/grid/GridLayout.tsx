@@ -21,12 +21,14 @@ export function GridLayout<Item>(props: GridLayoutProps<Item>) {
 	return (
 		<Dynamic
 			class={/* @once */ styleUtils.classOptional('layout-root', props.class)}
+			classList={props.classList}
 			component={/* @once */ props.as || 'div'}
 			style={{
 				...props.style,
 				'width': styleUtils.px(props.getMetrics().containerWidth),
 				'--layout-padding': styleUtils.pxNonZero(props.getMetrics().outerPadding),
 			}}
+			onAnimationEnd={/* @once */ props.onAnimationEnd}
 		>
 			{/* @once */ props.header}
 
