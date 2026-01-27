@@ -50,7 +50,7 @@ export function MasonryLayout<Item>(props: MasonryLayoutProps<Item>) {
 			{/* @once */ props.header}
 
 			<div style={getLayoutStyle()}>
-				<For each={props.getItems()}>
+				<For each={/* @once */ props.getItems()}>
 					{function(item, getIndex) {
 						// eslint-disable-next-line solid/reactivity
 						return props.children(

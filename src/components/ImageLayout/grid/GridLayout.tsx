@@ -33,7 +33,7 @@ export function GridLayout<Item>(props: GridLayoutProps<Item>) {
 			{/* @once */ props.header}
 
 			<div class='grid' style={getLayoutStyle()}>
-				<For each={props.getItems()}>
+				<For each={/* @once */ props.getItems()}>
 					{/* @once */ props.children}
 				</For>
 			</div>

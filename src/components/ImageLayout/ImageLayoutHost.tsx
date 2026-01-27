@@ -21,16 +21,14 @@ interface ImageLayoutHostProps<Layout extends ImageLayoutComponentBase> extends 
 }
 
 export function ImageLayoutHost<Layout extends ImageLayoutComponentBase>(props: ImageLayoutHostProps<Layout>) {
-	// eslint-disable-next-line solid/reactivity -- fixed at setup
-	const Layout = props.layout
 	return (
-		<Layout
+		<props.layout
 			{...props.layoutProps}
 			classList={props.classList}
 			getItems={/* @once */ props.getImages}
 			getMetrics={/* @once */ props.getMetrics}
 		>
 			{/* @once */ props.children}
-		</Layout>
+		</props.layout>
 	)
 }
