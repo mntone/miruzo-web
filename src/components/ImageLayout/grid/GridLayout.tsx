@@ -32,7 +32,18 @@ export function GridLayout<Item>(props: GridLayoutProps<Item>) {
 		>
 			{/* @once */ props.header}
 
-			<div class='grid' style={getLayoutStyle()}>
+			<div
+				ref={props.ref}
+				class='grid'
+				role='grid'
+				style={getLayoutStyle()}
+				// eslint-disable-next-line solid/reactivity -- fixed at setup
+				onFocusIn={props.onFocusIn}
+				// eslint-disable-next-line solid/reactivity -- fixed at setup
+				onFocusOut={props.onFocusOut}
+				// eslint-disable-next-line solid/reactivity -- fixed at setup
+				onKeyDown={props.onKeyDown}
+			>
 				<For each={/* @once */ props.getItems()}>
 					{/* @once */ props.children}
 				</For>

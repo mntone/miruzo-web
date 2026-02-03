@@ -14,6 +14,7 @@ export interface NormalizedLayoutInterval {
 export type NormalizedLayoutIntervals = readonly NormalizedLayoutInterval[]
 
 export interface LayoutRootProps {
+	readonly ref?: ((element: HTMLElement | undefined) => void) | undefined
 	// Limit to content containers; avoid header/footer/article semantics.
 	readonly as?: 'aside' | 'div' | 'main' | 'section' | undefined
 	readonly class?: string | undefined
@@ -21,6 +22,9 @@ export interface LayoutRootProps {
 	readonly header?: JSX.Element
 	readonly style?: JSX.CSSProperties | undefined
 	readonly onAnimationEnd?: JSX.EventHandlerUnion<HTMLElement, AnimationEvent> | undefined
+	readonly onFocusIn?: JSX.FocusEventHandlerUnion<HTMLElement, FocusEvent> | undefined
+	readonly onFocusOut?: JSX.FocusEventHandlerUnion<HTMLElement, FocusEvent> | undefined
+	readonly onKeyDown?: JSX.EventHandlerUnion<HTMLElement, KeyboardEvent> | undefined
 }
 
 export interface DynamicLayoutRootProps {

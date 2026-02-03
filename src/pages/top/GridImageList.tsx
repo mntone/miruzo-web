@@ -1,6 +1,7 @@
-import { createSignal, type Accessor } from 'solid-js'
+import { createMemo, createSignal, type Accessor } from 'solid-js'
 
 import { GridLayout, ImageLayoutHost, type LayoutMetrics } from '~/components/ImageLayout'
+import { useGridRovingTabIndex } from '~/components/ImageLayout/grid/useGridRovingTabIndex'
 import type { ImageEntrySlice } from '~/domain'
 
 import type { TopPageSectionConfig } from './config'
@@ -16,9 +17,20 @@ interface GridImageListProps {
 }
 
 export function GridImageList(props: GridImageListProps) {
-	function getImages() {
-		return props.initial.entries.slice(0, props.getMetrics().cols * props.config.maxRows)
-	}
+	const getColumnCount = createMemo(function() {
+		return props.getMetrics().cols
+	})
+
+	const getImages = createMemo(function() {
+		return props.initial.entries.slice(0, getColumnCount() * props.config.maxRows)
+	})
+
+	const [containerProps, getItemProps] = useGridRovingTabIndex({
+		getColumnCount,
+		getItemCount() {
+			return getImages().length
+		},
+	})
 
 	// eslint-disable-next-line solid/reactivity -- fixed at setup
 	const [isAnimating, setIsAnimating] = createSignal(props.enableEntranceAnimation)
@@ -32,6 +44,7 @@ export function GridImageList(props: GridImageListProps) {
 			getMetrics={/* @once */ props.getMetrics}
 			layout={GridLayout}
 			layoutProps={/* @once */ {
+				...containerProps,
 				as: 'section',
 				class: styles.section,
 				header: <SectionHeader type={props.config.listType} />,
@@ -45,9 +58,10 @@ export function GridImageList(props: GridImageListProps) {
 				},
 			}}
 		>
-			{function(item) {
+			{function(item, getIndex) {
 				return (
 					<TopCard
+						{...getItemProps(getIndex())}
 						item={item}
 						nativeItemWidth={props.getMetrics().nativeItemWidth}
 					/>
