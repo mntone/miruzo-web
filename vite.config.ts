@@ -6,6 +6,14 @@ import solid from 'vite-plugin-solid'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import { defineConfig } from 'vitest/config'
 
+const headers = {
+	'Cross-Origin-Opener-Policy': 'same-origin',
+	'Cross-Origin-Resource-Policy': 'same-origin',
+	'Referrer-Policy': 'no-referrer',
+	'X-Content-Type-Options': 'nosniff',
+	'X-Frame-Options': 'DENY',
+}
+
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
 	const env = loadEnv(mode, process.cwd(), '')
@@ -54,7 +62,11 @@ export default defineConfig(({ mode }) => {
 			],
 		},
 		server: {
+			headers,
 			port: 3326,
+		},
+		preview: {
+			headers,
 		},
 		test: {
 			include: [
