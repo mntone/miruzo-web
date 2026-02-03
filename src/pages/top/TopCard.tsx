@@ -10,6 +10,7 @@ import { DetailPage } from '../detail'
 import * as styles from './TopCard.css'
 
 interface TopCardProps extends RovingItemProps {
+	readonly isHighPriority: boolean
 	readonly item: ImageEntry
 	readonly nativeItemWidth: number
 }
@@ -46,8 +47,7 @@ export function TopCard(props: TopCardProps) {
 			<img
 				alt={`${props.item.id}`}
 				class={styles.image}
-				decoding='async'
-				loading='lazy'
+				fetchpriority={/* @once */ props.isHighPriority ? 'high' : undefined}
 				src={getVariant().src}
 			/>
 		</button>

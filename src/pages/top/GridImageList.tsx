@@ -62,6 +62,7 @@ export function GridImageList(props: GridImageListProps) {
 				return (
 					<TopCard
 						{...getItemProps(getIndex())}
+						isHighPriority={props.config.isHighPriority}
 						item={item}
 						nativeItemWidth={props.getMetrics().nativeItemWidth}
 					/>
