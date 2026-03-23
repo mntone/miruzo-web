@@ -2,10 +2,11 @@
 
 import type { Writable } from '~/@types/utils'
 import type { LoveStatsModel } from '~/api/types/love'
-import { toDateOptional } from '~/api/utils'
+import type { QuotaItem } from '~/api/types/quota'
+import { toDate, toDateOptional } from '~/api/utils'
 import type { QuotaEntry, StatsEntry } from '~/domain'
 
-import { applyLove, consumeLoveQuota } from './interaction'
+import { applyLove, applyLoveQuota } from './interaction'
 
 describe('applyLoveStats', () => {
 	it('updates score and love timestamps', () => {
@@ -47,32 +48,46 @@ describe('applyLoveStats', () => {
 	})
 })
 
-describe('consumeLoveQuota', () => {
-	it('decrements remaining and increments used', () => {
+describe('applyLoveQuota', () => {
+	it('overwrites quota fields from the API response', () => {
+		const entry: Writable<QuotaEntry> = {
+			resetAt: null,
+			limit: 10,
+			remaining: 4,
+			used: 6,
+		}
+		const model: QuotaItem = {
+			period: 'daily',
+			reset_at: '2026-03-24T00:00:00.000Z',
+			limit: 12,
+			remaining: 3,
+		}
+
+		applyLoveQuota(entry, model)
+
+		expect(entry.resetAt).toEqual(toDate(model.reset_at))
+		expect(entry.limit).toBe(model.limit)
+		expect(entry.remaining).toBe(model.remaining)
+		expect(entry.used).toBe(model.limit - model.remaining)
+	})
+
+	it('recomputes used from limit and remaining', () => {
 		const entry: Writable<QuotaEntry> = {
 			resetAt: null,
 			limit: 3,
 			remaining: 2,
-			used: 1,
+			used: 999,
 		}
-
-		consumeLoveQuota(entry)
-
-		expect(entry.remaining).toBe(1)
-		expect(entry.used).toBe(2)
-	})
-
-	it('clamps remaining at zero', () => {
-		const entry: Writable<QuotaEntry> = {
-			resetAt: null,
-			limit: 1,
+		const model: QuotaItem = {
+			period: 'daily',
+			reset_at: '2026-03-25T00:00:00.000Z',
+			limit: 5,
 			remaining: 0,
-			used: 1,
 		}
 
-		consumeLoveQuota(entry)
+		applyLoveQuota(entry, model)
 
 		expect(entry.remaining).toBe(0)
-		expect(entry.used).toBe(2)
+		expect(entry.used).toBe(5)
 	})
 })

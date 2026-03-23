@@ -1,6 +1,7 @@
 import type { Writable } from '~/@types/utils'
 import { postLove } from '~/api/images'
 import type { LoveResponse, LoveStatsModel } from '~/api/types/love'
+import type { QuotaItem } from '~/api/types/quota'
 import { toDate } from '~/api/utils'
 import { hasStats, type ImageEntry, type ImageEntryWithStats, type IngestId, type QuotaEntry, type StatsEntry } from '~/domain'
 import { setImageStore } from '~/stores/image'
@@ -40,13 +41,14 @@ export function applyLoveResponse(
 	updateEvents(dst)
 }
 
-export function consumeLoveQuota(entry: Writable<QuotaEntry>): void {
-	--entry.remaining
-	if (entry.remaining < 0) {
-		entry.remaining = 0
-	}
-
-	++entry.used
+export function applyLoveQuota(
+	dst: Writable<QuotaEntry>,
+	src: QuotaItem,
+): void {
+	dst.resetAt = toDate(src.reset_at)
+	dst.limit = src.limit
+	dst.remaining = src.remaining
+	dst.used = src.limit - src.remaining
 }
 
 export function loveImageIntoStore(ingestId: IngestId): Promise<void> {
@@ -63,7 +65,7 @@ export function loveImageIntoStore(ingestId: IngestId): Promise<void> {
 
 		setQuotaStore('love', function(prev: QuotaEntry): QuotaEntry {
 			const next = Object.assign({}, prev)
-			consumeLoveQuota(next)
+			applyLoveQuota(next, response.quota)
 			return next
 		})
 	})
