@@ -8,20 +8,12 @@ export function getBaseUrl(): string {
 		return baseUrl
 	}
 
-	const host = import.meta.env.DEV
-		? import.meta.env.VITE_STATIC_ASSET_HOST.replace('{host}', window.location.hostname)
-		: import.meta.env.VITE_STATIC_ASSET_HOST
-	if (host === '') {
-		baseUrl = ''
-		return ''
+	let host = import.meta.env.VITE_STATIC_ASSET_HOST
+	if (import.meta.env.DEV) {
+		host = host.replace('{host}', window.location.hostname)
 	}
-
-	const protocol = import.meta.env.DEV
-		? import.meta.env.VITE_STATIC_ASSET_PROTOCOL.replace('{protocol}', window.location.protocol)
-		: import.meta.env.VITE_STATIC_ASSET_PROTOCOL
-	const urlPrefix = protocol + '//' + host
-	baseUrl = urlPrefix
-	return urlPrefix
+	baseUrl = host === '' ? '' : '//' + host
+	return baseUrl
 }
 
 export function resetBaseUrlForTests(): void {
