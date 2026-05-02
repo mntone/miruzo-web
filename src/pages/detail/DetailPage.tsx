@@ -1,9 +1,10 @@
-import { createMemo, createSignal, onMount, Show } from 'solid-js'
+import { createMemo, createSignal, onMount, Show, type Accessor, type JSX } from 'solid-js'
 
-import { LoveButton, MemoButton } from '~/components/actions'
+import { HallOfFameButton, LoveButton, MemoButton } from '~/components/actions'
 import { EventList } from '~/components/events'
 import { ViewCountText } from '~/components/stats'
-import type { ImageEntry, IngestId } from '~/domain'
+import { canGrantHallOfFame } from '~/domain'
+import type { ImageEntry, IngestId, StatsEntry } from '~/domain'
 import { mockEvents } from '~/domain/event.mock'
 import { useContextResource } from '~/hooks/useContextResource'
 import { useQuota } from '~/hooks/useQuota'
@@ -14,6 +15,31 @@ import * as styles from './DetailPage.css'
 
 interface DetailPageProps {
 	params: IngestId
+}
+
+function renderReactionButton(
+	ingestId: IngestId,
+	getStats: Accessor<StatsEntry>,
+	remainingLoves: number,
+	getQuotaPending: Accessor<boolean>,
+): JSX.Element {
+	const stats = getStats()
+
+	if (stats.hallOfFameAt !== undefined) {
+		return undefined
+	}
+
+	if (canGrantHallOfFame(stats)) {
+		return <HallOfFameButton ingestId={ingestId} />
+	}
+
+	return (
+		<LoveButton
+			canLove={!getQuotaPending() && remainingLoves !== 0}
+			ingestId={ingestId}
+			remainingLoves={remainingLoves}
+		/>
+	)
 }
 
 export function DetailPage(props: DetailPageProps) {
@@ -83,11 +109,12 @@ export function DetailPage(props: DetailPageProps) {
 						{function(getStats) {
 							return (
 								<div class='button-group'>
-									<LoveButton
-										canLove={!getIsPending() && quotaStore.love.remaining !== 0}
-										ingestId={props.params}
-										remainingLoves={quotaStore.love.remaining}
-									/>
+									{renderReactionButton(
+										props.params,
+										getStats,
+										quotaStore.love.remaining,
+										getIsPending,
+									)}
 									{import.meta.env.DEV && <MemoButton />}
 
 									<ViewCountText value={getStats().viewCount} />

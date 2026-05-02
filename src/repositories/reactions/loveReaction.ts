@@ -7,8 +7,8 @@ import { hasStats, type ImageEntry, type ImageEntryWithStats, type IngestId, typ
 import { setImageStore } from '~/stores/image'
 import { setQuotaStore } from '~/stores/quota'
 
-import { updateEvents } from './event'
-import { deleteOwnProperty } from './utils'
+import { updateEvents } from '../event'
+import { deleteOwnProperty } from '../utils'
 
 export function applyLove(
 	dst: Writable<StatsEntry>,
@@ -55,7 +55,7 @@ export function loveImageIntoStore(ingestId: IngestId): Promise<void> {
 	return postLove(ingestId).then(function(response) {
 		setImageStore('imagesById', ingestId, function(prev: ImageEntry | undefined): ImageEntry {
 			if (!hasStats(prev)) {
-				throw Error('ImageEntry and stats must exist to apply love stats')
+				throw Error('ImageEntry with stats is required to apply love stats')
 			}
 
 			const next = Object.assign({}, prev)

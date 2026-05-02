@@ -1,12 +1,14 @@
 {
 	"actions": {
 		"cancel": "Cancel",
+		"hall_of_fame": "🏆 Enter the Hall of Fame",
 		"love": "❤ Love this Image",
 		"memo": "📝 Add a Memo",
 		"more": "More",
 		"ok": "Ok"
 	},
 	"events": {
+		"hall_of_fame": "Entered the Hall of Fame",
 		"love": "Loved",
 		"love:first": "Loved for the first time",
 		"memo": "Memo: {0}",

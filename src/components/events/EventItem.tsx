@@ -15,6 +15,8 @@ function renderEventLabel({ t, tp, tt }: I18nInstance, entry: EventEntry): strin
 		return t('events.love')
 	case 'love:first':
 		return t('events.love:first')
+	case 'hall_of_fame':
+		return t('events.hall_of_fame')
 	case 'post:memo':
 		return tt('events.memo', entry.message)
 	case 'view:milestone':

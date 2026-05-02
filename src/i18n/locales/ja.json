@@ -1,12 +1,14 @@
 {
 	"actions": {
 		"cancel": "キャンセル",
+		"hall_of_fame": "👑 殿堂入りする",
 		"love": "❤ ラブする",
 		"memo": "📝 メモする",
 		"more": "さらに表示",
 		"ok": "OK"
 	},
 	"events": {
+		"hall_of_fame": "殿堂入りした",
 		"love": "ラブした",
 		"love:first": "初めてラブした",
 		"memo": "メモ: {0}",

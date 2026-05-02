@@ -6,7 +6,7 @@ import type { QuotaItem } from '~/api/types/quota'
 import { toDate, toDateOptional } from '~/api/utils'
 import type { QuotaEntry, StatsEntry } from '~/domain'
 
-import { applyLove, applyLoveQuota } from './interaction'
+import { applyLove, applyLoveQuota } from './loveReaction'
 
 describe('applyLoveStats', () => {
 	it('updates score and love timestamps', () => {

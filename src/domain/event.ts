@@ -17,6 +17,11 @@ interface FirstLoveEventEntry {
 	readonly occurredAt: Date
 }
 
+interface HallOfFameEventEntry {
+	readonly type: 'hall_of_fame'
+	readonly occurredAt: Date
+}
+
 interface MemoEventEntry {
 	readonly type: 'post:memo'
 	readonly occurredAt: Date
@@ -32,6 +37,7 @@ interface MilestoneViewEventEntry {
 export type EventEntry =
 	| LoveEventEntry
 	| FirstLoveEventEntry
+	| HallOfFameEventEntry
 	| MemoEventEntry
 	| MilestoneViewEventEntry
 
@@ -76,6 +82,13 @@ export function deriveEventsFromStats(stats: StatsEntry): EventEntries {
 		entries.push({
 			type: 'love:first',
 			occurredAt: firstLovedAt,
+		})
+	}
+
+	if (stats.hallOfFameAt !== undefined) {
+		entries.push({
+			type: 'hall_of_fame',
+			occurredAt: stats.hallOfFameAt,
 		})
 	}
 
