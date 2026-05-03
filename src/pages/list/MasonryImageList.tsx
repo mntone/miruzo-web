@@ -63,7 +63,7 @@ export function MasonryImageList(props: MasonryImageListProps) {
 						getItemStyle={/* @once */ getItemStyle!}
 						item={item}
 						itemWidth={props.getMetrics().itemWidth}
-						nativeItemWidth={props.getMetrics().nativeItemWidth}
+						nativeItemWidth={props.getMetrics().itemNativeWidth}
 					/>
 				)
 			}}

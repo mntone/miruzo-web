@@ -1,6 +1,14 @@
 import type { LayoutIntervals } from '../types'
 
-import { computeFluidWidth, computeLayoutMetrics, computeTotalInnerGap, estimateColumnCount, normalizeIntervals, resolveInterval } from './layoutMetrics'
+import {
+	computeFluidWidth,
+	computeLayoutMetrics,
+	computeTotalGapWidth,
+	computeTotalInnerGapWidth,
+	estimateColumnCount,
+	normalizeIntervals,
+	resolveInterval,
+} from './layoutMetrics'
 
 beforeAll(() => {
 	vi.stubGlobal('window', { devicePixelRatio: 1 })
@@ -11,9 +19,9 @@ afterAll(() => {
 })
 
 const intervals = normalizeIntervals([
-	{ colEnd: 2, minItemWidth: 200, maxItemWidth: Infinity, spacing: 8, outerPadding: 12 },
-	{ colEnd: 3, minItemWidth: 200, maxItemWidth: 320, spacing: 16, outerPadding: 24 },
-	{ itemWidth: 320, spacing: 16, outerPadding: 24 },
+	{ colEnd: 2, minItemWidth: 200, maxItemWidth: Infinity, innerGap: 8, outerGap: 12 },
+	{ colEnd: 3, minItemWidth: 200, maxItemWidth: 320, innerGap: 16, outerGap: 24 },
+	{ itemWidth: 320, innerGap: 16, outerGap: 24 },
 ] satisfies LayoutIntervals)
 
 describe('estimateColumnCount', () => {
@@ -45,7 +53,7 @@ describe('resolveInterval', () => {
 describe('normalizeIntervals', () => {
 	it('normalizes spacing shortcuts', () => {
 		const normalized = normalizeIntervals([
-			{ colEnd: 2, itemWidth: 240, spacing: 12, outerPadding: 20 },
+			{ colEnd: 2, itemWidth: 240, innerGap: 12, outerGap: 20 },
 		] satisfies LayoutIntervals)
 
 		expect(normalized).toEqual([
@@ -53,16 +61,15 @@ describe('normalizeIntervals', () => {
 				colEnd: 2,
 				minItemWidth: 240,
 				maxItemWidth: 240,
-				horizontalSpacing: 12,
-				verticalSpacing: 12,
-				outerPadding: 20,
+				innerGap: 12,
+				outerGap: 20,
 			},
 		])
 	})
 
 	it('fills missing colEnd with Infinity', () => {
 		const normalized = normalizeIntervals([
-			{ minItemWidth: 200, maxItemWidth: 320, spacing: 16, outerPadding: 24 },
+			{ minItemWidth: 200, maxItemWidth: 320, innerGap: 16, outerGap: 24 },
 		] satisfies LayoutIntervals)
 
 		expect(normalized[0].colEnd).toBe(Infinity)
@@ -70,11 +77,11 @@ describe('normalizeIntervals', () => {
 
 	it('defaults optional values and clamps max item width', () => {
 		const normalized = normalizeIntervals([
-			{ colEnd: 2, minItemWidth: 240, spacing: 12 },
-			{ colEnd: 3, minItemWidth: 200, maxItemWidth: 160, spacing: 12, outerPadding: 8 },
+			{ colEnd: 2, minItemWidth: 240, innerGap: 12 },
+			{ colEnd: 3, minItemWidth: 200, maxItemWidth: 160, innerGap: 12, outerGap: 8 },
 		] satisfies LayoutIntervals)
 
-		expect(normalized[0].outerPadding).toBe(0)
+		expect(normalized[0].outerGap).toBe(0)
 		expect(normalized[0].maxItemWidth).toBe(Infinity)
 		expect(normalized[1].maxItemWidth).toBe(200)
 	})
@@ -82,9 +89,9 @@ describe('normalizeIntervals', () => {
 	it('rejects open-ended ranges before the last interval', () => {
 		const shouldThrow = import.meta.env.DEV
 		const run = () => normalizeIntervals([
-			{ colEnd: 2, minItemWidth: 200, spacing: 8 },
-			{ minItemWidth: 200, spacing: 8 },
-			{ itemWidth: 320, spacing: 16 },
+			{ colEnd: 2, minItemWidth: 200, innerGap: 8 },
+			{ minItemWidth: 200, innerGap: 8 },
+			{ itemWidth: 320, innerGap: 16 },
 		] satisfies LayoutIntervals)
 
 		if (shouldThrow) {
@@ -107,57 +114,78 @@ describe('computeFluidWidth', () => {
 	})
 })
 
-describe('computeTotalInnerGap', () => {
+describe('computeTotalInnerGapWidth', () => {
 	it('multiplies spacing by the number of gaps', () => {
-		expect(computeTotalInnerGap(4, intervals[2])).toBe(48)
+		expect(computeTotalInnerGapWidth(4, intervals[2].innerGap)).toBe(48)
+	})
+})
+
+describe('computeTotalGapWidth', () => {
+	it('adds outer gaps to the total inner gap width', () => {
+		expect(computeTotalGapWidth(4, intervals[2])).toBe(48 + 2 * 24)
 	})
 })
 
 describe('computeMetrics', () => {
 	it('returns safe defaults when the container width is zero', () => {
-		expect(computeLayoutMetrics(0, intervals)).toEqual({
+		const metrics = computeLayoutMetrics({
+			availableWidth: 0,
+			intervals,
+		})
+		expect(metrics).toEqual({
 			cols: 1,
-			horizontalSpacing: 0,
-			totalHorizontalSpacing: 0,
-			verticalSpacing: 8,
-			outerPadding: 12,
+			innerGap: 8,
+			outerGap: 12,
+			itemNativeWidth: 0,
 			itemWidth: 0,
 			itemWidthMode: 'fixed',
-			nativeItemWidth: 0,
+			trackInnerGapWidth: 0,
+			trackInnerWidth: 0,
 		})
 	})
 
 	it('computes fluid widths based on the provided intervals', () => {
-		const metrics = computeLayoutMetrics(900, intervals)
-
+		const metrics = computeLayoutMetrics({
+			availableWidth: 900,
+			intervals,
+		})
 		expect(metrics.cols).toBe(3)
-		expect(metrics.horizontalSpacing).toBe(16)
-		expect(metrics.totalHorizontalSpacing).toBe(32)
-		expect(metrics.verticalSpacing).toBe(16)
-		expect(metrics.outerPadding).toBe(24)
+		expect(metrics.innerGap).toBe(16)
+		expect(metrics.outerGap).toBe(24)
+
+		expect(metrics.itemNativeWidth).toBe(metrics.itemWidth)
 		expect(metrics.itemWidthMode).toBe('fluid')
 		expect(metrics.itemWidth).toBeCloseTo((900 - 80) / 3, 5)
-		expect(metrics.nativeItemWidth).toBe(metrics.itemWidth)
-		expect(metrics.containerWidth).toBeCloseTo(900, 5)
+		expect(metrics.layoutWidth).toBeCloseTo(900, 5)
+		expect(metrics.trackInnerGapWidth).toBe(2 * 16)
+		expect(metrics.trackInnerWidth).toBe((900 - 80) + 2 * 16)
 	})
 
 	it('uses the fixed width value and produces a layout width', () => {
-		const metrics = computeLayoutMetrics(1200, intervals)
-
+		const metrics = computeLayoutMetrics({
+			availableWidth: 1200,
+			intervals,
+		})
 		expect(metrics.cols).toBe(3)
+		expect(metrics.itemNativeWidth).toBe(metrics.itemWidth)
+		expect(metrics.itemWidth).toBe(320)
 		expect(metrics.itemWidthMode).toBe('fixed')
-		expect(metrics.itemWidth).toBe(320)
-		expect(metrics.containerWidth).toBe(3 * 320 + 80)
-		expect(metrics.itemWidth).toBe(320)
-		expect(metrics.nativeItemWidth).toBe(metrics.itemWidth)
+		expect(metrics.layoutWidth).toBe(3 * 320 + 80)
+		expect(metrics.trackInnerGapWidth).toBe(2 * 16)
+		expect(metrics.trackInnerWidth).toBe(3 * 320 + 2 * 16)
 	})
 
 	it('switches to fixed width when the max item width is exceeded', () => {
-		const metrics = computeLayoutMetrics(1400, intervals)
-
+		const metrics = computeLayoutMetrics({
+			availableWidth: 1400,
+			intervals,
+		})
 		expect(metrics.cols).toBe(4)
-		expect(metrics.itemWidthMode).toBe('fixed')
+		expect(metrics.itemNativeWidth).toBe(metrics.itemWidth)
 		expect(metrics.itemWidth).toBe(320)
-		expect(metrics.containerWidth).toBe(4 * 320 + 2 * 24 + 3 * 16)
+		expect(metrics.itemWidthMode).toBe('fixed')
+		expect(metrics.layoutWidth).toBe(4 * 320 + 2 * 24 + 3 * 16)
+		expect(metrics.trackInnerGapWidth).toBe(2 * 24)
+		expect(metrics.trackInnerWidth).toBe(4 * 320 + 2 * 24)
 	})
 })

@@ -13,7 +13,7 @@ function getChildrenStyleBase(
 	scaledHeight: number,
 ) {
 	const roundedScaledHeight = 0.0001 * Math.round(10000 * scaledHeight)
-	const gridHeight = Math.round(extraMetrics.rowSize * (scaledHeight + getMetrics().verticalSpacing))
+	const gridHeight = Math.round(extraMetrics.rowSize * (scaledHeight + getMetrics().innerGap))
 	const style: JSX.CSSProperties = {
 		'grid-row-end': `span ${gridHeight}`,
 		'height': `${roundedScaledHeight}px`,
@@ -27,10 +27,12 @@ export function MasonryLayout<Item>(props: MasonryLayoutProps<Item>) {
 		const metrics = props.getMetrics()
 		const style: JSX.CSSProperties = {
 			'display': 'grid',
-			'gap': `0 ${metrics.horizontalSpacing}px`,
+			'gap': `0 ${metrics.innerGap}px`,
 			'grid-auto-rows': `${extraMetrics.rowUnit}px`,
 			'grid-template-columns': `repeat(${metrics.cols}, ${metrics.itemWidth}px)`,
-			'padding': styleUtils.zeroVerticalHorizontalPxNonZero(props.getMetrics().outerPadding),
+			'padding': styleUtils.zeroVerticalHorizontalPxNonZero(props.getMetrics().outerGap),
+			'width': styleUtils.px(props.getMetrics().trackInnerWidth),
+			'--layout-padding': styleUtils.pxNonZero(props.getMetrics().outerGap),
 		}
 		return style
 	})
@@ -42,8 +44,7 @@ export function MasonryLayout<Item>(props: MasonryLayoutProps<Item>) {
 			component={/* @once */ props.as || 'div'}
 			style={{
 				...props.style,
-				'width': styleUtils.px(props.getMetrics().containerWidth),
-				'--layout-padding': styleUtils.pxNonZero(props.getMetrics().outerPadding),
+				width: styleUtils.px(props.getMetrics().layoutWidth),
 			}}
 			onAnimationEnd={/* @once */ props.onAnimationEnd}
 		>

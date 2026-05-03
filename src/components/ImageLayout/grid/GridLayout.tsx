@@ -10,10 +10,12 @@ export function GridLayout<Item>(props: GridLayoutProps<Item>) {
 	const getLayoutStyle = createMemo(function() {
 		const metrics = props.getMetrics()
 		const style: JSX.CSSProperties = {
-			'gap': `${metrics.verticalSpacing}px ${metrics.horizontalSpacing}px`,
+			'gap': `${metrics.innerGap}px ${metrics.innerGap}px`,
+			'width': `${metrics.trackInnerWidth}px`,
 			'--layout-item-width': metrics.itemWidthMode == 'fixed'
 				? `${metrics.itemWidth}px`
-				: `calc((100% - ${metrics.totalHorizontalSpacing}px) / ${metrics.cols})`,
+				: `calc((100% - ${metrics.trackInnerGapWidth}px)/${metrics.cols})`,
+			'--layout-padding': styleUtils.pxNonZero(props.getMetrics().outerGap),
 		}
 		return style
 	})
@@ -25,8 +27,7 @@ export function GridLayout<Item>(props: GridLayoutProps<Item>) {
 			component={/* @once */ props.as || 'div'}
 			style={{
 				...props.style,
-				'width': styleUtils.px(props.getMetrics().containerWidth),
-				'--layout-padding': styleUtils.pxNonZero(props.getMetrics().outerPadding),
+				width: styleUtils.px(props.getMetrics().layoutWidth),
 			}}
 			onAnimationEnd={/* @once */ props.onAnimationEnd}
 		>

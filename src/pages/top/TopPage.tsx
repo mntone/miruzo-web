@@ -14,7 +14,7 @@ import { prefersReducedMotion } from '~/utils/motion'
 import { topPageConfigs } from './config'
 import { loadTopPageData } from './data'
 import { GridImageList } from './GridImageList'
-import { topPageIntervals } from './interval'
+import { topPageIntervals as intervals } from './interval'
 
 export function TopPage() {
 	useSurfaceScope(function() {
@@ -26,9 +26,7 @@ export function TopPage() {
 
 	const [getElement, setElement] = createSignal<HTMLElement | undefined>(undefined)
 	const getLayoutWidth = useContentWidth(getElement)
-	const getMetrics = useLayoutMetrics(getLayoutWidth, {
-		intervals: topPageIntervals,
-	})
+	const getMetrics = useLayoutMetrics(getLayoutWidth, { intervals })
 
 	const [resource] = createResource(topPageConfigs, loadTopPageData)
 

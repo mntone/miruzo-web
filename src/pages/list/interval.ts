@@ -6,7 +6,7 @@ export const listPageIntervals: readonly LayoutInterval[] = [
 	{
 		colEnd: 2,
 		minItemWidth: 160,
-		spacing: 8,
+		innerGap: 8,
 	},
 
 	// 3 columns
@@ -14,12 +14,12 @@ export const listPageIntervals: readonly LayoutInterval[] = [
 		colEnd: 3,
 		minItemWidth: 200,
 		maxItemWidth: 320,
-		spacing: 16,
+		innerGap: 16,
 	},
 
 	// 4+ columns
 	{
 		itemWidth: 320,
-		spacing: 16,
+		innerGap: 16,
 	},
 ] as const

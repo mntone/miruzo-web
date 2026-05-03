@@ -6,9 +6,8 @@ export interface NormalizedLayoutInterval {
 	colEnd: number
 	minItemWidth: number
 	maxItemWidth: number
-	horizontalSpacing: number
-	verticalSpacing: number
-	outerPadding: number
+	innerGap: number
+	outerGap: number
 }
 
 export type NormalizedLayoutIntervals = readonly NormalizedLayoutInterval[]

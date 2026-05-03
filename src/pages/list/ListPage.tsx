@@ -11,7 +11,7 @@ import { useContentWidth } from '~/hooks'
 import { useI18n } from '~/i18n/Context'
 import { loadImageEntryList } from '~/repositories'
 
-import { listPageIntervals } from './interval'
+import { listPageIntervals as intervals } from './interval'
 import { MasonryImageList } from './MasonryImageList'
 
 interface ListPageProps {
@@ -28,9 +28,7 @@ export function ListPage(props: ListPageProps) {
 
 	const [getElement, setElement] = createSignal<HTMLElement | undefined>(undefined)
 	const getLayoutWidth = useContentWidth(getElement)
-	const getMetrics = useLayoutMetrics(getLayoutWidth, {
-		intervals: listPageIntervals,
-	})
+	const getMetrics = useLayoutMetrics(getLayoutWidth, { intervals })
 
 	const [resource] = createResource(options, loadImageEntryList)
 

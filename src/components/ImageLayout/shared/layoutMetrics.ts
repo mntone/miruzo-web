@@ -31,15 +31,21 @@ export function normalizeIntervals(intervals: LayoutIntervals): NormalizedLayout
 			}
 		}
 
-		const horizontalSpacing = 'horizontalSpacing' in interval ? interval.horizontalSpacing : interval.spacing
-		const verticalSpacing = 'verticalSpacing' in interval ? interval.verticalSpacing : interval.spacing
+		let innerGap: number, outerGap: number
+		if ('gap' in interval) {
+			innerGap = interval.gap
+			outerGap = interval.gap
+		} else {
+			innerGap = interval.innerGap
+			outerGap = interval.outerGap || 0
+		}
+
 		normalized[i] = {
 			colEnd,
 			minItemWidth,
 			maxItemWidth,
-			horizontalSpacing,
-			verticalSpacing,
-			outerPadding: interval.outerPadding || 0,
+			innerGap,
+			outerGap,
 		}
 	}
 
@@ -59,12 +65,12 @@ export function estimateColumnCount(
 
 	let colStart = 1
 	for (const interval of intervals) {
-		const { colEnd, minItemWidth, horizontalSpacing: innerGap, outerPadding } = interval
+		const { colEnd, minItemWidth, innerGap, outerGap } = interval
 
 		// Invert the width function to find the maximum allowed column count:
-		// widthNeeded(col) = col * minW + (col - 1) * innerGap + 2 * outerPadding
-		// => col <= floor((w - innerGap) / (minW + innerGap))
-		const maxByWidth = Math.floor((containerWidth + innerGap - 2 * outerPadding) / (minItemWidth + innerGap))
+		// widthNeeded(col) = col * minW + (col - 1) * innerGap + 2 * outerGap
+		// => col <= floor((w + innerGap - 2 * outerGap) / (minW + innerGap))
+		const maxByWidth = Math.floor((containerWidth + innerGap - 2 * outerGap) / (minItemWidth + innerGap))
 
 		if (maxByWidth >= colStart) {
 			const constrained = Math.min(maxByWidth, colEnd)
@@ -92,22 +98,25 @@ export function resolveInterval(intervals: NormalizedLayoutIntervals, cols: numb
 	return interval
 }
 
-export function computeTotalInnerGap(cols: number, interval: NormalizedLayoutInterval): number {
-	const totalInnerGap = (cols - 1) * interval.horizontalSpacing
-	return totalInnerGap
+export function computeTotalInnerGapWidth(cols: number, innerGap: number): number {
+	return Math.max(0, cols - 1) * innerGap
+}
+
+export function computeTotalGapWidth(cols: number, interval: NormalizedLayoutInterval): number {
+	return computeTotalInnerGapWidth(cols, interval.innerGap) + 2 * interval.outerGap
 }
 
 /**
  * Converts a CSS grid `1fr` track definition into a concrete pixel width by
- * removing the total gutter and clamping the computed width to the container.
+ * subtracting total horizontal gaps, then dividing the remaining width by columns.
+ * The result is never negative because the remainder is clamped at zero.
  */
 export function computeFluidWidth(
-	containerWidth: number,
+	availableWidth: number,
 	cols: number,
-	spacing: number,
+	totalGapWidth: number,
 ): number {
-	const raw = Math.max(0, containerWidth - spacing) / cols
-	return Math.min(containerWidth, raw)
+	return Math.max(0, availableWidth - totalGapWidth) / cols
 }
 
 /**
@@ -120,13 +129,13 @@ export function computeLayoutMetrics(params: ComputeLayoutMetricsParams): Layout
 	if (availableWidth === 0) {
 		return {
 			cols: 1,
-			horizontalSpacing: 0,
-			totalHorizontalSpacing: 0,
-			verticalSpacing: intervals.length === 0 ? 8 : intervals[0].verticalSpacing,
-			outerPadding: intervals.length === 0 ? 0 : intervals[0].outerPadding,
+			innerGap: intervals.length === 0 ? 8 : intervals[0].innerGap,
+			outerGap: intervals.length === 0 ? 0 : intervals[0].outerGap,
+			itemNativeWidth: 0,
 			itemWidth: 0,
 			itemWidthMode: 'fixed',
-			nativeItemWidth: 0,
+			trackInnerGapWidth: 0,
+			trackInnerWidth: 0,
 		}
 	}
 
@@ -135,21 +144,10 @@ export function computeLayoutMetrics(params: ComputeLayoutMetricsParams): Layout
 
 	// 2. Read the gap value from the interval that matches the chosen column count.
 	const interval = resolveInterval(intervals, cols)
+	const layoutTotalGapWidth = computeTotalGapWidth(cols, interval)
+	const fluidWidth = computeFluidWidth(availableWidth, cols, layoutTotalGapWidth)
 
-	// 3. Resolve whether this breakpoint uses a fixed card width (e.g. 320px).
-	// const fixedWidth = getItemWidth(cols, availableWidth)
-
-	// 4. When no fixed width is provided, derive the fluid width from CSS grid math.
-	// let fluidWidth: number | undefined = undefined
-	// if (fixedWidth === undefined) {
-	// 	// Convert the “1fr” track size into an actual pixel value.
-	// 	fluidWidth = computeFluidWidth(availableWidth, cols, innerGap)
-	// }
-
-	const totalHorizontalSpacing = computeTotalInnerGap(cols, interval)
-	const spacing = totalHorizontalSpacing + 2 * interval.outerPadding
-	const fluidWidth = computeFluidWidth(availableWidth, cols, spacing)
-
+	// 3. Use fluid width while it stays within interval bounds; otherwise clamp to fixed max width.
 	let itemWidth: number, itemWidthMode: ItemWidthMode
 	if (fluidWidth <= interval.maxItemWidth) {
 		itemWidth = fluidWidth
@@ -159,29 +157,17 @@ export function computeLayoutMetrics(params: ComputeLayoutMetricsParams): Layout
 		itemWidthMode = 'fixed'
 	}
 
-	// 5. Use the fixed width when available, otherwise fall back to the fluid width.
-	// const finalWidth = fixedWidth ?? fluidWidth!
-
-	// 6. Only fixed-width layouts have a deterministic container width.
-	// const containerWidth =
-	// 	fixedWidth != null
-	// 		? cols * fixedWidth + (cols - 1) * innerGap + 2 * outerPadding
-	// 		: undefined
-
-	const containerWidth = cols * itemWidth + spacing
-
-	// 7. Account for device-pixel scaling so we can request sharper assets and maintain consistent row units.
-	const nativeItemWidth = window.devicePixelRatio * itemWidth
-
+	const trackInnerGapWidth = computeTotalInnerGapWidth(cols, interval.innerGap)
 	return {
 		cols,
-		horizontalSpacing: interval.horizontalSpacing,
-		totalHorizontalSpacing,
-		verticalSpacing: interval.verticalSpacing,
-		outerPadding: interval.outerPadding,
+		innerGap: interval.innerGap,
+		outerGap: interval.outerGap,
+
+		itemNativeWidth: window.devicePixelRatio * itemWidth,
 		itemWidth,
 		itemWidthMode,
-		nativeItemWidth,
-		containerWidth,
+		layoutWidth: cols * itemWidth + layoutTotalGapWidth,
+		trackInnerGapWidth,
+		trackInnerWidth: cols * itemWidth + trackInnerGapWidth,
 	}
 }

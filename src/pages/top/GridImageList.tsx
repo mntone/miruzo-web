@@ -64,7 +64,7 @@ export function GridImageList(props: GridImageListProps) {
 						{...getItemProps(getIndex())}
 						isHighPriority={props.config.isHighPriority}
 						item={item}
-						nativeItemWidth={props.getMetrics().nativeItemWidth}
+						nativeItemWidth={props.getMetrics().itemNativeWidth}
 					/>
 				)
 			}}
