@@ -1,6 +1,6 @@
 import type { ItemWidthMode, LayoutIntervals, LayoutMetrics } from '../types'
 
-import type { NormalizedLayoutInterval, NormalizedLayoutIntervals } from './types'
+import type { ComputeLayoutMetricsParams, NormalizedLayoutInterval, NormalizedLayoutIntervals } from './types'
 
 export function normalizeIntervals(intervals: LayoutIntervals): NormalizedLayoutIntervals {
 	const normalized = new Array<NormalizedLayoutInterval>(intervals.length)
@@ -114,7 +114,9 @@ export function computeFluidWidth(
  * Combines the interval specification (piecewise-linear segments) with a custom
  * fixed-width resolver to derive the spacing, track width, and overall layout metrics.
  */
-export function computeLayoutMetrics(availableWidth: number, intervals: NormalizedLayoutIntervals): LayoutMetrics {
+export function computeLayoutMetrics(params: ComputeLayoutMetricsParams): LayoutMetrics {
+	const { availableWidth, intervals } = params
+
 	if (availableWidth === 0) {
 		return {
 			cols: 1,

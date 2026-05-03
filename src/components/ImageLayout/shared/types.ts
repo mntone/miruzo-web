@@ -13,6 +13,11 @@ export interface NormalizedLayoutInterval {
 
 export type NormalizedLayoutIntervals = readonly NormalizedLayoutInterval[]
 
+export interface ComputeLayoutMetricsParams {
+	readonly availableWidth: number
+	readonly intervals: NormalizedLayoutIntervals
+}
+
 export interface LayoutRootProps {
 	readonly ref?: ((element: HTMLElement | undefined) => void) | undefined
 	// Limit to content containers; avoid header/footer/article semantics.
