@@ -1,6 +1,6 @@
 import { createMemo, type Accessor } from 'solid-js'
 
-import { computeLayoutMetrics, normalizeIntervals } from './shared/layoutMetrics'
+import { adjustLayoutMetricsForItemCount, computeLayoutMetrics, normalizeIntervals } from './shared/layoutMetrics'
 import type { ComputeLayoutMetricsParams } from './shared/types'
 import type { LayoutIntervals, LayoutMetrics } from './types'
 
@@ -24,4 +24,18 @@ export function useLayoutMetrics(getRootWidth: Accessor<number>, options: Layout
 	})
 
 	return getLayoutMetrics
+}
+
+export function useLayoutMetricsForItemCount(
+	getBaseMetrics: Accessor<LayoutMetrics>,
+	getItemCount: Accessor<number | undefined>,
+) {
+	const getLayoutMetricsForItemCount = createMemo(function() {
+		const baseMetrics = getBaseMetrics()
+		return adjustLayoutMetricsForItemCount(baseMetrics, {
+			itemCount: getItemCount(),
+		})
+	})
+
+	return getLayoutMetricsForItemCount
 }

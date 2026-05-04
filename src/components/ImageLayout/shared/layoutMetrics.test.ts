@@ -1,6 +1,7 @@
 import type { LayoutIntervals } from '../types'
 
 import {
+	adjustLayoutMetricsForItemCount,
 	computeFluidWidth,
 	computeLayoutMetrics,
 	computeTotalGapWidth,
@@ -187,5 +188,50 @@ describe('computeMetrics', () => {
 		expect(metrics.layoutWidth).toBe(4 * 320 + 2 * 24 + 3 * 16)
 		expect(metrics.trackInnerGapWidth).toBe(2 * 24)
 		expect(metrics.trackInnerWidth).toBe(4 * 320 + 2 * 24)
+	})
+})
+
+describe('adjustLayoutMetricsForItemCount', () => {
+	it('keeps base metrics when itemCount is missing', () => {
+		const baseMetrics = computeLayoutMetrics({
+			availableWidth: 900,
+			intervals,
+		})
+		const metrics = adjustLayoutMetricsForItemCount(baseMetrics, {
+		})
+
+		expect(metrics).toEqual(baseMetrics)
+	})
+
+	it('shrinks only track metrics when itemCount is smaller than columns', () => {
+		const baseMetrics = computeLayoutMetrics({
+			availableWidth: 900,
+			intervals,
+		})
+		const metrics = adjustLayoutMetricsForItemCount(baseMetrics, {
+			itemCount: 1,
+		})
+
+		expect(metrics.cols).toBe(1)
+		expect(metrics.trackInnerGapWidth).toBe(0)
+		expect(metrics.trackInnerWidth).toBe(baseMetrics.itemWidth)
+		expect(metrics.layoutWidth).toBe(baseMetrics.layoutWidth)
+		expect(metrics.itemWidth).toBe(baseMetrics.itemWidth)
+		expect(metrics.innerGap).toBe(baseMetrics.innerGap)
+		expect(metrics.outerGap).toBe(baseMetrics.outerGap)
+	})
+
+	it('clamps to one column when itemCount is zero', () => {
+		const baseMetrics = computeLayoutMetrics({
+			availableWidth: 900,
+			intervals,
+		})
+		const metrics = adjustLayoutMetricsForItemCount(baseMetrics, {
+			itemCount: 0,
+		})
+
+		expect(metrics.cols).toBe(1)
+		expect(metrics.trackInnerGapWidth).toBe(0)
+		expect(metrics.trackInnerWidth).toBe(baseMetrics.itemWidth)
 	})
 })

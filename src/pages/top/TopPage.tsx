@@ -3,7 +3,7 @@ import { createResource, Suspense, Switch, Match, For, createSignal, Show } from
 import { ErrorMessage } from '~/components/ErrorMessage'
 import { Header } from '~/components/Header/Header'
 import { HorizontalEdgeInsetBoundary } from '~/components/HorizontalEdgeInsetBoundary'
-import { useLayoutMetrics } from '~/components/ImageLayout'
+import { useLayoutMetrics, useLayoutMetricsForItemCount } from '~/components/ImageLayout'
 import { LoadingView } from '~/components/progress'
 import { useContentWidth } from '~/hooks'
 import { useSurfaceScope } from '~/hooks/useSurfaceScope'
@@ -26,7 +26,7 @@ export function TopPage() {
 
 	const [getElement, setElement] = createSignal<HTMLElement | undefined>(undefined)
 	const getLayoutWidth = useContentWidth(getElement)
-	const getMetrics = useLayoutMetrics(getLayoutWidth, { intervals })
+	const getBaseMetrics = useLayoutMetrics(getLayoutWidth, { intervals })
 
 	const [resource] = createResource(topPageConfigs, loadTopPageData)
 
@@ -56,6 +56,12 @@ export function TopPage() {
 											return (
 												<Show when={initial}>
 													{function(getEntries) {
+														const getMetrics = useLayoutMetricsForItemCount(
+															getBaseMetrics,
+															function() {
+																return getEntries().entries.length
+															},
+														)
 														return (
 															<GridImageList
 																config={topPageConfigs[getIndex()]}

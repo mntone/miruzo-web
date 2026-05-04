@@ -17,6 +17,10 @@ export interface ComputeLayoutMetricsParams {
 	readonly intervals: NormalizedLayoutIntervals
 }
 
+export interface AdjustLayoutMetricsOptions {
+	readonly itemCount?: number | undefined
+}
+
 export interface LayoutRootProps {
 	readonly ref?: ((element: HTMLElement | undefined) => void) | undefined
 	// Limit to content containers; avoid header/footer/article semantics.

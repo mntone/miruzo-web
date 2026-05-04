@@ -1,6 +1,11 @@
 import type { ItemWidthMode, LayoutIntervals, LayoutMetrics } from '../types'
 
-import type { ComputeLayoutMetricsParams, NormalizedLayoutInterval, NormalizedLayoutIntervals } from './types'
+import type {
+	AdjustLayoutMetricsOptions,
+	ComputeLayoutMetricsParams,
+	NormalizedLayoutInterval,
+	NormalizedLayoutIntervals,
+} from './types'
 
 export function normalizeIntervals(intervals: LayoutIntervals): NormalizedLayoutIntervals {
 	const normalized = new Array<NormalizedLayoutInterval>(intervals.length)
@@ -169,5 +174,24 @@ export function computeLayoutMetrics(params: ComputeLayoutMetricsParams): Layout
 		layoutWidth: cols * itemWidth + layoutTotalGapWidth,
 		trackInnerGapWidth,
 		trackInnerWidth: cols * itemWidth + trackInnerGapWidth,
+	}
+}
+
+export function adjustLayoutMetricsForItemCount(
+	metrics: LayoutMetrics,
+	options: AdjustLayoutMetricsOptions,
+): LayoutMetrics {
+	const { cols: baseCols, ...others } = metrics
+
+	const renderCols = options.itemCount !== undefined
+		? Math.max(1, Math.min(baseCols, options.itemCount))
+		: baseCols
+
+	const trackInnerGapWidth = computeTotalInnerGapWidth(renderCols, others.innerGap)
+	return {
+		...others,
+		cols: renderCols,
+		trackInnerGapWidth,
+		trackInnerWidth: renderCols * others.itemWidth + trackInnerGapWidth,
 	}
 }
