@@ -15,7 +15,6 @@ export function GridLayout<Item>(props: GridLayoutProps<Item>) {
 			'--layout-item-width': metrics.itemWidthMode == 'fixed'
 				? `${metrics.itemWidth}px`
 				: `calc((100% - ${metrics.trackInnerGapWidth}px)/${metrics.cols})`,
-			'--layout-padding': styleUtils.pxNonZero(props.getMetrics().outerGap),
 		}
 		return style
 	})
@@ -27,7 +26,9 @@ export function GridLayout<Item>(props: GridLayoutProps<Item>) {
 			component={/* @once */ props.as || 'div'}
 			style={{
 				...props.style,
-				width: styleUtils.px(props.getMetrics().layoutWidth),
+				'width': styleUtils.px(props.getMetrics().layoutWidth),
+				// Keep this on the root so header/footer can reuse the same layout padding.
+				'--layout-padding': styleUtils.pxNonZero(props.getMetrics().outerGap),
 			}}
 			onAnimationEnd={/* @once */ props.onAnimationEnd}
 		>

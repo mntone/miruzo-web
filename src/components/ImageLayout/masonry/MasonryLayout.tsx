@@ -32,7 +32,6 @@ export function MasonryLayout<Item>(props: MasonryLayoutProps<Item>) {
 			'grid-template-columns': `repeat(${metrics.cols}, ${metrics.itemWidth}px)`,
 			'padding': styleUtils.zeroVerticalHorizontalPxNonZero(props.getMetrics().outerGap),
 			'width': styleUtils.px(props.getMetrics().trackInnerWidth),
-			'--layout-padding': styleUtils.pxNonZero(props.getMetrics().outerGap),
 		}
 		return style
 	})
@@ -44,7 +43,9 @@ export function MasonryLayout<Item>(props: MasonryLayoutProps<Item>) {
 			component={/* @once */ props.as || 'div'}
 			style={{
 				...props.style,
-				width: styleUtils.px(props.getMetrics().layoutWidth),
+				'width': styleUtils.px(props.getMetrics().layoutWidth),
+				// Keep this on the root so header/footer can reuse the same layout padding.
+				'--layout-padding': styleUtils.pxNonZero(props.getMetrics().outerGap),
 			}}
 			onAnimationEnd={/* @once */ props.onAnimationEnd}
 		>
