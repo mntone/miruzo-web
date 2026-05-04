@@ -174,7 +174,6 @@ body {
 }
 
 .layout-root {
-	box-sizing: border-box;
 	margin-inline: auto;
 	-webkit-user-select: none;
 	user-select: none;
